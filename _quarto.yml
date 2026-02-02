@@ -1,23 +1,23 @@
 project:
-  type: book
+  type: website
+  output-dir: _site
 
-book:
-  title: "ghk-textbook"
-  author: "Norah Jones"
-  date: "2/1/2026"
-  chapters:
-    - index.qmd
-    - intro.qmd
-    - summary.qmd
-    - references.qmd
+website:
+  title: "Computational Social Science Textbook"
+  navbar:
+    left:
+      - text: Home
+        href: index.qmd
+      - text: Tutorials
+        href: Tutorials/index.qmd
 
-bibliography: references.bib
+  sidebar:
+    - title: "Tutorials"
+      contents:
+        - Tutorials/index.qmd
+        - Tutorials/Intro-to-R.qmd
+        - Tutorials/Data-structure-and-cleaning.qmd
 
 format:
   html:
-    theme: cosmo
-  pdf:
-    documentclass: scrreprt
-
-
-
+    toc: true

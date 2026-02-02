@@ -1,5 +1,6 @@
 .DS_Store
-_book/
 .Rhistory
 .Rproj.user/
 .quarto/
+_book/
+_site/

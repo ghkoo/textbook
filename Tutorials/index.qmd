@@ -1,0 +1,6 @@
+---
+title: "Tutorials"
+---
+
+- [Introduction to R](Intro-to-R.qmd)
+- [Data structure and cleaning](Data-structure-and-cleaning.qmd)
