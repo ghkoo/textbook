@@ -408,8 +408,20 @@ Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre
 </section>
 <section id="pipe-operators" class="level3">
 <h3 class="anchored" data-anchor-id="pipe-operators">2.2 Pipe operators: <code>|&gt;</code>, <code>%&gt;%</code></h3>
-<p>::: {.callout-tip} s In R version 4.1 and later, the base pipe operator |&gt; works the same way as %&gt;%. The difference is that |&gt; is built directly into R, so you do not need to install or load dplyr to use it.</p>
-<p>You can turn |&gt; on through Tools &gt; Global Options. :::</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In R version 4.1 and later, the base pipe operator |&gt; works the same way as %&gt;%. The difference is that |&gt; is built directly into R, so you do not need to install or load dplyr to use it.</p>
+<p>You can turn |&gt; on through Tools &gt; Global Options.</p>
+</div>
+</div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="co"># Basic code (without pipe operator) </span></span>
 <span id="cb39-2"><a href="#cb39-2"></a><span class="fu">mean</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)) <span class="co"># mean(): we get the mean score. </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1047,7 +1059,7 @@ Note
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/ghkoo\.github\.io\/textbook\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

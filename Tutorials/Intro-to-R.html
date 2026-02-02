@@ -234,9 +234,10 @@ Note
 <p>The <strong>cowsay</strong> package displays messages using ASCII art animals. This makes console output more fun and engaging.</p>
 </div>
 </div>
+<p>Install the package from CRAN onto your computer and load the package (once you install a package, you do not need to re-install it again. Next time, just use library() without install.packages().</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">#install.packages("cowsay")  # installs the package from CRAN onto your computer</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(cowsay) <span class="co"># loads the package so you can use its functions (once you install a package, you do not need to reinstall it again. Next time, just use library().)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">#install.packages("cowsay")  </span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(cowsay)</span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="fu">say</span>(<span class="st">"Hello world!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -252,28 +253,13 @@ Note
              ||------w|
              ||      ||</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">say</span>(<span class="st">"We are so cool.</span><span class="sc">\n</span><span class="st"> --Anonymous"</span>,</span>
-<span id="cb3-2"><a href="#cb3-2"></a>    <span class="at">by =</span> <span class="st">"cow"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">say</span>(<span class="st">"I'm EGGS-hausted!.</span><span class="sc">\n</span><span class="st"> --chicken"</span>,</span>
+<span id="cb3-2"><a href="#cb3-2"></a>    <span class="at">by =</span> <span class="st">"chicken"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
- ------------------------------ 
-&lt; We are so cool.  --Anonymous &gt;
- ------------------------------ 
-      \
-       \
-
-        ^__^ 
-        (oo)\ ________ 
-        (__)\         )\ /\ 
-             ||------w|
-             ||      ||</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">say</span>(<span class="st">"I'm EGGS-hausted!"</span>, <span class="st">"chicken"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
- ------------------- 
-&lt; I'm EGGS-hausted! &gt;
- ------------------- 
+ ------------------------------- 
+&lt; I'm EGGS-hausted!.  --chicken &gt;
+ ------------------------------- 
       \
        \
          _
@@ -289,13 +275,14 @@ Note
             /` /` [nosig]
  </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">say</span>(<span class="st">"catfact"</span>, <span class="st">"cat"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">say</span>(<span class="st">"catfact"</span>, <span class="st">"cat"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
- ----------------------------------------------------- 
-/ Florence Nightingale owned more than 60 cats in her \
-\ lifetime.                                           /
- ----------------------------------------------------- 
+ --------------------------------------------------------- 
+/ The group of words associated with cat                  \
+|(catt,&nbsp;cath,&nbsp;chat,&nbsp;katze) stem from the Latin&nbsp;catus, |
+\meaning domestic cat, as opposed to&nbsp;feles, or wild cat. /
+ --------------------------------------------------------- 
          \
           \
 
@@ -311,12 +298,12 @@ Note
                \_)
   </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">say</span>(<span class="st">"It is going to snow this weekend. Stay warm!"</span>, <span class="st">"snowman"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">say</span>(<span class="st">"It is going to snow this weekend. Stay warm!</span><span class="sc">\n</span><span class="st">— Dr. Koo"</span>, <span class="st">"snowman"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
- ---------------------------------------------- 
-&lt; It is going to snow this weekend. Stay warm! &gt;
- ---------------------------------------------- 
+ -------------------------------------------------------- 
+&lt;It is going to snow this weekend. Stay warm! — Dr. Koo&gt;
+ -------------------------------------------------------- 
   \
    \
 
@@ -326,7 +313,6 @@ Note
     (__:__) [nosig]
   </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>?say</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -340,6 +326,9 @@ Tip
 <div class="callout-body-container callout-body">
 <p>Tip: If you type ? followed by a function name, the Help window will open on the right and explain what the function does</p>
 </div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>?say</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -371,24 +360,24 @@ Tip
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>first_computer <span class="ot">&lt;-</span> <span class="dv">1946</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a>first_moon_landing <span class="ot">&lt;-</span> <span class="dv">1969</span></span>
-<span id="cb12-3"><a href="#cb12-3"></a>current_year <span class="ot">&lt;-</span> <span class="dv">2026</span> <span class="co">#ENTER THE CURRENT YEAR</span></span>
-<span id="cb12-4"><a href="#cb12-4"></a>  </span>
-<span id="cb12-5"><a href="#cb12-5"></a><span class="co"># Calculate years since events</span></span>
-<span id="cb12-6"><a href="#cb12-6"></a>years_since_computer <span class="ot">&lt;-</span> current_year <span class="sc">-</span> first_computer</span>
-<span id="cb12-7"><a href="#cb12-7"></a><span class="fu">print</span>(years_since_computer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>first_computer <span class="ot">&lt;-</span> <span class="dv">1946</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>first_moon_landing <span class="ot">&lt;-</span> <span class="dv">1969</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a>current_year <span class="ot">&lt;-</span> <span class="dv">2026</span> <span class="co">#ENTER THE CURRENT YEAR</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a>  </span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="co"># Calculate years since events</span></span>
+<span id="cb10-6"><a href="#cb10-6"></a>years_since_computer <span class="ot">&lt;-</span> current_year <span class="sc">-</span> first_computer</span>
+<span id="cb10-7"><a href="#cb10-7"></a><span class="fu">print</span>(years_since_computer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 80</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>years_since_moon <span class="ot">&lt;-</span> current_year <span class="sc">-</span> first_moon_landing</span>
-<span id="cb14-2"><a href="#cb14-2"></a><span class="fu">print</span>(years_since_moon)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>years_since_moon <span class="ot">&lt;-</span> current_year <span class="sc">-</span> first_moon_landing</span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="fu">print</span>(years_since_moon)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 57</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Sum of years since events</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a>total_years <span class="ot">&lt;-</span> years_since_computer <span class="sc">+</span> years_since_moon</span>
-<span id="cb16-3"><a href="#cb16-3"></a><span class="fu">print</span>(total_years)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># Sum of years since events</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>total_years <span class="ot">&lt;-</span> years_since_computer <span class="sc">+</span> years_since_moon</span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="fu">print</span>(total_years)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 137</code></pre>
 </div>
@@ -471,7 +460,7 @@ Tip
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/ghkoo\.github\.io\/textbook\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
