@@ -20,8 +20,6 @@ library(cowsay)
 say("Hello world!")
 say("I'm EGGS-hausted!.\n --chicken",
     by = "chicken")
-say("catfact", "cat")
-say("It is going to snow this weekend. Stay warm!\n— Dr. Koo", "snowman")
 ```
 
 ::: {.callout-tip}
@@ -34,6 +32,14 @@ Tip: If you type ? followed by a function name, the Help window will open on the
 ::: {.callout-note}
 Try different animals! If you enter an animal name that is not supported, R will return an error such as: Error: unknown animal. The message will also display a list of supported animals; for example frog, ghost, pumpkin, dragon, bat, owl, duck, yoda, alligator.
 :::
+
+```{r}
+say("catfact", "cat")
+say("It is going to snow this weekend. Stay warm!\n— Dr. Koo", "snowman")
+```
+
+
+
 
 ## Practice: Years Since Major Historical Events
 

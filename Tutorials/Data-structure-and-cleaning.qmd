@@ -103,7 +103,7 @@ head(mtcars) # Check the first few rows
 
 ### 2.2 Pipe operators: `|>`, `%>%`
 
-::: {.callout-tip} s
+::: {.callout-tip} 
 In R version 4.1 and later, the base pipe operator |> works the same way as %>%.
 The difference is that |> is built directly into R, so you do not need to install or load dplyr to use it.
 
