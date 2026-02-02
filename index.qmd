@@ -1,5 +1,34 @@
-# Preface {.unnumbered}
+---
+title: "Learning Computational Social Science with R"
+author: "Hyun Koo"
+---
 
-This is a Quarto book.
+### About This Textbook
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+This textbook introduces practical and beginner-friendly computational approaches to social science research. It consists of hands-on tutorials designed to help you work with real-world data, formulate meaningful research questions, and explore social phenomena using computational methods.
+
+The course (CCMS787-01) emphasizes learning by doing. You will collect, clean, analyze, and visualize data using R, while engaging with conceptual foundations and ethical considerations that guide responsible data-driven research.
+
+Computational methods are powerful, but they are not neutral. Throughout the tutorials, we will think critically about what data represent, what they exclude, and how analytical choices shape conclusions.
+
+By the end of the tutorials, you should feel confident designing data-driven research and continuing to learn new methods independently. You will likely also find yourself asking better questions. That part is intentional.
+
+> "Finding the right question is often more important than finding the answer."  
+> - John Tukey
+
+
+
+### About the Author
+
+I am Gyo “Hyun” Koo, a researcher and educator focused on how computational tools can help us understand the impact of digital platforms on public sociopolitical behaviors. My approach emphasizes learning by doing and the ethical use of diverse datasets. To learn more about my research and teaching, [visit my personal website](https://sites.google.com/view/ghkoo?usp=sharing)
+
+
+::: {.callout-tip}
+**How to use this site**
+
+- Read tutorials in order
+- Copy and run code in RStudio
+- Practice questions with examples
+- CCMS787-01 students: Ask questions when something feels unclear
+:::
+

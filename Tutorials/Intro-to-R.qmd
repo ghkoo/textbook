@@ -1,45 +1,47 @@
 ---
-title: "Week 2 Introduction to R"
+title: "1. Introduction to R"
 author: "Hyun Koo"
-date: "2026-01-22"
-output: html_document
 ---
 
-## Your first code example: Just for fun, we will try a package called coways: it is a fun package that displays text messages using ASCII art animals, making R output more playful and interactive.
+## Your first code example
 
-```{r installing packages - Practice}
+As a warm-up, we begin with a **cowsay** package to run our initial codes.
 
-# This is where you write your code! The output will be displayed in the Console.
+::: {.callout-note}
+The **cowsay** package displays messages using ASCII art animals.
+This makes console output more fun and engaging.
+:::
 
+```{r install-cowsay, message=FALSE, warning=FALSE}
 #install.packages("cowsay")  # installs the package from CRAN onto your computer
 library(cowsay) # loads the package so you can use its functions (once you install a package, you do not need to reinstall it again. Next time, just use library().)
-
-
 say("Hello world!")
-say("Dr.Koo's class is so cool.\n --Anonymous",
+say("We are so cool.\n --Anonymous",
     by = "cow")
 say("I'm EGGS-hausted!", "chicken")
-say("catfact", "cat")  # Displays an interesting fact using the Cat Facts API, presented in a cat-themed ASCII art.
+say("catfact", "cat")
 say("It is going to snow this weekend. Stay warm!", "snowman")
 
-
-# Try different animals
-
-
-?say # Tip: If you type ? followed by a function name, the Help window will open on the right and explain what the function does
-
+?say
 ```
 
-### If you enter an animal name that is not supported, R will return an error such as: Error: unknown animal. The message will also display a list of supported animals; for example frog, ghost, pumpkin, dragon, bat, owl, duck, yoda, alligator
+::: {.callout-tip}
+Tip: If you type ? followed by a function name, the Help window will open on the right and explain what the function does
+:::
 
+::: {.callout-note}
+Try different animals! If you enter an animal name that is not supported, R will return an error such as: Error: unknown animal. The message will also display a list of supported animals; for example frog, ghost, pumpkin, dragon, bat, owl, duck, yoda, alligator.
+:::
 
+## Practice: Years Since Major Historical Events
 
-# Practice Question and Answer
-### Calculate how many years have passed since the first computer was built in 1946 and since the first moon landing in 1969. Print each result and the total number of years
+::: {.callout-tip}
+**Task**
+Calculate how many years have passed since: the first computer (1946) + the first moon landing (1969)
+Print each result and the total number of years.
+:::
 
 ```{r How to code - Practice Question and Answer}
-
-# Historical events
 first_computer <- 1946
 first_moon_landing <- 1969
 current_year <- 2026 #ENTER THE CURRENT YEAR
