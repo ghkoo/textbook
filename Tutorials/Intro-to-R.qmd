@@ -69,11 +69,9 @@ total_years <- years_since_computer + years_since_moon
 print(total_years)
 ```
 
-::: callout-tip
+::: {.callout-note} 
 **Tip: Remember to label your R code chunks**
 
-When writing code in your Rmarkdown, make sure:
-> every \`\`\`{r} needs another \`\`\`
+When writing code in your R Markdown, make sure that every R code block starts with three backticks and {r}, and also ends with three backticks. The backtick key is usually located next to the 1 key on your keyboard (the same key as ~).
 
-If the r is missing after the opening backticks, R will treat the code as plain text and it will not run. This is a very common beginner mistake, especially when getting started.
 :::
