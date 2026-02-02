@@ -1,6 +1,5 @@
-.Rproj.user
+.DS_Store
+_book/
 .Rhistory
-.RData
-.Ruserdata
-
-/.quarto/
+.Rproj.user/
+.quarto/

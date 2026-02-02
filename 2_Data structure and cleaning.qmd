@@ -1,0 +1,259 @@
+---
+title: "Week 3 Data structure and cleaning - Using Tidyverse"
+author: "Hyun Koo"
+date: "2026-01-29"
+output: html_document
+---
+
+
+# Working with vectors and data types in R
+
+### 1. Vector
+```{r Vector}
+# Vector of strings
+weather <- c("windy", "cloudy", "snowy", "cold", "hot") 
+print(weather)
+
+length(weather) 
+weather[1] # Access the first item 
+weather[c(1, 4)] # first and fourth item
+sort(weather) #alphabetically or numerically
+weather[1] <- "breezy" #Change "windy" to "breezy"
+class(weather) # Check data type
+
+# Vector of numerical values
+numbers <- c(7, 1, 3, 5)
+print(numbers)
+sort(numbers) # Sort numbers
+
+# Vector with numerical values in a sequence
+number_seq <- 1:5
+print(number_seq)
+
+# Vector of logical values
+veracity <- c(TRUE, FALSE, TRUE, FALSE)
+print(veracity)
+```
+
+# Data type conversion
+```{r data type conversion}
+x <- 5
+as.character(x)  # converts to character
+as.numeric(x)    # converts to numeric
+as.integer(x)    # converts to integer
+as.logical(x)    # converts to logical
+
+
+temps <- c("30", "25", "40")
+class(temps)
+
+# convert to numeric
+temps_num <- as.numeric(temps)
+class(temps_num)
+
+```
+
+### 2. Dataframe
+```{r data frame}
+
+weather <- data.frame(
+  day = c("Mon", "Tue", "Wed"),
+  temp = c(70, 75, 80),
+  snow = c(TRUE, FALSE, TRUE)
+)
+```
+
+### 3. Object
+```{r}
+first_computer <- 1946
+first_moon <- 1969
+```
+
+In this part of the module, we will use 'mtcars', a built-in dataset in R, to learn how to clean and pre-process data. (It has the data from the 1974 Motor Trend US magazine.)
+
+When working with large datasets, filtering variables of interest, summarizing data, arranging, and mutating (such as to create new columns after averaging the scores) can significantly save time and memory usage in your software. We will use the 'tidyverse' package to do so today. 
+
+
+# 1. Install Tidyverse and read mtcars data
+Use head() function to check the first few rows of the dataset, View() to open the dataset
+
+```{r install library, read data}
+#install.packages("tidyverse") # if you already installed it, skip this line 
+library(tidyverse) #Tidyverse will automatically load packages that you’re likely to use in everyday data analyses, such as dplyr, readr, tidyr ... etc
+
+#Load a sample dataset (Motor Trend Car Road Tests from 1974 Motor Trend US magazine)
+data(mtcars)
+?mtcars #To learn more about the dataset
+head(mtcars) #Check the first few rows
+#View(mtcars) #View() function opens the dataset 
+```
+
+
+# Using pipe operator: |> (base pipe) and %>% 
+
+** Note: 
+In R version 4.1 and later, the base pipe operator |> works the same way as %>%.
+The difference is that |> is built directly into R, so you do not need to install or load dplyr to use it.
+
+We turned this option on last week through Tools > Global Options, which allows you to use the base pipe in your code.
+
+```{r Tip: Using pipe operators}
+# Basic code (without pipe operator) 
+mean(c(1, 2, 3, 4)) # mean(): we get the mean score. 
+
+# bonus: ^ If we do not use c(), R will treat the numbers as separate function inputs instead of data values. Try: mean(1, 2, 3, 4) and check its result
+
+# Using |> (basic pipe) 
+# It takes the result of one command and passes it into the next command.
+
+c(1, 2, 3, 4) |> mean()
+
+# Using %>% 
+
+library(tidyverse)
+c(1, 2, 3, 4) %>% mean()
+# It works almost the same way as |> 
+# but requires installing and loading packages.
+
+
+```
+
+Pipe operators are useful for longer code because they reduce repetition, improve readability, simplify debugging and modification, and avoid creating temporary variables (more examples below).
+
+
+
+
+
+# 2. Data cleaning: select, filter, mutate, arrange, summarize functions
+Also try using pipe operators.
+
+### Example 1: Select specific columns (Useful when you have a huge dataset).
+
+```{r Use tidyverse for data cleaning}
+# Three options (with/out pipe operators)
+
+  # Without pipe operator (|> or %>%)
+select(mtcars, mpg, hp, wt) # Select three columns from the mtcars dataset (you can get the column names by ?mtcars)
+# if you want to the first few rows of specific columns:
+head(select(mtcars, mpg, hp, wt)) 
+
+  # 2) With base pipe |>
+mtcars |>
+  select(mpg, hp, wt) |>
+  head()
+
+  # 3) With %>%
+mtcars %>%
+  select(mpg, hp, wt) %>% # Select three columns 
+  head() # View the first few rows
+```
+
+
+### Example 2: Filter rows where Miles/gallon (mpg) is greater than 30
+
+```{r}
+
+mtcars |> 
+  filter(mpg > 30)
+
+new_mtcars <- mtcars |> # You can also create a new filtered dataframe 'new_mtcars'
+  filter(mpg > 30)
+head(new_mtcars)
+```
+
+### Example 3: Mutate (Create a new column) that shows TRUE if mpg is over 30, or FALSE otherwise
+
+```{r}
+
+mtcars |>
+  mutate(mpg_over_30 = ifelse(mpg > 30, TRUE, FALSE))
+
+```
+
+### Example 4: Arrange data by horsepower (hp) in descending order
+
+```{r}
+mtcars |> 
+  arrange(desc(hp))
+
+```
+
+### Example 5: Summarize data to get the average (mean) mpg and hp
+
+```{r}
+
+mtcars |>
+  summarize(
+    avg_mpg = mean(mpg),
+    avg_hp = mean(hp)
+    )
+
+```
+
+
+
+# Practice: HDSinRdata
+
+In this practice question, I will demonstrate how to clean and work with datasets from the HDSinRdata package. For more, you can also check this free online textbook: https://alicepaul.github.io/health-data-science-using-r/book/working_data_files.html 
+
+After we call the HDSinRdata package, we will use 'covidcases' and 'mobility' data from the package 
+
+
+```{r install package, load library, read data}
+#install.packages("HDSinRdata")
+library(HDSinRdata) 
+?HDSinRdata # It includes ten datasets used in the chapters and exercises of Paul, Alice (2023) "Health Data Science in R" https://alicepaul.github.io/health-data-science-using-r/.
+
+
+# Use two datasets from the package
+
+data(covidcases) 
+?covidcases # Weekly confirmed Covid-19 cases and deaths at the state and county level in 2020, downloaded from the COVID19 R package. A data frame with 69,530 rows (values) and 5 variables (state, county, week, weely cases, weekly deaths).
+print(covidcases) # Showcase the full dataset
+
+
+data(mobility)
+?mobility #2020 mobility statistics at the state level from Descartes Labs.
+print(mobility)
+
+
+head(mobility) #Displays the first few lines of the dataset.
+head(mobility, n = 5) #Allows you to specify the number of lines to view; here, it shows '5'
+summary(mobility) #Displays median, mean, min/max ... etc
+```
+
+## pre-processing the data (select and summarize)
+
+```{r Understanding and pre-processing the data: use tidyverse - select and summarize}
+# Check the names of the columns
+colnames(covidcases)
+colnames(mobility)
+
+# Display the frequency of unique values in the 'state' column
+table(covidcases$state)
+table(mobility$state)
+
+# Filter rows where the 'state' column is 'Hawaii'
+
+## You could directly filter it:
+covidcases |> 
+  filter(state == "Hawaii")
+
+## Or create a new dataframe with the filtered rows (recommended)
+hawaii_covidcases <- covidcases |>
+  filter(state == "Hawaii")
+print(hawaii_covidcases)
+
+hawaii_mobility <- mobility |>
+  filter(state == "Hawaii")
+print(hawaii_mobility)
+
+
+# Bonus
+nrow(hawaii_covidcases)  # nrow(): Count how many rows there are (in filtered dataset)
+nrow(hawaii_mobility)
+```
+
+
+
+Great job! Next week, we will continue using this built-in package to further explore data interpretation and visualization. The functions we used today are very frequently used when cleaning and wrangling datasets, so make sure to be familiar with them.
