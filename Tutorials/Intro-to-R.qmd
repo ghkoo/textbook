@@ -1,6 +1,6 @@
 ---
 title: "1. Introduction to R"
-author: "Hyun Koo"
+author: "G Hyun Koo"
 ---
 
 ## Your first code example
@@ -73,7 +73,7 @@ print(total_years)
 **Tip: Remember to label your R code chunks**
 
 When writing code in your Rmarkdown, make sure:
-> every ```{r} needs another ```
+> every \`\`\`{r} needs another \`\`\`
 
 If the r is missing after the opening backticks, R will treat the code as plain text and it will not run. This is a very common beginner mistake, especially when getting started.
 :::
