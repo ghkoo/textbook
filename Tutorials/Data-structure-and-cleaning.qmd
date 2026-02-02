@@ -1,101 +1,118 @@
 ---
-title: "Week 3 Data structure and cleaning - Using Tidyverse"
+title: "2. Data structure and cleaning - Using Tidyverse"
 author: "Hyun Koo"
-date: "2026-01-29"
-output: html_document
 ---
 
+## Learning goals
 
-# Working with vectors and data types in R
+By the end of this tutorial, you will be able to:
 
-### 1. Vector
-```{r Vector}
+- Understand vectors, data types, and data frames in R
+- Convert between different data types
+- Use the **tidyverse** to clean and summarize data
+- Apply pipe operators to write readable R code
+
+---
+
+## 1. Working with vectors and data types in R
+
+### 1.1 Vectors
+
+```{r vectors}
 # Vector of strings
-weather <- c("windy", "cloudy", "snowy", "cold", "hot") 
-print(weather)
+weather <- c("windy", "cloudy", "snowy", "cold", "hot")
+weather
 
-length(weather) 
-weather[1] # Access the first item 
-weather[c(1, 4)] # first and fourth item
-sort(weather) #alphabetically or numerically
-weather[1] <- "breezy" #Change "windy" to "breezy"
-class(weather) # Check data type
+length(weather)
+weather[1]           # first element
+weather[c(1, 4)]     # first and fourth elements
+sort(weather)        # alphabetical order
 
-# Vector of numerical values
+weather[1] <- "breezy"
+class(weather)
+
+# Numeric vector
 numbers <- c(7, 1, 3, 5)
-print(numbers)
-sort(numbers) # Sort numbers
+sort(numbers)
 
-# Vector with numerical values in a sequence
+# Sequence
 number_seq <- 1:5
-print(number_seq)
+number_seq
 
-# Vector of logical values
+# Logical vector
 veracity <- c(TRUE, FALSE, TRUE, FALSE)
-print(veracity)
+veracity
 ```
 
-# Data type conversion
-```{r data type conversion}
-x <- 5
-as.character(x)  # converts to character
-as.numeric(x)    # converts to numeric
-as.integer(x)    # converts to integer
-as.logical(x)    # converts to logical
-
-
-temps <- c("30", "25", "40")
-class(temps)
-
-# convert to numeric
-temps_num <- as.numeric(temps)
-class(temps_num)
-
-```
-
-### 2. Dataframe
-```{r data frame}
-
-weather <- data.frame(
-  day = c("Mon", "Tue", "Wed"),
-  temp = c(70, 75, 80),
-  snow = c(TRUE, FALSE, TRUE)
-)
-```
-
-### 3. Object
+### 1.2 Object
 ```{r}
 first_computer <- 1946
 first_moon <- 1969
 ```
 
-In this part of the module, we will use 'mtcars', a built-in dataset in R, to learn how to clean and pre-process data. (It has the data from the 1974 Motor Trend US magazine.)
+### 1.3 Data frames
+```{r}
+weather_df <- data.frame(
+  day = c("Mon", "Tue", "Wed"),
+  temp = c(70, 75, 80),
+  snow = c(TRUE, FALSE, TRUE)
+)
 
-When working with large datasets, filtering variables of interest, summarizing data, arranging, and mutating (such as to create new columns after averaging the scores) can significantly save time and memory usage in your software. We will use the 'tidyverse' package to do so today. 
-
-
-# 1. Install Tidyverse and read mtcars data
-Use head() function to check the first few rows of the dataset, View() to open the dataset
-
-```{r install library, read data}
-#install.packages("tidyverse") # if you already installed it, skip this line 
-library(tidyverse) #Tidyverse will automatically load packages that you’re likely to use in everyday data analyses, such as dplyr, readr, tidyr ... etc
-
-#Load a sample dataset (Motor Trend Car Road Tests from 1974 Motor Trend US magazine)
-data(mtcars)
-?mtcars #To learn more about the dataset
-head(mtcars) #Check the first few rows
-#View(mtcars) #View() function opens the dataset 
+weather_df
 ```
 
 
-# Using pipe operator: |> (base pipe) and %>% 
+### 1.4 Data type conversion
+```{r}
+x <- 5
 
-** Note: 
+as.character(x)  # convert to character
+as.numeric(x)    # convert to numeric
+as.integer(x)    # convert to integer
+as.logical(x)    # convert to logical
+
+temps <- c("30", "25", "40")
+class(temps)
+
+# Convert to numeric
+temps_num <- as.numeric(temps)
+class(temps_num)
+```
+
+
+##2. Introduction to tidyverse and the mtcars dataset
+
+In this part of the module, we will now use mtcars, a built-in dataset from Motor Trend magazine (1974), to learn basic data cleaning and preprocessing.
+
+::: {.callout-note}
+When working with large datasets, filtering variables of interest, summarizing data, arranging, and mutating (such as to create new columns after averaging the scores) can significantly save time and memory usage in your software. We will use the 'tidyverse' package to do so. Tidyverse will automatically load packages that you’re likely to use in everyday data analyses, such as dplyr, readr, tidyr ... etc.
+:::
+
+
+### 2.1 Install Tidyverse and read mtcars data
+Use head() function to check the first few rows of the dataset, View() to open the dataset
+
+```{r install library, read data}
+# install.packages("tidyverse") # Run once if needed
+library(tidyverse)
+
+data(mtcars) # Load a sample dataset
+?mtcars # To learn more about the dataset
+
+head(mtcars) # Check the first few rows
+#View(mtcars) # Opens the dataset
+```
+
+
+### 2.2 Pipe operators: `|>` and `%>%`
+
+::: {.callout-tip} 
 In R version 4.1 and later, the base pipe operator |> works the same way as %>%.
 The difference is that |> is built directly into R, so you do not need to install or load dplyr to use it.
 
-We turned this option on last week through Tools > Global Options, which allows you to use the base pipe in your code.
+You can turn |> on through Tools > Global Options.
+:::
+
 
 ```{r Tip: Using pipe operators}
 # Basic code (without pipe operator) 
@@ -115,19 +132,16 @@ c(1, 2, 3, 4) %>% mean()
 # It works almost the same way as |> 
 # but requires installing and loading packages.
 
-
 ```
 
 Pipe operators are useful for longer code because they reduce repetition, improve readability, simplify debugging and modification, and avoid creating temporary variables (more examples below).
 
 
 
-
-
-# 2. Data cleaning: select, filter, mutate, arrange, summarize functions
+### 2.3 Data cleaning: select, filter, mutate, arrange, summarize functions
 Also try using pipe operators.
 
-### Example 1: Select specific columns (Useful when you have a huge dataset).
+#### Example 1: Select specific columns (Useful when you have a huge dataset).
 
 ```{r Use tidyverse for data cleaning}
 # Three options (with/out pipe operators)
@@ -149,54 +163,49 @@ mtcars %>%
 ```
 
 
-### Example 2: Filter rows where Miles/gallon (mpg) is greater than 30
+#### Example 2: Filter rows where Miles/gallon (mpg) is greater than 30
 
 ```{r}
-
 mtcars |> 
   filter(mpg > 30)
-
 new_mtcars <- mtcars |> # You can also create a new filtered dataframe 'new_mtcars'
   filter(mpg > 30)
 head(new_mtcars)
 ```
 
-### Example 3: Mutate (Create a new column) that shows TRUE if mpg is over 30, or FALSE otherwise
+#### Example 3: Mutate (Create a new column) that shows TRUE if mpg is over 30, or FALSE otherwise
 
 ```{r}
-
 mtcars |>
   mutate(mpg_over_30 = ifelse(mpg > 30, TRUE, FALSE))
-
 ```
 
-### Example 4: Arrange data by horsepower (hp) in descending order
+#### Example 4: Arrange data by horsepower (hp) in descending order
 
 ```{r}
 mtcars |> 
   arrange(desc(hp))
-
 ```
 
-### Example 5: Summarize data to get the average (mean) mpg and hp
+#### Example 5: Summarize data to get the average (mean) mpg and hp
 
 ```{r}
-
 mtcars |>
   summarize(
     avg_mpg = mean(mpg),
     avg_hp = mean(hp)
     )
-
 ```
 
 
 
-# Practice: HDSinRdata
+## Practice: Working with HDSinRdata
 
+::: {.callout-note}
 In this practice question, I will demonstrate how to clean and work with datasets from the HDSinRdata package. For more, you can also check this free online textbook: https://alicepaul.github.io/health-data-science-using-r/book/working_data_files.html 
 
 After we call the HDSinRdata package, we will use 'covidcases' and 'mobility' data from the package 
+:::
 
 
 ```{r install package, load library, read data}
@@ -222,7 +231,7 @@ head(mobility, n = 5) #Allows you to specify the number of lines to view; here, 
 summary(mobility) #Displays median, mean, min/max ... etc
 ```
 
-## pre-processing the data (select and summarize)
+### Pre-processing the data (select and summarize)
 
 ```{r Understanding and pre-processing the data: use tidyverse - select and summarize}
 # Check the names of the columns
@@ -254,6 +263,10 @@ nrow(hawaii_covidcases)  # nrow(): Count how many rows there are (in filtered da
 nrow(hawaii_mobility)
 ```
 
+Summary: You learned how to
+1) Work with vectors, data frames, and objects
+2) Convert between data types
+3) Use pipe operators for readable code
+4) Clean and summarize real-world datasets
 
-
-Great job! Next week, we will continue using this built-in package to further explore data interpretation and visualization. The functions we used today are very frequently used when cleaning and wrangling datasets, so make sure to be familiar with them.
+Next, we will build on these skills to explore data visualization and interpretation.
