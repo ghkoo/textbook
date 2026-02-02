@@ -69,7 +69,7 @@ total_years <- years_since_computer + years_since_moon
 print(total_years)
 ```
 
-::: {.callout-tip}
+::: callout-tip
 **Tip: Remember to label your R code chunks**
 
 When writing code in your Rmarkdown, make sure:
