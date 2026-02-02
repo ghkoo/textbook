@@ -309,10 +309,12 @@ Note
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">say</span>(<span class="st">"catfact"</span>, <span class="st">"cat"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
- ----------------------------------------------------- 
-/ Baking chocolate is the most dangerous chocolate to \
-\ your cat.                                           /
- ----------------------------------------------------- 
+ -------------------------------------------------------- 
+/ People who are allergic to cats are actually allergic  \
+| to cat saliva or to cat dander. If the resident cat is |
+| bathed regularly the allergic people tolerate it       |
+\ better.                                                /
+ -------------------------------------------------------- 
          \
           \
 
@@ -357,34 +359,58 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Task</strong> Calculate how many years have passed since: the first computer (1946) + the first moon landing (1969) Print each result and the total number of years.</p>
+<p><strong>Task</strong></p>
+<p>Calculate how many years have passed since: the first computer (1946) + the first moon landing (1969).</p>
+<p>Print each result and the total number of years.</p>
 </div>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>first_computer <span class="ot">&lt;-</span> <span class="dv">1946</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a>first_moon_landing <span class="ot">&lt;-</span> <span class="dv">1969</span></span>
-<span id="cb10-3"><a href="#cb10-3"></a>current_year <span class="ot">&lt;-</span> <span class="dv">2026</span> <span class="co">#ENTER THE CURRENT YEAR</span></span>
-<span id="cb10-4"><a href="#cb10-4"></a>  </span>
-<span id="cb10-5"><a href="#cb10-5"></a><span class="co"># Calculate years since events</span></span>
-<span id="cb10-6"><a href="#cb10-6"></a>years_since_computer <span class="ot">&lt;-</span> current_year <span class="sc">-</span> first_computer</span>
-<span id="cb10-7"><a href="#cb10-7"></a><span class="fu">print</span>(years_since_computer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-3"><a href="#cb10-3"></a>current_year <span class="ot">&lt;-</span> <span class="dv">2026</span> <span class="co">#ENTER THE CURRENT YEAR</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="calculate-years-since-events" class="level4">
+<h4 class="anchored" data-anchor-id="calculate-years-since-events">Calculate years since events</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>years_since_computer <span class="ot">&lt;-</span> current_year <span class="sc">-</span> first_computer</span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="fu">print</span>(years_since_computer)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 80</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>years_since_moon <span class="ot">&lt;-</span> current_year <span class="sc">-</span> first_moon_landing</span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="fu">print</span>(years_since_moon)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>years_since_moon <span class="ot">&lt;-</span> current_year <span class="sc">-</span> first_moon_landing</span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="fu">print</span>(years_since_moon)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 57</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># Sum of years since events</span></span>
-<span id="cb14-2"><a href="#cb14-2"></a>total_years <span class="ot">&lt;-</span> years_since_computer <span class="sc">+</span> years_since_moon</span>
-<span id="cb14-3"><a href="#cb14-3"></a><span class="fu">print</span>(total_years)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="sum-of-years-since-events" class="level4">
+<h4 class="anchored" data-anchor-id="sum-of-years-since-events">Sum of years since events</h4>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>total_years <span class="ot">&lt;-</span> years_since_computer <span class="sc">+</span> years_since_moon</span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="fu">print</span>(total_years)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 137</code></pre>
 </div>
 </div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Tip: Remember to label your R code chunks</strong></p>
+<p>When writing code in your Rmarkdown, make sure: &gt; every <code>{r} needs another</code></p>
+<p>If the r is missing after the opening backticks, R will treat the code as plain text and it will not run. This is a very common beginner mistake, especially when getting started.</p>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
