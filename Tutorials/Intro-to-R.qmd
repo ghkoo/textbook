@@ -38,14 +38,13 @@ say("catfact", "cat")
 say("It is going to snow this weekend. Stay warm!\n— Dr. Koo", "snowman")
 ```
 
-
-
-
 ## Practice: Years Since Major Historical Events
 
 ::: {.callout-tip}
 **Task**
-Calculate how many years have passed since: the first computer (1946) + the first moon landing (1969)
+
+Calculate how many years have passed since: the first computer (1946) + the first moon landing (1969).
+
 Print each result and the total number of years.
 :::
 
@@ -53,17 +52,28 @@ Print each result and the total number of years.
 first_computer <- 1946
 first_moon_landing <- 1969
 current_year <- 2026 #ENTER THE CURRENT YEAR
-  
-# Calculate years since events
+```
+
+#### Calculate years since events
+```{r}
 years_since_computer <- current_year - first_computer
 print(years_since_computer)
 
 years_since_moon <- current_year - first_moon_landing
 print(years_since_moon)
-
-# Sum of years since events
-total_years <- years_since_computer + years_since_moon
-print(total_years)
-
 ```
 
+#### Sum of years since events
+```{r}
+total_years <- years_since_computer + years_since_moon
+print(total_years)
+```
+
+::: {.callout-tip}
+**Tip: Remember to label your R code chunks**
+
+When writing code in your Rmarkdown, make sure:
+> every ```{r} needs another ```
+
+If the r is missing after the opening backticks, R will treat the code as plain text and it will not run. This is a very common beginner mistake, especially when getting started.
+:::
