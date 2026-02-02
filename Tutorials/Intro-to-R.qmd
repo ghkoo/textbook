@@ -12,22 +12,24 @@ The **cowsay** package displays messages using ASCII art animals.
 This makes console output more fun and engaging.
 :::
 
-```{r install-cowsay, message=FALSE, warning=FALSE}
-#install.packages("cowsay")  # installs the package from CRAN onto your computer
-library(cowsay) # loads the package so you can use its functions (once you install a package, you do not need to reinstall it again. Next time, just use library().)
-say("Hello world!")
-say("We are so cool.\n --Anonymous",
-    by = "cow")
-say("I'm EGGS-hausted!", "chicken")
-say("catfact", "cat")
-say("It is going to snow this weekend. Stay warm!", "snowman")
+Install the package from CRAN onto your computer and load the package (once you install a package, you do not need to re-install it again. Next time, just use library() without install.packages().
 
-?say
+```{r install-cowsay, message=FALSE, warning=FALSE}
+#install.packages("cowsay")  
+library(cowsay)
+say("Hello world!")
+say("I'm EGGS-hausted!.\n --chicken",
+    by = "chicken")
+say("catfact", "cat")
+say("It is going to snow this weekend. Stay warm!\n— Dr. Koo", "snowman")
 ```
 
 ::: {.callout-tip}
 Tip: If you type ? followed by a function name, the Help window will open on the right and explain what the function does
 :::
+```{r}
+?say
+```
 
 ::: {.callout-note}
 Try different animals! If you enter an animal name that is not supported, R will return an error such as: Error: unknown animal. The message will also display a list of supported animals; for example frog, ghost, pumpkin, dragon, bat, owl, duck, yoda, alligator.
