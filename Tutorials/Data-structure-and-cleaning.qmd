@@ -87,6 +87,8 @@ In this part of the module, we will now use mtcars, a built-in dataset from Moto
 When working with large datasets, filtering variables of interest, summarizing data, arranging, and mutating (such as to create new columns after averaging the scores) can significantly save time and memory usage in your software. We will use the 'tidyverse' package to do so. Tidyverse will automatically load packages that you’re likely to use in everyday data analyses, such as dplyr, readr, tidyr ... etc.
 :::
 
+---
+
 # 2. Data cleaning and summarizing
 ### 2.1 Take a first look at the data
 Use head() function to check the first few rows of the dataset, View() to open the dataset
@@ -270,14 +272,18 @@ nrow(hawaii_covidcases)
 nrow(hawaii_mobility)
 ```
 
-#### Summary: You learned how to
+---
 
-1) Work with vectors, data frames, and objects
+## Summary: 
 
-2) Convert between data types
+You learned how to
 
-3) Use pipe operators for readable code
+- Work with vectors, data frames, and objects
 
-4) Clean and summarize real-world datasets
+- Convert between data types
+
+- Use pipe operators for readable code
+
+- Clean and summarize real-world datasets
 
 Next, we will build on these skills to explore data visualization and interpretation.

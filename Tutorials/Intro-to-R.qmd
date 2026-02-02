@@ -18,7 +18,7 @@ Install the package from CRAN onto your computer and load the package (once you 
 #install.packages("cowsay")  
 library(cowsay)
 say("Hello world!")
-say("I'm EGGS-hausted!.\n --chicken",
+say("I'm EGGS-hausted!.\n - Fluffy chicken",
     by = "chicken")
 ```
 
@@ -35,7 +35,8 @@ Try different animals! If you enter an animal name that is not supported, R will
 
 ```{r}
 say("catfact", "cat")
-say("It is going to snow this weekend. Stay warm!\n— Dr. Koo", "snowman")
+say("It is going to snow this weekend. Stay warm! 
+    — Dr. Koo", "snowman")
 ```
 
 ## Practice: Years Since Major Historical Events
@@ -43,9 +44,9 @@ say("It is going to snow this weekend. Stay warm!\n— Dr. Koo", "snowman")
 ::: {.callout-tip}
 **Task**
 
-Calculate how many years have passed since: the first computer (1946) + the first moon landing (1969).
+1. Calculate how many years have passed since: the first computer (1946) + the first moon landing (1969).
 
-Print each result and the total number of years.
+2. Print each result and the total number of years.
 :::
 
 ```{r How to code - Practice Question and Answer}
