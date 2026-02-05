@@ -17,6 +17,7 @@ website:
         - Tutorials/index.qmd
         - Tutorials/Intro-to-R.qmd
         - Tutorials/Data-structure-and-cleaning.qmd
+	- Tutorials/Data access.qmd
 
 format:
   html:
