@@ -40,32 +40,11 @@
     ]
   },
   {
-    "objectID": "summary.html",
-    "href": "summary.html",
-    "title": "Summary",
-    "section": "",
-    "text": "Summary\nIn summary, this book has no content whatsoever."
-  },
-  {
-    "objectID": "intro.html",
-    "href": "intro.html",
-    "title": "Introduction",
-    "section": "",
-    "text": "Introduction\nThis is a book created from markdown and executable code.\nSee @knuth84 for additional discussion of literate programming."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Learning Computational Social Science with R",
-    "section": "",
-    "text": "About This Textbook\nThis textbook introduces practical and beginner-friendly computational approaches to social science research. It consists of hands-on tutorials designed to help you work with real-world data, formulate meaningful research questions, and explore social phenomena using computational methods.\nThe course (CCMS787-01) emphasizes learning by doing. You will collect, clean, analyze, and visualize data using R, while engaging with conceptual foundations and ethical considerations that guide responsible data-driven research.\nComputational methods are powerful, but they are not neutral. Throughout the tutorials, we will think critically about what data represent, what they exclude, and how analytical choices shape conclusions.\nBy the end of the tutorials, you should feel confident designing data-driven research and continuing to learn new methods independently. You will likely also find yourself asking better questions. That part is intentional.\n\n“Finding the right question is often more important than finding the answer.”\n- John Tukey\n\n\n\nAbout the Author\nI am Gyo “Hyun” Koo, a researcher and educator focused on how computational tools can help us understand the impact of digital platforms on public sociopolitical behaviors. My approach emphasizes learning by doing and the ethical use of diverse datasets. To learn more about my research and teaching, visit my personal website\n\n\n\n\n\n\nTip\n\n\n\nHow to use this site\n\nRead tutorials in order\nCopy and run code in RStudio\nPractice questions with examples\nCCMS787-01 students: Ask questions when something feels unclear"
-  },
-  {
     "objectID": "Tutorials/Intro-to-R.html",
     "href": "Tutorials/Intro-to-R.html",
     "title": "1. Introduction to R",
     "section": "",
-    "text": "As a warm-up, we begin with a cowsay package to run our initial codes.\n\n\n\n\n\n\nNote\n\n\n\nThe cowsay package displays messages using ASCII art animals. This makes console output more fun and engaging.\n\n\nInstall the package from CRAN onto your computer and load the package (once you install a package, you do not need to re-install it again. Next time, just use library() without install.packages().\n\n#install.packages(\"cowsay\")  \nlibrary(cowsay)\nsay(\"Hello world!\")\n\n\n -------------- \n&lt; Hello world! &gt;\n -------------- \n      \\\n       \\\n\n        ^__^ \n        (oo)\\ ________ \n        (__)\\         )\\ /\\ \n             ||------w|\n             ||      ||\n\nsay(\"I'm EGGS-hausted!.\\n - Fluffy chicken\",\n    by = \"chicken\")\n\n\n -------------------------------------- \n&lt; I'm EGGS-hausted!.  - Fluffy chicken &gt;\n -------------------------------------- \n      \\\n       \\\n         _\n       _/ }\n      `&gt;' \\\n      `|   \\\n       |   /'-.     .-.\n        \\'     ';`--' .'\n         \\'.    `'-./\n          '.`-..-;`\n            `;-..'\n            _| _|\n            /` /` [nosig]\n \n\n\n\n\n\n\n\n\nTip\n\n\n\nTip: If you type ? followed by a function name, the Help window will open on the right and explain what the function does\n\n\n\n?say\n\n\n\n\n\n\n\nNote\n\n\n\nTry different animals! If you enter an animal name that is not supported, R will return an error such as: Error: unknown animal. The message will also display a list of supported animals; for example frog, ghost, pumpkin, dragon, bat, owl, duck, yoda, alligator.\n\n\n\nsay(\"catfact\", \"cat\")\n\n\n ------------------------------------------------------ \n/ Cats spend nearly 1/3 of their waking hours cleaning \\\n\\ themselves.                                          /\n ------------------------------------------------------ \n         \\\n          \\\n\n            |\\___/|\n          ==) ^Y^ (==\n            \\  ^  /\n             )=*=(\n            /     \\\n            |     |\n           /| | | |\\\n           \\| | |_|/\\\n      jgs  //_// ___/\n               \\_)\n  \n\nsay(\"It is going to snow this weekend. Stay warm! \n    — Dr. Koo\", \"snowman\")\n\n\n --------------------------------------------------------- \n&lt;It is going to snow this weekend. Stay warm!  — Dr. Koo&gt;\n --------------------------------------------------------- \n  \\\n   \\\n\n     _[_]_\n      (\")\n  &gt;--( : )--&lt;\n    (__:__) [nosig]",
+    "text": "As a warm-up, we begin with a cowsay package to run our initial codes.\n\n\n\n\n\n\nNote\n\n\n\nThe cowsay package displays messages using ASCII art animals. This makes console output more fun and engaging.\n\n\nInstall the package from CRAN onto your computer and load the package (once you install a package, you do not need to re-install it again. Next time, just use library() without install.packages().\n\n#install.packages(\"cowsay\")  \nlibrary(cowsay)\nsay(\"Hello world!\")\n\n\n -------------- \n&lt; Hello world! &gt;\n -------------- \n      \\\n       \\\n\n        ^__^ \n        (oo)\\ ________ \n        (__)\\         )\\ /\\ \n             ||------w|\n             ||      ||\n\nsay(\"I'm EGGS-hausted!.\\n - Fluffy chicken\",\n    by = \"chicken\")\n\n\n -------------------------------------- \n&lt; I'm EGGS-hausted!.  - Fluffy chicken &gt;\n -------------------------------------- \n      \\\n       \\\n         _\n       _/ }\n      `&gt;' \\\n      `|   \\\n       |   /'-.     .-.\n        \\'     ';`--' .'\n         \\'.    `'-./\n          '.`-..-;`\n            `;-..'\n            _| _|\n            /` /` [nosig]\n \n\n\n\n\n\n\n\n\nTip\n\n\n\nTip: If you type ? followed by a function name, the Help window will open on the right and explain what the function does\n\n\n\n?say\n\n\n\n\n\n\n\nNote\n\n\n\nTry different animals! If you enter an animal name that is not supported, R will return an error such as: Error: unknown animal. The message will also display a list of supported animals; for example frog, ghost, pumpkin, dragon, bat, owl, duck, yoda, alligator.\n\n\n\nsay(\"catfact\", \"cat\")\n\n\n ------------------------------------------------ \n&lt; Cats can jump up to 7 times their tail length. &gt;\n ------------------------------------------------ \n         \\\n          \\\n\n            |\\___/|\n          ==) ^Y^ (==\n            \\  ^  /\n             )=*=(\n            /     \\\n            |     |\n           /| | | |\\\n           \\| | |_|/\\\n      jgs  //_// ___/\n               \\_)\n  \n\nsay(\"It is going to snow this weekend. Stay warm! \n    — Dr. Koo\", \"snowman\")\n\n\n --------------------------------------------------------- \n&lt;It is going to snow this weekend. Stay warm!  — Dr. Koo&gt;\n --------------------------------------------------------- \n  \\\n   \\\n\n     _[_]_\n      (\")\n  &gt;--( : )--&lt;\n    (__:__) [nosig]",
     "crumbs": [
       "Tutorials",
       "1. Introduction to R"
@@ -76,7 +55,7 @@
     "href": "Tutorials/Intro-to-R.html#your-first-code-example",
     "title": "1. Introduction to R",
     "section": "",
-    "text": "As a warm-up, we begin with a cowsay package to run our initial codes.\n\n\n\n\n\n\nNote\n\n\n\nThe cowsay package displays messages using ASCII art animals. This makes console output more fun and engaging.\n\n\nInstall the package from CRAN onto your computer and load the package (once you install a package, you do not need to re-install it again. Next time, just use library() without install.packages().\n\n#install.packages(\"cowsay\")  \nlibrary(cowsay)\nsay(\"Hello world!\")\n\n\n -------------- \n&lt; Hello world! &gt;\n -------------- \n      \\\n       \\\n\n        ^__^ \n        (oo)\\ ________ \n        (__)\\         )\\ /\\ \n             ||------w|\n             ||      ||\n\nsay(\"I'm EGGS-hausted!.\\n - Fluffy chicken\",\n    by = \"chicken\")\n\n\n -------------------------------------- \n&lt; I'm EGGS-hausted!.  - Fluffy chicken &gt;\n -------------------------------------- \n      \\\n       \\\n         _\n       _/ }\n      `&gt;' \\\n      `|   \\\n       |   /'-.     .-.\n        \\'     ';`--' .'\n         \\'.    `'-./\n          '.`-..-;`\n            `;-..'\n            _| _|\n            /` /` [nosig]\n \n\n\n\n\n\n\n\n\nTip\n\n\n\nTip: If you type ? followed by a function name, the Help window will open on the right and explain what the function does\n\n\n\n?say\n\n\n\n\n\n\n\nNote\n\n\n\nTry different animals! If you enter an animal name that is not supported, R will return an error such as: Error: unknown animal. The message will also display a list of supported animals; for example frog, ghost, pumpkin, dragon, bat, owl, duck, yoda, alligator.\n\n\n\nsay(\"catfact\", \"cat\")\n\n\n ------------------------------------------------------ \n/ Cats spend nearly 1/3 of their waking hours cleaning \\\n\\ themselves.                                          /\n ------------------------------------------------------ \n         \\\n          \\\n\n            |\\___/|\n          ==) ^Y^ (==\n            \\  ^  /\n             )=*=(\n            /     \\\n            |     |\n           /| | | |\\\n           \\| | |_|/\\\n      jgs  //_// ___/\n               \\_)\n  \n\nsay(\"It is going to snow this weekend. Stay warm! \n    — Dr. Koo\", \"snowman\")\n\n\n --------------------------------------------------------- \n&lt;It is going to snow this weekend. Stay warm!  — Dr. Koo&gt;\n --------------------------------------------------------- \n  \\\n   \\\n\n     _[_]_\n      (\")\n  &gt;--( : )--&lt;\n    (__:__) [nosig]",
+    "text": "As a warm-up, we begin with a cowsay package to run our initial codes.\n\n\n\n\n\n\nNote\n\n\n\nThe cowsay package displays messages using ASCII art animals. This makes console output more fun and engaging.\n\n\nInstall the package from CRAN onto your computer and load the package (once you install a package, you do not need to re-install it again. Next time, just use library() without install.packages().\n\n#install.packages(\"cowsay\")  \nlibrary(cowsay)\nsay(\"Hello world!\")\n\n\n -------------- \n&lt; Hello world! &gt;\n -------------- \n      \\\n       \\\n\n        ^__^ \n        (oo)\\ ________ \n        (__)\\         )\\ /\\ \n             ||------w|\n             ||      ||\n\nsay(\"I'm EGGS-hausted!.\\n - Fluffy chicken\",\n    by = \"chicken\")\n\n\n -------------------------------------- \n&lt; I'm EGGS-hausted!.  - Fluffy chicken &gt;\n -------------------------------------- \n      \\\n       \\\n         _\n       _/ }\n      `&gt;' \\\n      `|   \\\n       |   /'-.     .-.\n        \\'     ';`--' .'\n         \\'.    `'-./\n          '.`-..-;`\n            `;-..'\n            _| _|\n            /` /` [nosig]\n \n\n\n\n\n\n\n\n\nTip\n\n\n\nTip: If you type ? followed by a function name, the Help window will open on the right and explain what the function does\n\n\n\n?say\n\n\n\n\n\n\n\nNote\n\n\n\nTry different animals! If you enter an animal name that is not supported, R will return an error such as: Error: unknown animal. The message will also display a list of supported animals; for example frog, ghost, pumpkin, dragon, bat, owl, duck, yoda, alligator.\n\n\n\nsay(\"catfact\", \"cat\")\n\n\n ------------------------------------------------ \n&lt; Cats can jump up to 7 times their tail length. &gt;\n ------------------------------------------------ \n         \\\n          \\\n\n            |\\___/|\n          ==) ^Y^ (==\n            \\  ^  /\n             )=*=(\n            /     \\\n            |     |\n           /| | | |\\\n           \\| | |_|/\\\n      jgs  //_// ___/\n               \\_)\n  \n\nsay(\"It is going to snow this weekend. Stay warm! \n    — Dr. Koo\", \"snowman\")\n\n\n --------------------------------------------------------- \n&lt;It is going to snow this weekend. Stay warm!  — Dr. Koo&gt;\n --------------------------------------------------------- \n  \\\n   \\\n\n     _[_]_\n      (\")\n  &gt;--( : )--&lt;\n    (__:__) [nosig]",
     "crumbs": [
       "Tutorials",
       "1. Introduction to R"
@@ -92,6 +71,118 @@
       "Tutorials",
       "1. Introduction to R"
     ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Learning Computational Social Science with R",
+    "section": "",
+    "text": "About This Textbook\nThis textbook introduces practical and beginner-friendly computational approaches to social science research. It consists of hands-on tutorials designed to help you work with real-world data, formulate meaningful research questions, and explore social phenomena using computational methods.\nThe course (CCMS787-01) emphasizes learning by doing. You will collect, clean, analyze, and visualize data using R, while engaging with conceptual foundations and ethical considerations that guide responsible data-driven research.\nComputational methods are powerful, but they are not neutral. Throughout the tutorials, we will think critically about what data represent, what they exclude, and how analytical choices shape conclusions.\nBy the end of the tutorials, you should feel confident designing data-driven research and continuing to learn new methods independently. You will likely also find yourself asking better questions. That part is intentional.\n\n“Finding the right question is often more important than finding the answer.”\n- John Tukey\n\n\n\nAbout the Author\nI am Gyo “Hyun” Koo, a researcher and educator focused on how computational tools can help us understand the impact of digital platforms on public sociopolitical behaviors. My approach emphasizes learning by doing and the ethical use of diverse datasets. To learn more about my research and teaching, visit my personal website\n\n\n\n\n\n\nTip\n\n\n\nHow to use this site\n\nRead tutorials in order\nCopy and run code in RStudio\nPractice questions with examples\nCCMS787-01 students: Ask questions when something feels unclear"
+  },
+  {
+    "objectID": "intro.html",
+    "href": "intro.html",
+    "title": "Introduction",
+    "section": "",
+    "text": "Introduction\nThis is a book created from markdown and executable code.\nSee @knuth84 for additional discussion of literate programming."
+  },
+  {
+    "objectID": "summary.html",
+    "href": "summary.html",
+    "title": "Summary",
+    "section": "",
+    "text": "Summary\nIn summary, this book has no content whatsoever."
+  },
+  {
+    "objectID": "Tutorials/Data access.html",
+    "href": "Tutorials/Data access.html",
+    "title": "4. Data access: Social media API",
+    "section": "",
+    "text": "By the end of this tutorial, you will be able to:\n\nExplain how APIs enable researchers to collect data from social media platforms\nRetrieve Reddit data using RedditExtractoR, including posts, threads, and comments\nAuthenticate and collect data from the YouTube API using the tuber package\nFilter and organize retrieved data by keyword, channel, and time frame\nSave and manage collected data for later cleaning and analysis\nAutomating tasks in R: For() loops and apply() functions"
+  },
+  {
+    "objectID": "Tutorials/Data access.html#learning-goals",
+    "href": "Tutorials/Data access.html#learning-goals",
+    "title": "4. Data access: Social media API",
+    "section": "",
+    "text": "By the end of this tutorial, you will be able to:\n\nExplain how APIs enable researchers to collect data from social media platforms\nRetrieve Reddit data using RedditExtractoR, including posts, threads, and comments\nAuthenticate and collect data from the YouTube API using the tuber package\nFilter and organize retrieved data by keyword, channel, and time frame\nSave and manage collected data for later cleaning and analysis\nAutomating tasks in R: For() loops and apply() functions"
+  },
+  {
+    "objectID": "Tutorials/Data access.html#using-redditextractor-wrapper-for-the-reddit-api",
+    "href": "Tutorials/Data access.html#using-redditextractor-wrapper-for-the-reddit-api",
+    "title": "4. Data access: Social media API",
+    "section": "1.1 Using RedditExtractoR (Wrapper for the Reddit API)",
+    "text": "1.1 Using RedditExtractoR (Wrapper for the Reddit API)\nThe RedditExtractoR package allows collection of posts, comments, and metadata from Reddit.\nCRAN documentation:\nhttps://cran.r-project.org/web/packages/RedditExtractoR/RedditExtractoR.pdf\nImportant limitation:\nMost queries return roughly up to 1,000 posts per subreddit or search. This works best for recent or popular content rather than full historical archives.\n\n# install.packages(\"RedditExtractoR\")\nlibrary(RedditExtractoR)\n\n# View available functions\nls(\"package:RedditExtractoR\")\n\n\nStep 1: Find Relevant Subreddits\n\nsubreddits &lt;- find_subreddits(\"washingtondc\")\nhead(subreddits)\n\nThis returns a data frame with subreddit names, descriptions, and subscriber counts.\n\n\nStep 2: Retrieve Thread URLs\n\nthread_urls &lt;- find_thread_urls(\n  subreddit = \"washingtondc\",\n  sort_by = \"top\",\n  period = \"week\"\n)\n\nhead(thread_urls)\nnrow(thread_urls)\n\nSearch by keyword:\n\nweekly_dc_snow &lt;- find_thread_urls(\n  keywords = \"snow\",\n  sort_by = \"top\",\n  subreddit = \"washingtondc\",\n  period = \"week\"\n)\n\nhead(weekly_dc_snow)\nnrow(weekly_dc_snow)\n\nwrite.csv(weekly_dc_snow, \"weekly_DCsnow_reddit.csv\", row.names = FALSE)\n\nMultiple keywords:\n\nkeywords &lt;- c(\"snow\", \"blizzard\", \"ice\")\n\nweekly_dc_snow_ver2 &lt;- do.call(\n  rbind,\n  lapply(keywords, function(k) {\n    find_thread_urls(\n      keywords = k,\n      sort_by = \"top\",\n      subreddit = \"washingtondc\",\n      period = \"week\"\n    )\n  })\n)\n\nnrow(weekly_dc_snow_ver2)\n\n\n\nStep 3: Extract Post and Comment Content\n\nthread_content &lt;- get_thread_content(thread_urls$url[1])\nhead(thread_content)\n\nwrite.csv(thread_content, \"DC_thread_content.csv\", row.names = FALSE)\n\n\n\nStep 4: Retrieve Data from a Specific User\n\nuser_content &lt;- get_user_content(\"enterusernamehere\")\nhead(user_content)"
+  },
+  {
+    "objectID": "Tutorials/Data access.html#filtering-by-date",
+    "href": "Tutorials/Data access.html#filtering-by-date",
+    "title": "4. Data access: Social media API",
+    "section": "Filtering by Date",
+    "text": "Filtering by Date\n\nlibrary(lubridate)\nlibrary(dplyr)\n\nthread_urls$date &lt;- as_datetime(thread_urls$timestamp)\n\nfiltered_threads &lt;- thread_urls %&gt;%\n  filter(date &gt;= as_datetime(\"2024-03-01\") &\n         date &lt;= as_datetime(\"2024-03-10\"))"
+  },
+  {
+    "objectID": "Tutorials/Data access.html#using-the-reddit-api-directly",
+    "href": "Tutorials/Data access.html#using-the-reddit-api-directly",
+    "title": "4. Data access: Social media API",
+    "section": "1.2 Using the Reddit API Directly",
+    "text": "1.2 Using the Reddit API Directly\nFor more control, use Reddit’s official API.\nYou must create an app and authenticate using:\n\nclient ID\n\nclient secret\n\nusername and password\n\nDocumentation:\nhttps://support.reddithelp.com/hc/en-us/articles/16160319875092-Reddit-Data-API-Wiki\nRate limit: ~60 requests per minute for personal use.\nSteps:\n\nGo to http://reddit.com/prefs/apps\n\nClick “Create App”\n\nSelect type: Script\n\nRedirect URI: http://localhost:1410\n\nSave client ID and client secret"
+  },
+  {
+    "objectID": "Tutorials/Data access.html#install-and-authenticate",
+    "href": "Tutorials/Data access.html#install-and-authenticate",
+    "title": "4. Data access: Social media API",
+    "section": "Install and Authenticate",
+    "text": "Install and Authenticate\n\nlibrary(devtools)\ndevtools::install_github(\"soodoku/tuber\", build_vignettes = TRUE)\n\nlibrary(tuber)\noptions(scipen = 999)\n\nclient_ID &lt;- \"YOUR_CLIENT_ID\"\nclient_secret &lt;- \"YOUR_CLIENT_SECRET\"\n\nyt_oauth(client_ID, client_secret, token = \"\")\n\nAfter authentication, return to R when prompted."
+  },
+  {
+    "objectID": "Tutorials/Data access.html#retrieve-channel-information",
+    "href": "Tutorials/Data access.html#retrieve-channel-information",
+    "title": "4. Data access: Social media API",
+    "section": "Retrieve Channel Information",
+    "text": "Retrieve Channel Information\n\nchannel_resources &lt;- get_channel_stats(\n  channel_id = \"UCBi2mrWuNuyYy4gbM6fU18Q\"\n) |&gt; as.data.frame()\n\nchannel_resources\n\nTo find a channel ID:\nYouTube → Channel → About → Share → Copy channel ID"
+  },
+  {
+    "objectID": "Tutorials/Data access.html#search-videos-by-keyword-and-date",
+    "href": "Tutorials/Data access.html#search-videos-by-keyword-and-date",
+    "title": "4. Data access: Social media API",
+    "section": "Search Videos by Keyword and Date",
+    "text": "Search Videos by Keyword and Date\n\nprotest_abcnews &lt;- yt_search(\n  \"protest\",\n  channel_id = \"UCBi2mrWuNuyYy4gbM6fU18Q\",\n  published_after = \"2024-12-01T00:00:00Z\",\n  published_before = \"2025-02-01T00:00:00Z\",\n  max_results = 10\n)\n\nnrow(protest_abcnews)\nhead(protest_abcnews)\n\nwrite.csv(protest_abcnews, \"protest_abcnews.csv\", row.names = FALSE)"
+  },
+  {
+    "objectID": "Tutorials/Data access.html#retrieve-video-details-and-comments",
+    "href": "Tutorials/Data access.html#retrieve-video-details-and-comments",
+    "title": "4. Data access: Social media API",
+    "section": "Retrieve Video Details and Comments",
+    "text": "Retrieve Video Details and Comments\n\ndetails &lt;- get_video_details(video_id = \"Yvb6ko7ZWaI\") |&gt; as.data.frame()\nstats &lt;- get_stats(video_id = \"Yvb6ko7ZWaI\") |&gt; as.data.frame()\n\nABC_comments &lt;- get_comment_threads(\n  filter = c(video_id = \"Yvb6ko7ZWaI\"),\n  max_results = 20\n)\n\nhead(ABC_comments)\n\nOptional table display:\n\nlibrary(knitr)\nkable(head(ABC_comments, 10))"
+  },
+  {
+    "objectID": "Tutorials/Data access.html#retrieve-captions",
+    "href": "Tutorials/Data access.html#retrieve-captions",
+    "title": "4. Data access: Social media API",
+    "section": "Retrieve Captions",
+    "text": "Retrieve Captions\n\n# remotes::install_github(\"jooyoungseo/youtubecaption\")\nlibrary(youtubecaption)\n\nurl &lt;- \"https://www.youtube.com/watch?v=Yvb6ko7ZWaI\"\ncaptions &lt;- get_caption(url)\n\nhead(captions)"
+  },
+  {
+    "objectID": "Tutorials/Data access.html#lapply-function",
+    "href": "Tutorials/Data access.html#lapply-function",
+    "title": "4. Data access: Social media API",
+    "section": "lapply() Function",
+    "text": "lapply() Function\nApplies a function to each element of a vector or list.\n\nnumbers &lt;- c(4, 9, 16)\nlapply(numbers, sqrt)\n\n[[1]]\n[1] 2\n\n[[2]]\n[1] 3\n\n[[3]]\n[1] 4\n\nwords &lt;- c(\"snow\", \"rain\", \"sun\")\nlapply(words, toupper)\n\n[[1]]\n[1] \"SNOW\"\n\n[[2]]\n[1] \"RAIN\"\n\n[[3]]\n[1] \"SUN\""
+  },
+  {
+    "objectID": "Tutorials/Data access.html#looping-over-reddit-threads",
+    "href": "Tutorials/Data access.html#looping-over-reddit-threads",
+    "title": "4. Data access: Social media API",
+    "section": "Looping Over Reddit Threads",
+    "text": "Looping Over Reddit Threads\n\nthreads &lt;- find_thread_urls(\n  subreddit = \"washingtondc\",\n  sort_by = \"top\",\n  period = \"week\"\n)\n\nurls &lt;- threads$url[1:3]\n\nthread_contents &lt;- lapply(urls, function(u) {\n  get_thread_content(u)\n})\n\nthread_contents[[1]]\n\nUsing a for loop:\n\nthread_contents &lt;- list()\n\nfor (i in 1:3) {\n  thread_contents[[i]] &lt;- get_thread_content(threads$url[i])\n}"
+  },
+  {
+    "objectID": "Tutorials/Data access.html#summary",
+    "href": "Tutorials/Data access.html#summary",
+    "title": "4. Data access: Social media API",
+    "section": "Summary:",
+    "text": "Summary:\nThis module introduced practical techniques for collecting digital data directly from online platforms. Because APIs and platform policies change frequently, always verify current documentation before starting a project."
   },
   {
     "objectID": "Tutorials/index.html",
