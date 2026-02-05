@@ -1,0 +1,344 @@
+---
+title: "4. Data access: Social media API"
+author: "G.H. Koo"
+---
+
+## Learning goals
+
+By the end of this tutorial, you will be able to:
+
+- Explain how APIs enable researchers to collect data from social media platforms
+- Retrieve Reddit data using RedditExtractoR, including posts, threads, and comments
+- Authenticate and collect data from the YouTube API using the tuber package
+- Filter and organize retrieved data by keyword, channel, and time frame
+- Save and manage collected data for later cleaning and analysis
+- Automating tasks in R: For() loops and apply() functions
+
+---
+
+# Social Media Data Collection
+
+**Disclaimer**  
+Access to social media APIs can change at any time depending on platform policies, and specific datasets may not remain available. Researchers should understand how APIs function so they do not rely on a single platform and can adapt to new data sources. Always review current platform policies and documentation before collecting data.
+
+This module demonstrates how to use social media APIs to retrieve data in R. APIs allow researchers to communicate with platforms and request structured data. Note that platforms regulate the type and volume of accessible data, and users must follow each platform’s terms of service. This form of data collection requires basic coding skills developed earlier in the semester.
+
+---
+
+# 1. Reddit Data Collection
+
+## 1.1 Using `RedditExtractoR` (Wrapper for the Reddit API)
+
+The **RedditExtractoR** package allows collection of posts, comments, and metadata from Reddit.
+
+CRAN documentation:  
+https://cran.r-project.org/web/packages/RedditExtractoR/RedditExtractoR.pdf  
+
+**Important limitation:**  
+Most queries return roughly up to 1,000 posts per subreddit or search. This works best for recent or popular content rather than full historical archives.
+
+```{r, eval=FALSE}
+# install.packages("RedditExtractoR")
+library(RedditExtractoR)
+
+# View available functions
+ls("package:RedditExtractoR")
+```
+
+### Step 1: Find Relevant Subreddits
+
+```{r, eval=FALSE}
+subreddits <- find_subreddits("washingtondc")
+head(subreddits)
+```
+
+This returns a data frame with subreddit names, descriptions, and subscriber counts.
+
+### Step 2: Retrieve Thread URLs
+
+```{r, eval=FALSE}
+thread_urls <- find_thread_urls(
+  subreddit = "washingtondc",
+  sort_by = "top",
+  period = "week"
+)
+
+head(thread_urls)
+nrow(thread_urls)
+```
+
+Search by keyword:
+
+```{r, eval=FALSE}
+weekly_dc_snow <- find_thread_urls(
+  keywords = "snow",
+  sort_by = "top",
+  subreddit = "washingtondc",
+  period = "week"
+)
+
+head(weekly_dc_snow)
+nrow(weekly_dc_snow)
+
+write.csv(weekly_dc_snow, "weekly_DCsnow_reddit.csv", row.names = FALSE)
+```
+
+Multiple keywords:
+
+```{r, eval=FALSE}
+keywords <- c("snow", "blizzard", "ice")
+
+weekly_dc_snow_ver2 <- do.call(
+  rbind,
+  lapply(keywords, function(k) {
+    find_thread_urls(
+      keywords = k,
+      sort_by = "top",
+      subreddit = "washingtondc",
+      period = "week"
+    )
+  })
+)
+
+nrow(weekly_dc_snow_ver2)
+```
+
+### Step 3: Extract Post and Comment Content
+
+```{r, eval=FALSE}
+thread_content <- get_thread_content(thread_urls$url[1])
+head(thread_content)
+
+write.csv(thread_content, "DC_thread_content.csv", row.names = FALSE)
+```
+
+### Step 4: Retrieve Data from a Specific User
+
+```{r, eval=FALSE}
+user_content <- get_user_content("enterusernamehere")
+head(user_content)
+```
+
+---
+
+## Filtering by Date
+
+```{r, eval=FALSE}
+library(lubridate)
+library(dplyr)
+
+thread_urls$date <- as_datetime(thread_urls$timestamp)
+
+filtered_threads <- thread_urls %>%
+  filter(date >= as_datetime("2024-03-01") &
+         date <= as_datetime("2024-03-10"))
+```
+
+---
+
+## 1.2 Using the Reddit API Directly
+
+For more control, use Reddit’s official API.  
+You must create an app and authenticate using:
+
+- client ID  
+- client secret  
+- username and password  
+
+Documentation:  
+https://support.reddithelp.com/hc/en-us/articles/16160319875092-Reddit-Data-API-Wiki  
+
+**Rate limit:** ~60 requests per minute for personal use.
+
+Steps:
+
+1. Go to http://reddit.com/prefs/apps  
+2. Click “Create App”  
+3. Select type: Script  
+4. Redirect URI: http://localhost:1410  
+5. Save client ID and client secret  
+
+---
+
+# 2. YouTube API
+
+Requirements:
+
+- Google account  
+- API credentials  
+- Daily quota: 10,000 units  
+
+## Install and Authenticate
+
+```{r, eval=FALSE}
+library(devtools)
+devtools::install_github("soodoku/tuber", build_vignettes = TRUE)
+
+library(tuber)
+options(scipen = 999)
+
+client_ID <- "YOUR_CLIENT_ID"
+client_secret <- "YOUR_CLIENT_SECRET"
+
+yt_oauth(client_ID, client_secret, token = "")
+```
+
+After authentication, return to R when prompted.
+
+---
+
+## Retrieve Channel Information
+
+```{r, eval=FALSE}
+channel_resources <- get_channel_stats(
+  channel_id = "UCBi2mrWuNuyYy4gbM6fU18Q"
+) |> as.data.frame()
+
+channel_resources
+```
+
+To find a channel ID:
+
+YouTube → Channel → About → Share → Copy channel ID
+
+---
+
+## Search Videos by Keyword and Date
+
+```{r, eval=FALSE}
+protest_abcnews <- yt_search(
+  "protest",
+  channel_id = "UCBi2mrWuNuyYy4gbM6fU18Q",
+  published_after = "2024-12-01T00:00:00Z",
+  published_before = "2025-02-01T00:00:00Z",
+  max_results = 10
+)
+
+nrow(protest_abcnews)
+head(protest_abcnews)
+
+write.csv(protest_abcnews, "protest_abcnews.csv", row.names = FALSE)
+```
+
+---
+
+## Retrieve Video Details and Comments
+
+```{r, eval=FALSE}
+details <- get_video_details(video_id = "Yvb6ko7ZWaI") |> as.data.frame()
+stats <- get_stats(video_id = "Yvb6ko7ZWaI") |> as.data.frame()
+
+ABC_comments <- get_comment_threads(
+  filter = c(video_id = "Yvb6ko7ZWaI"),
+  max_results = 20
+)
+
+head(ABC_comments)
+```
+
+Optional table display:
+
+```{r, eval=FALSE}
+library(knitr)
+kable(head(ABC_comments, 10))
+```
+
+---
+
+## Retrieve Captions
+
+```{r, eval=FALSE}
+# remotes::install_github("jooyoungseo/youtubecaption")
+library(youtubecaption)
+
+url <- "https://www.youtube.com/watch?v=Yvb6ko7ZWaI"
+captions <- get_caption(url)
+
+head(captions)
+```
+
+---
+
+# 3. Loops in R
+
+A `for()` loop repeats code for each element in a sequence.
+
+```{r}
+for (i in 1:5) {
+  print(paste("Student", i))
+}
+```
+
+Example with text:
+
+```{r}
+seasons <- c("Spring", "Summer", "Fall", "Winter")
+
+for (s in seasons) {
+  print(paste("I love", s))
+}
+```
+
+---
+
+## `lapply()` Function
+
+Applies a function to each element of a vector or list.
+
+```{r}
+numbers <- c(4, 9, 16)
+lapply(numbers, sqrt)
+
+words <- c("snow", "rain", "sun")
+lapply(words, toupper)
+```
+
+---
+
+## Looping Over Reddit Threads
+
+```{r, eval=FALSE}
+threads <- find_thread_urls(
+  subreddit = "washingtondc",
+  sort_by = "top",
+  period = "week"
+)
+
+urls <- threads$url[1:3]
+
+thread_contents <- lapply(urls, function(u) {
+  get_thread_content(u)
+})
+
+thread_contents[[1]]
+```
+
+Using a `for` loop:
+
+```{r, eval=FALSE}
+thread_contents <- list()
+
+for (i in 1:3) {
+  thread_contents[[i]] <- get_thread_content(threads$url[i])
+}
+```
+
+---
+
+# Bonus: Notifications for Long Scripts
+
+```{r, eval=FALSE}
+# install.packages("beepr")
+library(beepr)
+
+beep()
+```
+
+This plays a sound when code finishes running.
+
+
+---
+
+## Summary: 
+
+This module introduced practical techniques for collecting digital data directly from online platforms. Because APIs and platform policies change frequently, always verify current documentation before starting a project.

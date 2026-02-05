@@ -1,6 +1,6 @@
 ---
 title: "1. Introduction to R"
-author: "G Hyun Koo"
+author: "G.H. Koo"
 ---
 
 ## Your first code example

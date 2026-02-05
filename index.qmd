@@ -1,6 +1,6 @@
 ---
 title: "Learning Computational Social Science with R"
-author: "G Hyun Koo"
+author: "G.H. Koo"
 ---
 
 ### About This Textbook

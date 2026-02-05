@@ -1,6 +1,6 @@
 ---
 title: "2. Data structure & cleaning"
-author: "G Hyun Koo"
+author: "G.H. Koo"
 ---
 
 ## Learning goals
