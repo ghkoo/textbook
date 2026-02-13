@@ -336,12 +336,9 @@ After we call the HDSinRdata package, we will use 'covidcases' and 'mobility' da
 :::
 
 
-```{r, eval=FALSE}
+```{r}
 #install.packages("HDSinRdata")
 library(HDSinRdata) 
-?HDSinRdata
-?covidcases
-?mobility
 ```
 
 ```{r}
