@@ -208,7 +208,7 @@ When working with large datasets, filtering variables of interest, summarizing d
 ### 2.1 Take a first look at the data
 Use head() function to check the first few rows of the dataset, View() to open the dataset
 
-```{r, eval=FALSE}
+```{r, echo=FALSE}
 # install.packages("tidyverse") # Run once if needed
 library(tidyverse)
 data(mtcars) # Load a sample dataset
@@ -265,7 +265,7 @@ You are also encouraged to use pipe operators.
 
 Three options (with/without pipe operators):
 1) Without pipe operator
-```{r, eval=FALSE}
+```{r, echo=FALSE}
 select(mtcars, mpg, hp, wt) # Select three columns from the mtcars dataset
 ```
 
@@ -336,12 +336,12 @@ After we call the HDSinRdata package, we will use 'covidcases' and 'mobility' da
 :::
 
 
-```{r}
+```{r, echo=FALSE}
 #install.packages("HDSinRdata")
 library(HDSinRdata) 
 ```
 
-```{r}
+```{r, echo=FALSE}
 data(covidcases) 
 data(mobility)
 ```
@@ -352,7 +352,7 @@ head(mobility)
 ```
 
 Allows you to specify the number of lines to view; here, it shows '5'
-```{r, eval=FALSE}
+```{r, echo=FALSE}
 head(mobility, n = 5) 
 #Displays median, mean, min/max ... etc
 summary(mobility) 
@@ -361,14 +361,14 @@ summary(mobility)
 ### Pre-processing the data (select and summarize)
 
 Check the names of the columns
-```{r Understanding and pre-processing the data: use tidyverse - select and summarize}
+```{r, echo=FALSE}
 colnames(covidcases)
 colnames(mobility)
 ```
 
 
 Display the frequency of unique values in the 'state' column
-```{r, eval=FALSE}
+```{r, echo=FALSE}
 table(covidcases$state)
 table(mobility$state)
 ```
@@ -384,13 +384,13 @@ covidcases |>
 
 Create a new dataframe
 
-```{r}
+```{r, echo=FALSE}
 hawaii_covidcases <- covidcases |>
   filter(state == "Hawaii")
 print(hawaii_covidcases)
 ```
 
-```{r, eval=FALSE}
+```{r, echo=FALSE}
 hawaii_mobility <- mobility |>
   filter(state == "Hawaii")
 print(hawaii_mobility)
