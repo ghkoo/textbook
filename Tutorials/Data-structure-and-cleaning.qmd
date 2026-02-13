@@ -206,14 +206,19 @@ When working with large datasets, filtering variables of interest, summarizing d
 
 # 2. Data cleaning and summarizing
 ### 2.1 Take a first look at the data
-Use head() function to check the first few rows of the dataset, View() to open the dataset
 
-```{r, echo=FALSE}
+```{r, warning=FALSE, message=FALSE}
 # install.packages("tidyverse") # Run once if needed
 library(tidyverse)
 data(mtcars) # Load a sample dataset
 ?mtcars # To learn more about the dataset
-head(mtcars) # Check the first few rows
+```
+
+Check the first few rows: Use head() function to check the first few rows of the dataset, and View() to open the dataset
+
+```{r, eval=FALSE}
+head(mtcars) 
+View(mtcars)
 ```
 
 
@@ -265,13 +270,13 @@ You are also encouraged to use pipe operators.
 
 Three options (with/without pipe operators):
 1) Without pipe operator
-```{r, echo=FALSE}
-select(mtcars, mpg, hp, wt) # Select three columns from the mtcars dataset
+Select three columns from the mtcars dataset
+```{r}
+select(mtcars, mpg, hp, wt) 
 ```
 
+If you want to the first few rows of specific columns:
 ```{r}
-colnames(mtcars)
-# if you want to the first few rows of specific columns:
 head(select(mtcars, mpg, hp, wt)) 
 ```
 
@@ -292,13 +297,15 @@ mtcars %>%
 
 #### Example 2: Filter rows where Miles/gallon (mpg) is greater than 30
 
-```{r}
+```{r, eval=FALSE}
 mtcars |> 
   filter(mpg > 30)
-# You can also create a new filtered dataframe 'new_mtcars'
+```
+
+You can also create a new filtered dataframe 'new_mtcars'
+```{r, eval=FALSE}
 new_mtcars <- mtcars |> 
   filter(mpg > 30)
-head(new_mtcars)
 ```
 
 #### Example 3: Mutate (Create a new column) that shows TRUE if mpg is over 30, or FALSE otherwise
@@ -317,7 +324,7 @@ mtcars |>
 
 #### Example 5: Summarize data to get the average (mean) mpg and hp
 
-```{r}
+```{r, eval=FALSE}
 mtcars |>
   summarize(
     avg_mpg = mean(mpg),
@@ -336,63 +343,65 @@ After we call the HDSinRdata package, we will use 'covidcases' and 'mobility' da
 :::
 
 
-```{r, echo=FALSE}
+```{r, warning=FALSE, message=FALSE}
 #install.packages("HDSinRdata")
 library(HDSinRdata) 
 ```
 
-```{r, echo=FALSE}
+```{r}
 data(covidcases) 
 data(mobility)
 ```
 
 Displays the first few lines of the dataset.
+Or you can specify the number of lines to view; here, it shows '5'
 ```{r, eval=FALSE}
 head(mobility) 
+head(mobility, n = 5) 
 ```
 
-Allows you to specify the number of lines to view; here, it shows '5'
-```{r, echo=FALSE}
-head(mobility, n = 5) 
-#Displays median, mean, min/max ... etc
+Displays median, mean, min/max ... etc
+```{r}
 summary(mobility) 
 ```
 
 ### Pre-processing the data (select and summarize)
 
 Check the names of the columns
-```{r, echo=FALSE}
+```{r, eval=FALSE}
 colnames(covidcases)
 colnames(mobility)
 ```
 
 
 Display the frequency of unique values in the 'state' column
-```{r, echo=FALSE}
+```{r, eval=FALSE}
 table(covidcases$state)
 table(mobility$state)
 ```
 
 Filter rows where the 'state' column is 'Hawaii' You could directly filter it or create a new dataframe with the filtered rows (recommended)
 
-Directly filter
-
+Directly filter:
 ```{r}
 covidcases |> 
   filter(state == "Hawaii")
 ```
 
-Create a new dataframe
-
-```{r, echo=FALSE}
+Create a new dataframe:
+```{r}
 hawaii_covidcases <- covidcases |>
   filter(state == "Hawaii")
+```
+```{r, eval=FALSE}
 print(hawaii_covidcases)
 ```
 
-```{r, echo=FALSE}
+```{r}
 hawaii_mobility <- mobility |>
   filter(state == "Hawaii")
+```
+```{r, eval=FALSE}
 print(hawaii_mobility)
 ```
 
