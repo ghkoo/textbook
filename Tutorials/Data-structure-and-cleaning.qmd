@@ -145,7 +145,7 @@ mode(m)
 
 
 ### 1.6 Data type conversion
-```{r r, eval=FALSE}
+```{r, eval=FALSE}
 x <- 5
 as.character(x)  # convert to character
 as.numeric(x)    # convert to numeric
