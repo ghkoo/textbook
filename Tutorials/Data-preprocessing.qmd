@@ -1,0 +1,219 @@
+---
+title: "3. Data pre-processing and visualization"
+author: "G.H. Koo"
+---
+
+## Learning goals
+
+By the end of this tutorial, you will be able to:
+
+- Inspect and prepare datasets for analysis by checking structure and formats
+- Clean and pre-process data by creating variables and standardizing dates
+- Merge datasets using shared keys such as state and date
+- Create basic visualizations using ggplot2, including line graphs and bar charts
+- Customize plots with titles, labels, and themes
+- Export and save visualizations for reports or presentations
+
+---
+
+In the previous module, we explored data types and why they matter. R does not always import variables in the format you expect. For example, numbers may be read as character strings. When this happens, you must **convert (coerce)** the variable to the correct type before analysis and visualization.
+
+# Data types and coercion
+
+```{r data-types-coercion}
+library(tidyverse)
+library(lubridate)
+library(HDSinRdata)
+library(ggplot2)
+```
+
+# Data management and pre-processing
+
+This week we practice importing, merging, aggregating, and renaming variables using two datasets from the **HDSinRdata** package:
+
+- `covidcases` (weekly COVID cases)
+- `mobility` (daily mobility measures)
+
+Package documentation: https://alicepaul.github.io/health-data-science-using-r/book/working_data_files.html
+
+```{r load-hds-data}
+data(covidcases)
+data(mobility)
+
+head(covidcases)
+head(mobility)
+```
+
+## Why date formats matter
+
+Both datasets include time, but they record it differently. The COVID dataset uses a **week index**, while the mobility dataset uses a **calendar date**. Before merging, we must standardize the time variable.
+
+:::callout-note
+Date parsing is one of the most common sources of errors in data analysis.
+If your merge produces lots of missing values, date formats are often the reason.
+:::
+
+## Pre-processing and merging
+
+```{r preprocess-merge}
+# 1) Ensure mobility$date is a real Date object
+# If mobility$date is already a Date, this will keep it as Date.
+# If it's a character like "2020-04-01", this will parse it correctly.
+mobility <- mobility |>
+  mutate(date = as.Date(date))
+
+# 2) Create a calendar date in covidcases based on the week number
+# Week 1 starts on 2019-12-29
+covidcases <- covidcases |>
+  mutate(date = as.Date("2019-12-29") + weeks(week - 1))
+
+# 3) Merge datasets by state and date
+merged_data <- mobility |>
+  left_join(covidcases, by = c("state", "date"))
+
+glimpse(merged_data)
+```
+
+Alternatively, you can also use right_join(), innter_join(), full_join()... etc: for more, see: https://alicepaul.github.io/health-data-science-using-r/book/merging_data.html
+
+# Data visualization with ggplot2
+
+To make plots more interpretable, we often focus on a subset. Here we compare mobility trends across three states: California, Florida, and Hawaii.
+
+```{r filter-three-states}
+filtered_data <- merged_data |>
+  filter(state %in% c("California", "Florida", "Hawaii"))
+```
+
+## Line graph: trends over time
+You can add a title and label the x- and y-axes to make the plot more informative.
+Of note, m50 represents the median of the max-distance mobility (the distance a typical member of a given population moves in a day).
+```{r line-graph}
+m50trend <- ggplot(filtered_data, aes(x = week, y = m50, color = state)) +
+  geom_line() +
+  labs(
+    title = "Weekly Mobility Trends Across Three States",
+    x = "Week number",
+    y = "m50 (Median max-distance mobility)"
+  )
+
+m50trend
+```
+
+## Saving plots
+By default, ggsave() saves figures at 7 × 7 inches. You can change the width and height to customize the figure size.
+
+```{r save-plot, eval=FALSE}
+ggsave("mobility_line_graph.png", plot = m50trend)
+
+ggsave(
+  "mobility_line_graph_large.png",
+  plot = m50trend,
+  width = 10, height = 8, units = "in",
+  dpi = 300
+)
+```
+
+:::callout-tip
+If `ggsave()` does not save where you expect, check your working directory with `getwd()`.
+:::
+
+## Customizing plot appearance
+You can change the size of texts, colors/thickness/types of the lines etc by using different functions.
+
+### 1. Change the size of texts (increase text size for instane)
+```{r}
+m50trend_1 <- ggplot(filtered_data, aes(x = week, y = m50, color = state)) +
+  geom_line() +
+  labs(title = "Weekly Mobility Trends Across Three States",
+       x = "Week Number",
+       y = "m50 (Median Max-Distance Mobility)") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold"),  # Larger title
+    axis.title.x = element_text(size = 14),  # X-axis label size
+    axis.title.y = element_text(size = 14),  # Y-axis label size
+    legend.text = element_text(size = 12),  # Legend text size
+    legend.title = element_text(size = 14)  # Legend title size
+  )
+
+print(m50trend_1)
+```
+
+### 2. Change line thickness (size)
+```{r}
+m50trend_2 <- ggplot(filtered_data, aes(x = week, y = m50, color = state)) +
+  geom_line(size = 1.5) +  # Increase line thickness
+  labs(title = "Weekly Mobility Trends Across Three States",
+       x = "Week Number",
+       y = "m50 (Median Max-Distance Mobility)") +
+  theme_minimal()
+
+print(m50trend_2)
+
+```
+
+### 3. Change Line Type
+```{r}
+m50trend_3 <- ggplot(filtered_data, aes(x = week, y = m50, color = state, linetype = state)) +
+  geom_line(size = 1.2) +  # Thicker lines
+  labs(title = "Weekly Mobility Trends Across Three States",
+       x = "Week Number",
+       y = "m50 (Median Max-Distance Mobility)") +
+  theme_minimal()
+
+print(m50trend_3)
+
+#4. Assign Colors (scale_color_manual)
+m50trend_4 <- ggplot(filtered_data, aes(x = week, y = m50, color = state)) +
+  geom_line(size = 1.2) +
+  scale_color_manual(values = c("California" = "blue", "Florida" = "green", "Hawaii" = "pink")) +  # name colors here
+  labs(title = "Weekly Mobility Trends Across Three States",
+       x = "Week Number",
+       y = "m50 (Median Max-Distance Mobility)") +
+  theme_minimal()
+
+print(m50trend_4)
+```
+
+# Bar graph: comparing states
+
+A bar chart should usually use **summarized data** (one value per group), not raw daily rows.
+
+```{r bar-graph}
+state_summary <- filtered_data |>
+  group_by(state) |>
+  summarise(mean_m50 = mean(m50, na.rm = TRUE), .groups = "drop")
+
+ggplot(state_summary, aes(x = state, y = mean_m50)) +
+  geom_col() +
+  labs(
+    title = "Average Mobility (m50) Across Three States",
+    x = "State",
+    y = "Mean m50"
+  )
+```
+
+# Interactive plots with plotly
+
+To create interactive plots, use the plotly package. If you have not installed it yet, run install.packages("plotly") first. Interactive plots allow you to hover, zoom, and toggle groups. 
+
+```{r plotly-interactive, eval=FALSE}
+# install.packages("plotly")
+library(plotly)
+
+interactive_plot <- ggplot(filtered_data, aes(x = week, y = m50, color = state)) +
+  geom_line()
+
+ggplotly(interactive_plot)
+```
+
+---
+
+## Summary:
+
+In this chapter, you practiced inspecting datasets, converting variables, and preparing data for analysis by aligning date formats and merging datasets.
+
+You also created visualizations using ggplot2 to examine trends and compare groups. These steps—cleaning, organizing, and visualizing data—are essential for turning raw data into meaningful insights.
+
+In the next chapter, we will build on these skills by moving from data preparation to data analysis and interpretation.

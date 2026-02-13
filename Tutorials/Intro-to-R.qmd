@@ -3,6 +3,67 @@ title: "1. Introduction to R"
 author: "G.H. Koo"
 ---
 
+In this first tutorial, we begin with the core building blocks of R. We will explore data structures in more detail in Chapter 2.
+
+```{r}
+# --------------------------------------------------
+# Creating objects and basic arithmetic
+# --------------------------------------------------
+
+# Store values using the assignment operator <-
+x <- 10
+y <- 5
+
+# Perform basic calculations
+x + y
+x * y
+
+# --------------------------------------------------
+# Creating and exploring a data frame
+# --------------------------------------------------
+
+# Create a simple data frame of cities
+cities <- data.frame(
+  name = c("Washington DC", "Paris", "Seoul"),
+  population = c(693645, 2048472, 9600000)
+)
+
+# View the data frame
+cities
+
+# Check column names
+colnames(cities)
+
+# --------------------------------------------------
+# Accessing data
+# --------------------------------------------------
+
+# Access a column using $
+cities$population
+
+# Access rows and columns using indexing [row, column]
+cities[1, ]          # First row
+cities[, "name"]     # Name column
+
+# --------------------------------------------------
+# Using functions
+# --------------------------------------------------
+
+# Calculate summary statistics
+mean(cities$population)
+sd(cities$population)
+
+# --------------------------------------------------
+# Creating new variables
+# --------------------------------------------------
+
+# Add a new column
+cities$double_population <- cities$population * 2
+
+# View updated data frame
+cities
+```
+
 ## Your first code example
 
 As a warm-up, we begin with a **cowsay** package to run our initial codes.

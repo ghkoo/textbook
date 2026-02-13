@@ -12,7 +12,7 @@ By the end of this tutorial, you will be able to:
 - Authenticate and collect data from the YouTube API using the tuber package
 - Filter and organize retrieved data by keyword, channel, and time frame
 - Save and manage collected data for later cleaning and analysis
-- Automating tasks in R: For() loops and apply() functions
+- Automate tasks in R: For() loops and apply() functions
 
 ---
 
@@ -121,7 +121,7 @@ head(user_content)
 
 ---
 
-## Filtering by Date
+### Filtering by Date
 
 ```{r, eval=FALSE}
 library(lubridate)

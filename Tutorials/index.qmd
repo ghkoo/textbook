@@ -4,3 +4,5 @@ title: "Tutorials"
 
 - [Introduction to R](Intro-to-R.qmd)
 - [Data structure and cleaning](Data-structure-and-cleaning.qmd)
+- [Data pre-processing and visualization](Data-preprocessing.qmd)
+- [Data accss: Social media API](Data-access.qmd)

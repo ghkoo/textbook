@@ -62,7 +62,83 @@ weather_df
 ```
 
 
-### 1.4 Data type conversion
+### 1.4 List: Vectors and lists
+
+```{r vectors-lists}
+# Vector: one data type, stored in a sequence
+numbers <- c(1, 2, 3, 4, 5)
+numbers
+numbers[1:3]
+
+fruits <- c("Apple", "Banana", "Orange")
+fruits[1]
+
+# List: can store multiple objects of different types
+combined <- list(numbers = numbers, fruits = fruits)
+combined
+
+combined[["numbers"]]
+combined[["fruits"]]
+
+combined[["numbers"]][1:3]
+combined[["fruits"]][1]
+```
+
+### 1.5 Matrices: Matrix and data frame
+
+```{r matrices-dataframes}
+# Matrix: one data type, arranged in rows and columns
+a <- matrix(0, nrow = 5, ncol = 5)
+a[1, 1]
+a[, 1]
+a[1, ]
+
+b <- matrix(rnorm(25), nrow = 5, ncol = 5)
+
+# Convert matrix to data frame
+df <- as.data.frame(b)
+df[1, 5]
+
+# Data frame: columns can be different types (each column is one type)
+new_dataset <- mtcars
+new_dataset$wt[1:5]
+
+# Convert a column (example)
+new_dataset$wt <- as.character(new_dataset$wt)
+class(new_dataset$wt)
+str(new_dataset$wt)
+```
+
+:::callout-tip
+Matrices must contain a single data type. If you mix numbers and text, R will coerce everything into one type (often character). Data frames are usually more flexible for real-world datasets.
+:::
+
+### Comparing list, matrix, and data frame
+
+```{r compare-structures}
+# Data frames require columns of equal length
+fruits <- c("Apple", "Banana", "Orange", "Raspberry", "Strawberry")
+numbers <- c(1, 2, 3, 4, 5)
+
+df <- data.frame(numbers = numbers, fruits = fruits)
+df
+
+df[1, ]
+df[, 1]
+df[1:3, ]
+
+# Matrix example: mixing numeric + character coerces to character
+numbers <- c(1, 2, 3)
+fruits  <- c("Apple", "Banana", "Orange")
+
+m <- matrix(c(numbers, fruits), nrow = 3, ncol = 2)
+m
+class(m)
+mode(m)
+```
+
+
+### 1.6 Data type conversion
 ```{r}
 x <- 5
 as.character(x)  # convert to character
@@ -76,8 +152,30 @@ class(temps)
 # Convert to numeric
 temps_num <- as.numeric(temps)
 class(temps_num)
+
+
+# Check the type of an object
+variable <- "2.5"
+class(variable)
+
+# Convert character to numeric
+numeric_variable <- as.numeric(variable)
+class(numeric_variable)
+numeric_variable
+
+# Common coercion functions
+as.numeric(3.2)
+as.character(10)
+as.integer("3")
+
+# Caution: non-numeric text becomes NA
+as.numeric("three")
 ```
 
+:::callout-note
+When coercion produces `NA`, it usually means the original value could not be converted.
+Always check for unexpected `NA` values after converting variables.
+:::
 
 ##2. Introduction to tidyverse and the mtcars dataset
 
@@ -278,7 +376,7 @@ nrow(hawaii_mobility)
 
 You learned how to
 
-- Work with vectors, data frames, and objects
+- Work with vectors, data frames, objects, lists, and matrices
 
 - Convert between data types
 
