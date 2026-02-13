@@ -15,6 +15,28 @@ By the end of this tutorial, you will be able to:
 ---
 
 # 1.Data types in R
+## Key terms: objects and data structures in R
+
+Before working with datasets, it helps to understand a few basic terms used in R.
+
+- **Object**  
+  A general term for anything you create and store in R’s memory. For example, when you assign a value using `<-`, you are creating an object.
+
+- **Vector**  
+  A sequence of values stored in order where all elements are the same type (such as numbers or characters). Vectors are the most basic data structure in R.
+
+- **List**  
+  A container that can store multiple items of different types and lengths. Lists are flexible and can grow as needed. You can access elements by position (e.g., `mylist[[1]]`) or by name (e.g., `mylist$age`).
+
+- **Matrix**  
+  A two-dimensional structure made of rows and columns. All values in a matrix must be the same type, and its size is fixed when created.
+
+- **Data frame**  
+  A table-like structure commonly used for datasets. Each column contains one type of data, columns have names, and different columns can store different types (numeric, character, etc.).
+
+:::callout-note
+These structures form the foundation for organizing and analyzing data in R and will be used throughout the rest of the book.
+:::
 
 ### 1.1 Vectors
 
