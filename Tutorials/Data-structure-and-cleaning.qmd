@@ -171,21 +171,21 @@ class(variable)
 ```
 
 Convert character to numeric
-```{r r, eval=FALSE}
+```{r, eval=FALSE}
 numeric_variable <- as.numeric(variable)
 class(numeric_variable)
 numeric_variable
 ```
 
 Common coercion functions
-```{r r, eval=FALSE}
+```{r, eval=FALSE}
 as.numeric(3.2)
 as.character(10)
 as.integer("3")
 ```
 
 Caution: non-numeric text becomes NA
-```{r r, warning=FALSE}
+```{r, warning=FALSE}
 as.numeric("three")
 ```
 
