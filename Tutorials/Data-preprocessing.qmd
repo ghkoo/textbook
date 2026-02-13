@@ -139,16 +139,23 @@ m50trend_1 <- ggplot(filtered_data,
        y = "m50 (Median Max-Distance Mobility)") +
   theme_minimal() +
   theme(
-    plot.title = element_text(size = 16, face = "bold"),  # Big title
-    axis.title.x = element_text(size = 14),  # X-axis label size
-    axis.title.y = element_text(size = 14),  # Y-axis label size
-    legend.text = element_text(size = 12),  # Legend text size
-    legend.title = element_text(size = 14)  # Legend title size
+    # Bigger title
+    plot.title = element_text(size = 16, face = "bold"),  
+    # X-axis label size
+    axis.title.x = element_text(size = 14),  
+    # Y-axis label size
+    axis.title.y = element_text(size = 14),  
+    # Legend text size
+    legend.text = element_text(size = 12),  
+    # Legend title size
+    legend.title = element_text(size = 14)  
   )
 print(m50trend_1)
 ```
 
 ### 2. Change line thickness
+You can adjust the number after size = to control how thick the line appears in the plot.
+
 ```{r, warning=FALSE}
 m50trend_2 <- ggplot(filtered_data, 
                      aes(x = week, y = m50, color = state)) +
@@ -164,7 +171,8 @@ print(m50trend_2)
 If the figure will be printed in black and white, use different line types such as solid, dashed, or dotted to make each line easier to distinguish.
 
 ```{r, warning=FALSE}
-m50trend_3 <- ggplot(filtered_data, aes(x = week, y = m50, color = state, linetype = state)) +
+m50trend_3 <- ggplot(filtered_data, 
+                     aes(x = week, y = m50, color = state, linetype = state)) +
   geom_line(size = 1.2) +  # Thicker lines
   labs(title = "Weekly Mobility Trends Across Three States",
        x = "Week Number",
@@ -173,13 +181,16 @@ m50trend_3 <- ggplot(filtered_data, aes(x = week, y = m50, color = state, linety
 print(m50trend_3)
 ```
 
-###4. Assign Colors (scale_color_manual)
+### 4. Assign Colors
+You can use the scale_color_manual() function and enter the colors of your choice to customize the plot.
 
 ```{r, warning=FALSE}
 m50trend_4 <- ggplot(filtered_data, 
                      aes(x = week, y = m50, color = state)) +
   geom_line(size = 1.2) +
-  scale_color_manual(values = c("California" = "blue", "Florida" = "green", "Hawaii" = "pink")) +  # name colors here
+  scale_color_manual(values = c("California" = "blue", 
+                                "Florida" = "green", 
+                                "Hawaii" = "pink")) + 
   labs(title = "Weekly Mobility Trends Across Three States",
        x = "Week Number",
        y = "m50 (Median Max-Distance Mobility)") +
@@ -189,12 +200,14 @@ print(m50trend_4)
 
 # Bar graph: comparing states
 
-A bar chart usually use **summarized data** (one value per group), not raw daily rows.
+Example 1. Here we calculate the average mobility for each state and then plot it.
+A bar chart usually use **summarized data** (one value per group), not raw daily rows. First, create a summarized dataset.
 
 ```{r bar-graph}
 state_summary <- filtered_data |>
   group_by(state) |>
-  summarise(mean_m50 = mean(m50, na.rm = TRUE), .groups = "drop")
+  summarise(mean_m50 = mean(m50, na.rm = TRUE), 
+            .groups = "drop")
 ```
 
 ```{r}
@@ -207,11 +220,28 @@ ggplot(state_summary, aes(x = state, y = mean_m50)) +
   )
 ```
 
+Example 2. If we want to count how many observations exist for each state, we use geom_bar().
+geom_bar() automatically counts how many rows fall into each category.
+```{r}
+ggplot(filtered_data, aes(x = state)) +
+  geom_bar() +
+  labs(
+    title = "Number of Observations by State",
+    x = "State",
+    y = "Count"
+  )
+```
+
+:::callout-tip
+You already summarized your data. Then use the	geom_col() 
+You want counts of rows. Then use	geom_bar()
+:::
+
 # Interactive plots with plotly
 
 To create interactive plots, use the plotly package. Interactive plots allow you to hover, zoom, and toggle groups. 
 
-```{r plotly-interactive}
+```{r, warning=FALSE, message=FALSE}
 # install.packages("plotly")
 library(plotly)
 interactive_plot <- ggplot(filtered_data, 
@@ -226,6 +256,6 @@ ggplotly(interactive_plot)
 
 In this chapter, you practiced inspecting datasets, converting variables, and preparing data for analysis by aligning date formats and merging datasets.
 
-You also created visualizations using ggplot2 to examine trends and compare groups. These steps—cleaning, organizing, and visualizing data—are essential for turning raw data into meaningful insights.
+You also created visualizations using ggplot2 to examine trends and compare groups. These steps (cleaning, organizing, and visualizing data) are essential for turning raw data into meaningful insights.
 
 In the next chapter, we will build on these skills by moving from data preparation to data analysis and interpretation.
