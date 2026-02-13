@@ -344,7 +344,7 @@ library(HDSinRdata)
 ?mobility
 ```
 
-```{r, eval=FALSE}
+```{r}
 data(covidcases) 
 data(mobility)
 ```
@@ -355,7 +355,7 @@ head(mobility)
 ```
 
 Allows you to specify the number of lines to view; here, it shows '5'
-```{r}
+```{r, eval=FALSE}
 head(mobility, n = 5) 
 #Displays median, mean, min/max ... etc
 summary(mobility) 
