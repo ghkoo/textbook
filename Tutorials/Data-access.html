@@ -201,8 +201,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#step-2-retrieve-thread-urls" id="toc-step-2-retrieve-thread-urls" class="nav-link" data-scroll-target="#step-2-retrieve-thread-urls">Step 2: Retrieve Thread URLs</a></li>
   <li><a href="#step-3-extract-post-and-comment-content" id="toc-step-3-extract-post-and-comment-content" class="nav-link" data-scroll-target="#step-3-extract-post-and-comment-content">Step 3: Extract Post and Comment Content</a></li>
   <li><a href="#step-4-retrieve-data-from-a-specific-user" id="toc-step-4-retrieve-data-from-a-specific-user" class="nav-link" data-scroll-target="#step-4-retrieve-data-from-a-specific-user">Step 4: Retrieve Data from a Specific User</a></li>
-  </ul></li>
   <li><a href="#filtering-by-date" id="toc-filtering-by-date" class="nav-link" data-scroll-target="#filtering-by-date">Filtering by Date</a></li>
+  </ul></li>
   <li><a href="#using-the-reddit-api-directly" id="toc-using-the-reddit-api-directly" class="nav-link" data-scroll-target="#using-the-reddit-api-directly">1.2 Using the Reddit API Directly</a></li>
   </ul></li>
   <li><a href="#youtube-api" id="toc-youtube-api" class="nav-link" data-scroll-target="#youtube-api">2. YouTube API</a>
@@ -262,7 +262,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Authenticate and collect data from the YouTube API using the tuber package</li>
 <li>Filter and organize retrieved data by keyword, channel, and time frame</li>
 <li>Save and manage collected data for later cleaning and analysis</li>
-<li>Automating tasks in R: For() loops and apply() functions</li>
+<li>Automate tasks in R: For() loops and apply() functions</li>
 </ul>
 <hr>
 </section>
@@ -359,9 +359,8 @@ Most queries return roughly up to 1,000 posts per subreddit or search. This work
 </div>
 <hr>
 </section>
-</section>
-<section id="filtering-by-date" class="level2">
-<h2 class="anchored" data-anchor-id="filtering-by-date">Filtering by Date</h2>
+<section id="filtering-by-date" class="level3">
+<h3 class="anchored" data-anchor-id="filtering-by-date">Filtering by Date</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">library</span>(lubridate)</span>
 <span id="cb8-2"><a href="#cb8-2"></a><span class="fu">library</span>(dplyr)</span>
@@ -373,6 +372,7 @@ Most queries return roughly up to 1,000 posts per subreddit or search. This work
 <span id="cb8-8"><a href="#cb8-8"></a>         date <span class="sc">&lt;=</span> <span class="fu">as_datetime</span>(<span class="st">"2024-03-10"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
+</section>
 </section>
 <section id="using-the-reddit-api-directly" class="level2">
 <h2 class="anchored" data-anchor-id="using-the-reddit-api-directly">1.2 Using the Reddit API Directly</h2>

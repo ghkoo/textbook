@@ -197,7 +197,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#vectors" id="toc-vectors" class="nav-link" data-scroll-target="#vectors">1.1 Vectors</a></li>
   <li><a href="#object" id="toc-object" class="nav-link" data-scroll-target="#object">1.2 Object</a></li>
   <li><a href="#data-frames" id="toc-data-frames" class="nav-link" data-scroll-target="#data-frames">1.3 Data frames</a></li>
-  <li><a href="#data-type-conversion" id="toc-data-type-conversion" class="nav-link" data-scroll-target="#data-type-conversion">1.4 Data type conversion</a></li>
+  <li><a href="#list-vectors-and-lists" id="toc-list-vectors-and-lists" class="nav-link" data-scroll-target="#list-vectors-and-lists">1.4 List: Vectors and lists</a></li>
+  <li><a href="#matrices-matrix-and-data-frame" id="toc-matrices-matrix-and-data-frame" class="nav-link" data-scroll-target="#matrices-matrix-and-data-frame">1.5 Matrices: Matrix and data frame</a></li>
+  <li><a href="#comparing-list-matrix-and-data-frame" id="toc-comparing-list-matrix-and-data-frame" class="nav-link" data-scroll-target="#comparing-list-matrix-and-data-frame">Comparing list, matrix, and data frame</a></li>
+  <li><a href="#data-type-conversion" id="toc-data-type-conversion" class="nav-link" data-scroll-target="#data-type-conversion">1.6 Data type conversion</a></li>
   </ul></li>
   <li><a href="#data-cleaning-and-summarizing" id="toc-data-cleaning-and-summarizing" class="nav-link" data-scroll-target="#data-cleaning-and-summarizing">2. Data cleaning and summarizing</a>
   <ul class="collapse">
@@ -329,36 +332,243 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="data-type-conversion" class="level3">
-<h3 class="anchored" data-anchor-id="data-type-conversion">1.4 Data type conversion</h3>
+<section id="list-vectors-and-lists" class="level3">
+<h3 class="anchored" data-anchor-id="list-vectors-and-lists">1.4 List: Vectors and lists</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>x <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb22-2"><a href="#cb22-2"></a><span class="fu">as.character</span>(x)  <span class="co"># convert to character</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># Vector: one data type, stored in a sequence</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a>numbers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span>
+<span id="cb22-3"><a href="#cb22-3"></a>numbers</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "5"</code></pre>
+<pre><code>[1] 1 2 3 4 5</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="fu">as.numeric</span>(x)    <span class="co"># convert to numeric</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>numbers[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 5</code></pre>
+<pre><code>[1] 1 2 3</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="fu">as.integer</span>(x)    <span class="co"># convert to integer</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>fruits <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Apple"</span>, <span class="st">"Banana"</span>, <span class="st">"Orange"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2"></a>fruits[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 5</code></pre>
+<pre><code>[1] "Apple"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="fu">as.logical</span>(x)    <span class="co"># convert to logical</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="co"># List: can store multiple objects of different types</span></span>
+<span id="cb28-2"><a href="#cb28-2"></a>combined <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">numbers =</span> numbers, <span class="at">fruits =</span> fruits)</span>
+<span id="cb28-3"><a href="#cb28-3"></a>combined</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] TRUE</code></pre>
+<pre><code>$numbers
+[1] 1 2 3 4 5
+
+$fruits
+[1] "Apple"  "Banana" "Orange"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>temps <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"30"</span>, <span class="st">"25"</span>, <span class="st">"40"</span>)</span>
-<span id="cb30-2"><a href="#cb30-2"></a><span class="fu">class</span>(temps)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>combined[[<span class="st">"numbers"</span>]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3 4 5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>combined[[<span class="st">"fruits"</span>]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Apple"  "Banana" "Orange"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>combined[[<span class="st">"numbers"</span>]][<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>combined[[<span class="st">"fruits"</span>]][<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Apple"</code></pre>
+</div>
+</div>
+</section>
+<section id="matrices-matrix-and-data-frame" class="level3">
+<h3 class="anchored" data-anchor-id="matrices-matrix-and-data-frame">1.5 Matrices: Matrix and data frame</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="co"># Matrix: one data type, arranged in rows and columns</span></span>
+<span id="cb38-2"><a href="#cb38-2"></a>a <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> <span class="dv">5</span>, <span class="at">ncol =</span> <span class="dv">5</span>)</span>
+<span id="cb38-3"><a href="#cb38-3"></a>a[<span class="dv">1</span>, <span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>a[, <span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0 0 0 0 0</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>a[<span class="dv">1</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0 0 0 0 0</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>b <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">25</span>), <span class="at">nrow =</span> <span class="dv">5</span>, <span class="at">ncol =</span> <span class="dv">5</span>)</span>
+<span id="cb44-2"><a href="#cb44-2"></a></span>
+<span id="cb44-3"><a href="#cb44-3"></a><span class="co"># Convert matrix to data frame</span></span>
+<span id="cb44-4"><a href="#cb44-4"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(b)</span>
+<span id="cb44-5"><a href="#cb44-5"></a>df[<span class="dv">1</span>, <span class="dv">5</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.1565709</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a><span class="co"># Data frame: columns can be different types (each column is one type)</span></span>
+<span id="cb46-2"><a href="#cb46-2"></a>new_dataset <span class="ot">&lt;-</span> mtcars</span>
+<span id="cb46-3"><a href="#cb46-3"></a>new_dataset<span class="sc">$</span>wt[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.620 2.875 2.320 3.215 3.440</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a><span class="co"># Convert a column (example)</span></span>
+<span id="cb48-2"><a href="#cb48-2"></a>new_dataset<span class="sc">$</span>wt <span class="ot">&lt;-</span> <span class="fu">as.character</span>(new_dataset<span class="sc">$</span>wt)</span>
+<span id="cb48-3"><a href="#cb48-3"></a><span class="fu">class</span>(new_dataset<span class="sc">$</span>wt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "character"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="co"># Convert to numeric</span></span>
-<span id="cb32-2"><a href="#cb32-2"></a>temps_num <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(temps)</span>
-<span id="cb32-3"><a href="#cb32-3"></a><span class="fu">class</span>(temps_num)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a><span class="fu">str</span>(new_dataset<span class="sc">$</span>wt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> chr [1:32] "2.62" "2.875" "2.32" "3.215" "3.44" "3.46" "3.57" "3.19" ...</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Matrices must contain a single data type. If you mix numbers and text, R will coerce everything into one type (often character). Data frames are usually more flexible for real-world datasets.</p>
+</div>
+</div>
+</section>
+<section id="comparing-list-matrix-and-data-frame" class="level3">
+<h3 class="anchored" data-anchor-id="comparing-list-matrix-and-data-frame">Comparing list, matrix, and data frame</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a><span class="co"># Data frames require columns of equal length</span></span>
+<span id="cb52-2"><a href="#cb52-2"></a>fruits <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Apple"</span>, <span class="st">"Banana"</span>, <span class="st">"Orange"</span>, <span class="st">"Raspberry"</span>, <span class="st">"Strawberry"</span>)</span>
+<span id="cb52-3"><a href="#cb52-3"></a>numbers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span>
+<span id="cb52-4"><a href="#cb52-4"></a></span>
+<span id="cb52-5"><a href="#cb52-5"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">numbers =</span> numbers, <span class="at">fruits =</span> fruits)</span>
+<span id="cb52-6"><a href="#cb52-6"></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  numbers     fruits
+1       1      Apple
+2       2     Banana
+3       3     Orange
+4       4  Raspberry
+5       5 Strawberry</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a>df[<span class="dv">1</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  numbers fruits
+1       1  Apple</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a>df[, <span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3 4 5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a>df[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  numbers fruits
+1       1  Apple
+2       2 Banana
+3       3 Orange</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1"></a><span class="co"># Matrix example: mixing numeric + character coerces to character</span></span>
+<span id="cb60-2"><a href="#cb60-2"></a>numbers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb60-3"><a href="#cb60-3"></a>fruits  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Apple"</span>, <span class="st">"Banana"</span>, <span class="st">"Orange"</span>)</span>
+<span id="cb60-4"><a href="#cb60-4"></a></span>
+<span id="cb60-5"><a href="#cb60-5"></a>m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(numbers, fruits), <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb60-6"><a href="#cb60-6"></a>m</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2]    
+[1,] "1"  "Apple" 
+[2,] "2"  "Banana"
+[3,] "3"  "Orange"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a><span class="fu">class</span>(m)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "matrix" "array" </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1"></a><span class="fu">mode</span>(m)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "character"</code></pre>
+</div>
+</div>
+</section>
+<section id="data-type-conversion" class="level3">
+<h3 class="anchored" data-anchor-id="data-type-conversion">1.6 Data type conversion</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1"></a>x <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb66-2"><a href="#cb66-2"></a><span class="fu">as.character</span>(x)  <span class="co"># convert to character</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "5"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1"></a><span class="fu">as.numeric</span>(x)    <span class="co"># convert to numeric</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1"></a><span class="fu">as.integer</span>(x)    <span class="co"># convert to integer</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1"></a><span class="fu">as.logical</span>(x)    <span class="co"># convert to logical</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1"></a>temps <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"30"</span>, <span class="st">"25"</span>, <span class="st">"40"</span>)</span>
+<span id="cb74-2"><a href="#cb74-2"></a><span class="fu">class</span>(temps)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "character"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1"></a><span class="co"># Convert to numeric</span></span>
+<span id="cb76-2"><a href="#cb76-2"></a>temps_num <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(temps)</span>
+<span id="cb76-3"><a href="#cb76-3"></a><span class="fu">class</span>(temps_num)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "numeric"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1"></a><span class="co"># Check the type of an object</span></span>
+<span id="cb78-2"><a href="#cb78-2"></a>variable <span class="ot">&lt;-</span> <span class="st">"2.5"</span></span>
+<span id="cb78-3"><a href="#cb78-3"></a><span class="fu">class</span>(variable)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "character"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1"></a><span class="co"># Convert character to numeric</span></span>
+<span id="cb80-2"><a href="#cb80-2"></a>numeric_variable <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(variable)</span>
+<span id="cb80-3"><a href="#cb80-3"></a><span class="fu">class</span>(numeric_variable)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "numeric"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1"></a>numeric_variable</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.5</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1"></a><span class="co"># Common coercion functions</span></span>
+<span id="cb84-2"><a href="#cb84-2"></a><span class="fu">as.numeric</span>(<span class="fl">3.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.2</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1"></a><span class="fu">as.character</span>(<span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "10"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1"></a><span class="fu">as.integer</span>(<span class="st">"3"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1"></a><span class="co"># Caution: non-numeric text becomes NA</span></span>
+<span id="cb90-2"><a href="#cb90-2"></a><span class="fu">as.numeric</span>(<span class="st">"three"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: NAs introduced by coercion</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When coercion produces <code>NA</code>, it usually means the original value could not be converted. Always check for unexpected <code>NA</code> values after converting variables.</p>
 </div>
 </div>
 <p>##2. Introduction to tidyverse and the mtcars dataset</p>
@@ -385,8 +595,8 @@ Note
 <h3 class="anchored" data-anchor-id="take-a-first-look-at-the-data">2.1 Take a first look at the data</h3>
 <p>Use head() function to check the first few rows of the dataset, View() to open the dataset</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="co"># install.packages("tidyverse") # Run once if needed</span></span>
-<span id="cb34-2"><a href="#cb34-2"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1"></a><span class="co"># install.packages("tidyverse") # Run once if needed</span></span>
+<span id="cb93-2"><a href="#cb93-2"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
@@ -399,9 +609,9 @@ Note
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="fu">data</span>(mtcars) <span class="co"># Load a sample dataset</span></span>
-<span id="cb36-2"><a href="#cb36-2"></a>?mtcars <span class="co"># To learn more about the dataset</span></span>
-<span id="cb36-3"><a href="#cb36-3"></a><span class="fu">head</span>(mtcars) <span class="co"># Check the first few rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1"></a><span class="fu">data</span>(mtcars) <span class="co"># Load a sample dataset</span></span>
+<span id="cb95-2"><a href="#cb95-2"></a>?mtcars <span class="co"># To learn more about the dataset</span></span>
+<span id="cb95-3"><a href="#cb95-3"></a><span class="fu">head</span>(mtcars) <span class="co"># Check the first few rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                   mpg cyl disp  hp drat    wt  qsec vs am gear carb
 Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
@@ -411,7 +621,7 @@ Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
 Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
 Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="co">#View(mtcars) # Opens the dataset</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1"></a><span class="co">#View(mtcars) # Opens the dataset</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="pipe-operators" class="level3">
@@ -431,8 +641,8 @@ Tip
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="co"># Basic code (without pipe operator) </span></span>
-<span id="cb39-2"><a href="#cb39-2"></a><span class="fu">mean</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)) <span class="co"># mean(): we get the mean score. </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1"></a><span class="co"># Basic code (without pipe operator) </span></span>
+<span id="cb98-2"><a href="#cb98-2"></a><span class="fu">mean</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)) <span class="co"># mean(): we get the mean score. </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.5</code></pre>
 </div>
@@ -451,7 +661,7 @@ Note
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a><span class="fu">mean</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1"></a><span class="fu">mean</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1</code></pre>
 </div>
@@ -460,7 +670,7 @@ Note
 <h4 class="anchored" data-anchor-id="using-basic-pipe">Using |&gt; (basic pipe)</h4>
 <p>It takes the result of one command and passes it into the next command.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>) <span class="sc">|&gt;</span> <span class="fu">mean</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>) <span class="sc">|&gt;</span> <span class="fu">mean</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.5</code></pre>
 </div>
@@ -469,13 +679,13 @@ Note
 <section id="using" class="level4">
 <h4 class="anchored" data-anchor-id="using">Using %&gt;%</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb45-2"><a href="#cb45-2"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>) <span class="sc">%&gt;%</span> <span class="fu">mean</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb104-2"><a href="#cb104-2"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>) <span class="sc">%&gt;%</span> <span class="fu">mean</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.5</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a><span class="co"># It works almost the same way as |&gt; </span></span>
-<span id="cb47-2"><a href="#cb47-2"></a><span class="co"># but requires installing and loading packages.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb106"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1"></a><span class="co"># It works almost the same way as |&gt; </span></span>
+<span id="cb106-2"><a href="#cb106-2"></a><span class="co"># but requires installing and loading packages.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Pipe operators are useful for longer code because they reduce repetition, improve readability, simplify debugging and modification, and avoid creating temporary variables (more examples below).</p>
 </section>
@@ -487,8 +697,8 @@ Note
 <h4 class="anchored" data-anchor-id="example-1-select-specific-columns-useful-when-you-have-a-huge-dataset.">Example 1: Select specific columns (Useful when you have a huge dataset).</h4>
 <p>Three options (with/without pipe operators):</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a>  <span class="co"># 1) Without pipe operator</span></span>
-<span id="cb48-2"><a href="#cb48-2"></a><span class="fu">select</span>(mtcars, mpg, hp, wt) <span class="co"># Select three columns from the mtcars dataset</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1"></a>  <span class="co"># 1) Without pipe operator</span></span>
+<span id="cb107-2"><a href="#cb107-2"></a><span class="fu">select</span>(mtcars, mpg, hp, wt) <span class="co"># Select three columns from the mtcars dataset</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                     mpg  hp    wt
 Mazda RX4           21.0 110 2.620
@@ -524,13 +734,13 @@ Ferrari Dino        19.7 175 2.770
 Maserati Bora       15.0 335 3.570
 Volvo 142E          21.4 109 2.780</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a><span class="fu">colnames</span>(mtcars) <span class="co"># You can get the column names by ?mtcars</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb109"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1"></a><span class="fu">colnames</span>(mtcars) <span class="co"># You can get the column names by ?mtcars</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "mpg"  "cyl"  "disp" "hp"   "drat" "wt"   "qsec" "vs"   "am"   "gear"
 [11] "carb"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a><span class="co"># if you want to the first few rows of specific columns:</span></span>
-<span id="cb52-2"><a href="#cb52-2"></a><span class="fu">head</span>(<span class="fu">select</span>(mtcars, mpg, hp, wt)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb111"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1"></a><span class="co"># if you want to the first few rows of specific columns:</span></span>
+<span id="cb111-2"><a href="#cb111-2"></a><span class="fu">head</span>(<span class="fu">select</span>(mtcars, mpg, hp, wt)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                   mpg  hp    wt
 Mazda RX4         21.0 110 2.620
@@ -540,10 +750,10 @@ Hornet 4 Drive    21.4 110 3.215
 Hornet Sportabout 18.7 175 3.440
 Valiant           18.1 105 3.460</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a>  <span class="co"># 2) With base pipe |&gt;</span></span>
-<span id="cb54-2"><a href="#cb54-2"></a>mtcars <span class="sc">|&gt;</span></span>
-<span id="cb54-3"><a href="#cb54-3"></a>  <span class="fu">select</span>(mpg, hp, wt) <span class="sc">|&gt;</span></span>
-<span id="cb54-4"><a href="#cb54-4"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb113"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1"></a>  <span class="co"># 2) With base pipe |&gt;</span></span>
+<span id="cb113-2"><a href="#cb113-2"></a>mtcars <span class="sc">|&gt;</span></span>
+<span id="cb113-3"><a href="#cb113-3"></a>  <span class="fu">select</span>(mpg, hp, wt) <span class="sc">|&gt;</span></span>
+<span id="cb113-4"><a href="#cb113-4"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                   mpg  hp    wt
 Mazda RX4         21.0 110 2.620
@@ -553,10 +763,10 @@ Hornet 4 Drive    21.4 110 3.215
 Hornet Sportabout 18.7 175 3.440
 Valiant           18.1 105 3.460</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a>  <span class="co"># 3) With %&gt;%</span></span>
-<span id="cb56-2"><a href="#cb56-2"></a>mtcars <span class="sc">%&gt;%</span></span>
-<span id="cb56-3"><a href="#cb56-3"></a>  <span class="fu">select</span>(mpg, hp, wt) <span class="sc">%&gt;%</span> <span class="co"># Select three columns </span></span>
-<span id="cb56-4"><a href="#cb56-4"></a>  <span class="fu">head</span>() <span class="co"># View the first few rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb115"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1"></a>  <span class="co"># 3) With %&gt;%</span></span>
+<span id="cb115-2"><a href="#cb115-2"></a>mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb115-3"><a href="#cb115-3"></a>  <span class="fu">select</span>(mpg, hp, wt) <span class="sc">%&gt;%</span> <span class="co"># Select three columns </span></span>
+<span id="cb115-4"><a href="#cb115-4"></a>  <span class="fu">head</span>() <span class="co"># View the first few rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                   mpg  hp    wt
 Mazda RX4         21.0 110 2.620
@@ -571,8 +781,8 @@ Valiant           18.1 105 3.460</code></pre>
 <section id="example-2-filter-rows-where-milesgallon-mpg-is-greater-than-30" class="level4">
 <h4 class="anchored" data-anchor-id="example-2-filter-rows-where-milesgallon-mpg-is-greater-than-30">Example 2: Filter rows where Miles/gallon (mpg) is greater than 30</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a>mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb58-2"><a href="#cb58-2"></a>  <span class="fu">filter</span>(mpg <span class="sc">&gt;</span> <span class="dv">30</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb117"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1"></a>mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb117-2"><a href="#cb117-2"></a>  <span class="fu">filter</span>(mpg <span class="sc">&gt;</span> <span class="dv">30</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                mpg cyl disp  hp drat    wt  qsec vs am gear carb
 Fiat 128       32.4   4 78.7  66 4.08 2.200 19.47  1  1    4    1
@@ -580,10 +790,10 @@ Honda Civic    30.4   4 75.7  52 4.93 1.615 18.52  1  1    4    2
 Toyota Corolla 33.9   4 71.1  65 4.22 1.835 19.90  1  1    4    1
 Lotus Europa   30.4   4 95.1 113 3.77 1.513 16.90  1  1    5    2</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1"></a><span class="co"># You can also create a new filtered dataframe 'new_mtcars'</span></span>
-<span id="cb60-2"><a href="#cb60-2"></a>new_mtcars <span class="ot">&lt;-</span> mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb60-3"><a href="#cb60-3"></a>  <span class="fu">filter</span>(mpg <span class="sc">&gt;</span> <span class="dv">30</span>)</span>
-<span id="cb60-4"><a href="#cb60-4"></a><span class="fu">head</span>(new_mtcars)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb119"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1"></a><span class="co"># You can also create a new filtered dataframe 'new_mtcars'</span></span>
+<span id="cb119-2"><a href="#cb119-2"></a>new_mtcars <span class="ot">&lt;-</span> mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb119-3"><a href="#cb119-3"></a>  <span class="fu">filter</span>(mpg <span class="sc">&gt;</span> <span class="dv">30</span>)</span>
+<span id="cb119-4"><a href="#cb119-4"></a><span class="fu">head</span>(new_mtcars)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                mpg cyl disp  hp drat    wt  qsec vs am gear carb
 Fiat 128       32.4   4 78.7  66 4.08 2.200 19.47  1  1    4    1
@@ -596,8 +806,8 @@ Lotus Europa   30.4   4 95.1 113 3.77 1.513 16.90  1  1    5    2</code></pre>
 <section id="example-3-mutate-create-a-new-column-that-shows-true-if-mpg-is-over-30-or-false-otherwise" class="level4">
 <h4 class="anchored" data-anchor-id="example-3-mutate-create-a-new-column-that-shows-true-if-mpg-is-over-30-or-false-otherwise">Example 3: Mutate (Create a new column) that shows TRUE if mpg is over 30, or FALSE otherwise</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a>mtcars <span class="sc">|&gt;</span></span>
-<span id="cb62-2"><a href="#cb62-2"></a>  <span class="fu">mutate</span>(<span class="at">mpg_over_30 =</span> <span class="fu">ifelse</span>(mpg <span class="sc">&gt;</span> <span class="dv">30</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb121"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1"></a>mtcars <span class="sc">|&gt;</span></span>
+<span id="cb121-2"><a href="#cb121-2"></a>  <span class="fu">mutate</span>(<span class="at">mpg_over_30 =</span> <span class="fu">ifelse</span>(mpg <span class="sc">&gt;</span> <span class="dv">30</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
@@ -671,8 +881,8 @@ Volvo 142E                FALSE</code></pre>
 <section id="example-4-arrange-data-by-horsepower-hp-in-descending-order" class="level4">
 <h4 class="anchored" data-anchor-id="example-4-arrange-data-by-horsepower-hp-in-descending-order">Example 4: Arrange data by horsepower (hp) in descending order</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1"></a>mtcars <span class="sc">|&gt;</span> </span>
-<span id="cb64-2"><a href="#cb64-2"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(hp))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb123"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1"></a>mtcars <span class="sc">|&gt;</span> </span>
+<span id="cb123-2"><a href="#cb123-2"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(hp))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
@@ -713,11 +923,11 @@ Honda Civic         30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2</code></
 <section id="example-5-summarize-data-to-get-the-average-mean-mpg-and-hp" class="level4">
 <h4 class="anchored" data-anchor-id="example-5-summarize-data-to-get-the-average-mean-mpg-and-hp">Example 5: Summarize data to get the average (mean) mpg and hp</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1"></a>mtcars <span class="sc">|&gt;</span></span>
-<span id="cb66-2"><a href="#cb66-2"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb66-3"><a href="#cb66-3"></a>    <span class="at">avg_mpg =</span> <span class="fu">mean</span>(mpg),</span>
-<span id="cb66-4"><a href="#cb66-4"></a>    <span class="at">avg_hp =</span> <span class="fu">mean</span>(hp)</span>
-<span id="cb66-5"><a href="#cb66-5"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb125"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1"></a>mtcars <span class="sc">|&gt;</span></span>
+<span id="cb125-2"><a href="#cb125-2"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb125-3"><a href="#cb125-3"></a>    <span class="at">avg_mpg =</span> <span class="fu">mean</span>(mpg),</span>
+<span id="cb125-4"><a href="#cb125-4"></a>    <span class="at">avg_hp =</span> <span class="fu">mean</span>(hp)</span>
+<span id="cb125-5"><a href="#cb125-5"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   avg_mpg   avg_hp
 1 20.09062 146.6875</code></pre>
@@ -743,12 +953,12 @@ Note
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1"></a><span class="co">#install.packages("HDSinRdata")</span></span>
-<span id="cb68-2"><a href="#cb68-2"></a><span class="fu">library</span>(HDSinRdata) </span>
-<span id="cb68-3"><a href="#cb68-3"></a>?HDSinRdata</span>
-<span id="cb68-4"><a href="#cb68-4"></a><span class="fu">data</span>(covidcases) </span>
-<span id="cb68-5"><a href="#cb68-5"></a>?covidcases</span>
-<span id="cb68-6"><a href="#cb68-6"></a><span class="fu">print</span>(covidcases) <span class="co"># Showcase the full dataset</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb127"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1"></a><span class="co">#install.packages("HDSinRdata")</span></span>
+<span id="cb127-2"><a href="#cb127-2"></a><span class="fu">library</span>(HDSinRdata) </span>
+<span id="cb127-3"><a href="#cb127-3"></a>?HDSinRdata</span>
+<span id="cb127-4"><a href="#cb127-4"></a><span class="fu">data</span>(covidcases) </span>
+<span id="cb127-5"><a href="#cb127-5"></a>?covidcases</span>
+<span id="cb127-6"><a href="#cb127-6"></a><span class="fu">print</span>(covidcases) <span class="co"># Showcase the full dataset</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 69,530 × 5
    state         county         week weekly_cases weekly_deaths
@@ -765,9 +975,9 @@ Note
 10 Arizona       Maricopa          9            2             0
 # ℹ 69,520 more rows</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1"></a><span class="fu">data</span>(mobility)</span>
-<span id="cb70-2"><a href="#cb70-2"></a>?mobility</span>
-<span id="cb70-3"><a href="#cb70-3"></a><span class="fu">print</span>(mobility)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb129"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1"></a><span class="fu">data</span>(mobility)</span>
+<span id="cb129-2"><a href="#cb129-2"></a>?mobility</span>
+<span id="cb129-3"><a href="#cb129-3"></a><span class="fu">print</span>(mobility)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 9,333 × 5
 # Groups:   state [51]
@@ -785,7 +995,7 @@ Note
 10 Alabama 2020-03-10  286780  14.4     100. 
 # ℹ 9,323 more rows</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1"></a><span class="fu">head</span>(mobility) <span class="co">#Displays the first few lines of the dataset.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb131"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1"></a><span class="fu">head</span>(mobility) <span class="co">#Displays the first few lines of the dataset.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 5
 # Groups:   state [1]
@@ -798,8 +1008,8 @@ Note
 5 Alabama 2020-03-05  288218  14.8     102. 
 6 Alabama 2020-03-06  282982  17.9     126. </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1"></a><span class="co">#Allows you to specify the number of lines to view; here, it shows '5'</span></span>
-<span id="cb74-2"><a href="#cb74-2"></a><span class="fu">head</span>(mobility, <span class="at">n =</span> <span class="dv">5</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb133"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1"></a><span class="co">#Allows you to specify the number of lines to view; here, it shows '5'</span></span>
+<span id="cb133-2"><a href="#cb133-2"></a><span class="fu">head</span>(mobility, <span class="at">n =</span> <span class="dv">5</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 5
 # Groups:   state [1]
@@ -811,8 +1021,8 @@ Note
 4 Alabama 2020-03-04  298704  13.1      89.7
 5 Alabama 2020-03-05  288218  14.8     102. </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1"></a><span class="co">#Displays median, mean, min/max ... etc</span></span>
-<span id="cb76-2"><a href="#cb76-2"></a><span class="fu">summary</span>(mobility) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb135"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a href="#cb135-1"></a><span class="co">#Displays median, mean, min/max ... etc</span></span>
+<span id="cb135-2"><a href="#cb135-2"></a><span class="fu">summary</span>(mobility) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    state               date              samples             m50        
  Length:9333        Length:9333        Min.   :   2353   Min.   : 0.018  
@@ -833,18 +1043,18 @@ Note
 <section id="pre-processing-the-data-select-and-summarize" class="level3">
 <h3 class="anchored" data-anchor-id="pre-processing-the-data-select-and-summarize">Pre-processing the data (select and summarize)</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1"></a><span class="co"># Check the names of the columns</span></span>
-<span id="cb78-2"><a href="#cb78-2"></a><span class="fu">colnames</span>(covidcases)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb137"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a href="#cb137-1"></a><span class="co"># Check the names of the columns</span></span>
+<span id="cb137-2"><a href="#cb137-2"></a><span class="fu">colnames</span>(covidcases)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "state"         "county"        "week"          "weekly_cases" 
 [5] "weekly_deaths"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1"></a><span class="fu">colnames</span>(mobility)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb139"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1"></a><span class="fu">colnames</span>(mobility)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "state"     "date"      "samples"   "m50"       "m50_index"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1"></a><span class="co"># Display the frequency of unique values in the 'state' column</span></span>
-<span id="cb82-2"><a href="#cb82-2"></a><span class="fu">table</span>(covidcases<span class="sc">$</span>state)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb141"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a href="#cb141-1"></a><span class="co"># Display the frequency of unique values in the 'state' column</span></span>
+<span id="cb141-2"><a href="#cb141-2"></a><span class="fu">table</span>(covidcases<span class="sc">$</span>state)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
              Alabama               Alaska              Arizona 
@@ -882,7 +1092,7 @@ Note
        West Virginia            Wisconsin              Wyoming 
                 1195                 1633                  518 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1"></a><span class="fu">table</span>(mobility<span class="sc">$</span>state)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb143"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1"></a><span class="fu">table</span>(mobility<span class="sc">$</span>state)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
          Alabama           Alaska          Arizona         Arkansas 
@@ -915,9 +1125,9 @@ Note
 </div>
 <p>Filter rows where the ‘state’ column is ‘Hawaii’ You could directly filter it or create a new dataframe with the filtered rows (recommended)</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1"></a><span class="co"># Directly filter</span></span>
-<span id="cb86-2"><a href="#cb86-2"></a>covidcases <span class="sc">|&gt;</span> </span>
-<span id="cb86-3"><a href="#cb86-3"></a>  <span class="fu">filter</span>(state <span class="sc">==</span> <span class="st">"Hawaii"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb145"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1"></a><span class="co"># Directly filter</span></span>
+<span id="cb145-2"><a href="#cb145-2"></a>covidcases <span class="sc">|&gt;</span> </span>
+<span id="cb145-3"><a href="#cb145-3"></a>  <span class="fu">filter</span>(state <span class="sc">==</span> <span class="st">"Hawaii"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 101 × 5
    state  county    week weekly_cases weekly_deaths
@@ -934,10 +1144,10 @@ Note
 10 Hawaii Maui        13           14             0
 # ℹ 91 more rows</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1"></a><span class="do">## Create a new dataframe</span></span>
-<span id="cb88-2"><a href="#cb88-2"></a>hawaii_covidcases <span class="ot">&lt;-</span> covidcases <span class="sc">|&gt;</span></span>
-<span id="cb88-3"><a href="#cb88-3"></a>  <span class="fu">filter</span>(state <span class="sc">==</span> <span class="st">"Hawaii"</span>)</span>
-<span id="cb88-4"><a href="#cb88-4"></a><span class="fu">print</span>(hawaii_covidcases)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb147"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a href="#cb147-1"></a><span class="do">## Create a new dataframe</span></span>
+<span id="cb147-2"><a href="#cb147-2"></a>hawaii_covidcases <span class="ot">&lt;-</span> covidcases <span class="sc">|&gt;</span></span>
+<span id="cb147-3"><a href="#cb147-3"></a>  <span class="fu">filter</span>(state <span class="sc">==</span> <span class="st">"Hawaii"</span>)</span>
+<span id="cb147-4"><a href="#cb147-4"></a><span class="fu">print</span>(hawaii_covidcases)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 101 × 5
    state  county    week weekly_cases weekly_deaths
@@ -954,9 +1164,9 @@ Note
 10 Hawaii Maui        13           14             0
 # ℹ 91 more rows</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1"></a>hawaii_mobility <span class="ot">&lt;-</span> mobility <span class="sc">|&gt;</span></span>
-<span id="cb90-2"><a href="#cb90-2"></a>  <span class="fu">filter</span>(state <span class="sc">==</span> <span class="st">"Hawaii"</span>)</span>
-<span id="cb90-3"><a href="#cb90-3"></a><span class="fu">print</span>(hawaii_mobility)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb149"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1"></a>hawaii_mobility <span class="ot">&lt;-</span> mobility <span class="sc">|&gt;</span></span>
+<span id="cb149-2"><a href="#cb149-2"></a>  <span class="fu">filter</span>(state <span class="sc">==</span> <span class="st">"Hawaii"</span>)</span>
+<span id="cb149-3"><a href="#cb149-3"></a><span class="fu">print</span>(hawaii_mobility)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 183 × 5
 # Groups:   state [1]
@@ -977,11 +1187,11 @@ Note
 </div>
 <p>You can also use nrow() to count how many rows there are (in filtered dataset)</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1"></a><span class="fu">nrow</span>(hawaii_covidcases)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb151"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb151-1"><a href="#cb151-1"></a><span class="fu">nrow</span>(hawaii_covidcases)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 101</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1"></a><span class="fu">nrow</span>(hawaii_mobility)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb153"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb153-1"><a href="#cb153-1"></a><span class="fu">nrow</span>(hawaii_mobility)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 183</code></pre>
 </div>
@@ -992,7 +1202,7 @@ Note
 <h2 class="anchored" data-anchor-id="summary">Summary:</h2>
 <p>You learned how to</p>
 <ul>
-<li><p>Work with vectors, data frames, and objects</p></li>
+<li><p>Work with vectors, data frames, objects, lists, and matrices</p></li>
 <li><p>Convert between data types</p></li>
 <li><p>Use pipe operators for readable code</p></li>
 <li><p>Clean and summarize real-world datasets</p></li>
