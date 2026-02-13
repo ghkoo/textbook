@@ -269,12 +269,13 @@ You are also encouraged to use pipe operators.
 #### Example 1: Select specific columns (Useful when you have a huge dataset).
 
 Three options (with/without pipe operators):
-1) Without pipe operator
+
+1) Without pipe operator: 
+
 Select three columns from the mtcars dataset
-```{r}
+```{r, results="hide"}
 select(mtcars, mpg, hp, wt) 
 ```
-
 If you want to the first few rows of specific columns:
 ```{r}
 head(select(mtcars, mpg, hp, wt)) 
