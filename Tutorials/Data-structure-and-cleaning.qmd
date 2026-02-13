@@ -57,23 +57,25 @@ weather_df <- data.frame(
   temp = c(70, 75, 80),
   snow = c(TRUE, FALSE, TRUE)
 )
-
 weather_df
 ```
 
 
 ### 1.4 List: Vectors and lists
 
+Vector: one data type, stored in a sequence
 ```{r vectors-lists}
-# Vector: one data type, stored in a sequence
+
 numbers <- c(1, 2, 3, 4, 5)
 numbers
 numbers[1:3]
 
 fruits <- c("Apple", "Banana", "Orange")
 fruits[1]
+```
 
-# List: can store multiple objects of different types
+List: can store multiple objects of different types
+```{r}
 combined <- list(numbers = numbers, fruits = fruits)
 combined
 
@@ -85,25 +87,29 @@ combined[["fruits"]][1]
 ```
 
 ### 1.5 Matrices: Matrix and data frame
-
-```{r matrices-dataframes}
-# Matrix: one data type, arranged in rows and columns
+Matrix: one data type, arranged in rows and columns
+```{r r, eval=FALSE}
 a <- matrix(0, nrow = 5, ncol = 5)
 a[1, 1]
 a[, 1]
 a[1, ]
-
 b <- matrix(rnorm(25), nrow = 5, ncol = 5)
+```
 
-# Convert matrix to data frame
+Convert matrix to data frame
+```{r}
 df <- as.data.frame(b)
 df[1, 5]
+```
 
-# Data frame: columns can be different types (each column is one type)
+Data frame: columns can be different types (each column is one type)
+```{r}
 new_dataset <- mtcars
 new_dataset$wt[1:5]
+```
 
-# Convert a column (example)
+Convert a column (example)
+```{r}
 new_dataset$wt <- as.character(new_dataset$wt)
 class(new_dataset$wt)
 str(new_dataset$wt)
@@ -117,20 +123,23 @@ Matrices must contain a single data type. If you mix numbers and text, R will co
 
 ```{r compare-structures}
 # Data frames require columns of equal length
-fruits <- c("Apple", "Banana", "Orange", "Raspberry", "Strawberry")
+fruits <- c("Apple", "Banana", "Orange", 
+            "Raspberry", "Strawberry")
 numbers <- c(1, 2, 3, 4, 5)
-
 df <- data.frame(numbers = numbers, fruits = fruits)
 df
+```
 
+```{r}
 df[1, ]
 df[, 1]
 df[1:3, ]
+```
 
-# Matrix example: mixing numeric + character coerces to character
+Matrix example: mixing numeric + character coerces to character
+```{r}
 numbers <- c(1, 2, 3)
 fruits  <- c("Apple", "Banana", "Orange")
-
 m <- matrix(c(numbers, fruits), nrow = 3, ncol = 2)
 m
 class(m)
@@ -139,36 +148,47 @@ mode(m)
 
 
 ### 1.6 Data type conversion
-```{r}
+```{r r, eval=FALSE}
 x <- 5
 as.character(x)  # convert to character
 as.numeric(x)    # convert to numeric
 as.integer(x)    # convert to integer
 as.logical(x)    # convert to logical
+```
 
+```{r}
 temps <- c("30", "25", "40")
 class(temps)
+```
 
-# Convert to numeric
+Convert to numeric
+```{r}
 temps_num <- as.numeric(temps)
 class(temps_num)
+```
 
-
-# Check the type of an object
+Check the type of an object
+```{r}
 variable <- "2.5"
 class(variable)
+```
 
-# Convert character to numeric
+Convert character to numeric
+```{r r, eval=FALSE}
 numeric_variable <- as.numeric(variable)
 class(numeric_variable)
 numeric_variable
+```
 
-# Common coercion functions
+Common coercion functions
+```{r r, eval=FALSE}
 as.numeric(3.2)
 as.character(10)
 as.integer("3")
+```
 
-# Caution: non-numeric text becomes NA
+Caution: non-numeric text becomes NA
+```{r r, warning=FALSE}
 as.numeric("three")
 ```
 
@@ -177,7 +197,7 @@ When coercion produces `NA`, it usually means the original value could not be co
 Always check for unexpected `NA` values after converting variables.
 :::
 
-##2. Introduction to tidyverse and the mtcars dataset
+## 2. Introduction to tidyverse and the mtcars dataset
 
 In this part of the module, we will now use mtcars, a built-in dataset from Motor Trend magazine (1974), to learn basic data cleaning and preprocessing.
 
@@ -191,13 +211,12 @@ When working with large datasets, filtering variables of interest, summarizing d
 ### 2.1 Take a first look at the data
 Use head() function to check the first few rows of the dataset, View() to open the dataset
 
-```{r install library, read data}
+```{r, eval=FALSE}
 # install.packages("tidyverse") # Run once if needed
 library(tidyverse)
 data(mtcars) # Load a sample dataset
 ?mtcars # To learn more about the dataset
 head(mtcars) # Check the first few rows
-#View(mtcars) # Opens the dataset
 ```
 
 
@@ -210,9 +229,8 @@ The difference is that |> is built directly into R, so you do not need to instal
 You can turn |> on through Tools > Global Options.
 :::
 
-
+Basic code (without pipe operator) 
 ```{r Tip: Using pipe operators}
-# Basic code (without pipe operator) 
 mean(c(1, 2, 3, 4)) # mean(): we get the mean score. 
 ```
 
@@ -223,6 +241,7 @@ Bonus: If we do not use c(), R will treat the numbers as separate function input
 ```{r}
 mean(1, 2, 3, 4)
 ```
+
 #### Using |> (basic pipe) 
 It takes the result of one command and passes it into the next command.
 ```{r}
@@ -231,11 +250,10 @@ c(1, 2, 3, 4) |> mean()
 
 
 #### Using %>% 
+It works almost the same way as |> but requires installing and loading packages.
 ```{r}
 library(tidyverse)
 c(1, 2, 3, 4) %>% mean()
-# It works almost the same way as |> 
-# but requires installing and loading packages.
 ```
 
 Pipe operators are useful for longer code because they reduce repetition, improve readability, simplify debugging and modification, and avoid creating temporary variables (more examples below).
@@ -249,20 +267,26 @@ You are also encouraged to use pipe operators.
 #### Example 1: Select specific columns (Useful when you have a huge dataset).
 
 Three options (with/without pipe operators):
-
-```{r Use tidyverse for data cleaning}
-  # 1) Without pipe operator
+1) Without pipe operator
+```{r, eval=FALSE}
 select(mtcars, mpg, hp, wt) # Select three columns from the mtcars dataset
-colnames(mtcars) # You can get the column names by ?mtcars
+```
+
+```{r}
+colnames(mtcars)
 # if you want to the first few rows of specific columns:
 head(select(mtcars, mpg, hp, wt)) 
+```
 
-  # 2) With base pipe |>
+2) With base pipe |>
+```{r}
 mtcars |>
   select(mpg, hp, wt) |>
   head()
+```
 
-  # 3) With %>%
+3) With %>%
+```{r}
 mtcars %>%
   select(mpg, hp, wt) %>% # Select three columns 
   head() # View the first few rows
@@ -282,14 +306,14 @@ head(new_mtcars)
 
 #### Example 3: Mutate (Create a new column) that shows TRUE if mpg is over 30, or FALSE otherwise
 
-```{r}
+```{r, eval=FALSE}
 mtcars |>
   mutate(mpg_over_30 = ifelse(mpg > 30, TRUE, FALSE))
 ```
 
 #### Example 4: Arrange data by horsepower (hp) in descending order
 
-```{r}
+```{r, eval=FALSE}
 mtcars |> 
   arrange(desc(hp))
 ```
@@ -315,19 +339,26 @@ After we call the HDSinRdata package, we will use 'covidcases' and 'mobility' da
 :::
 
 
-```{r install package, load library, read data}
+```{r, eval=FALSE}
 #install.packages("HDSinRdata")
 library(HDSinRdata) 
 ?HDSinRdata
-data(covidcases) 
 ?covidcases
-print(covidcases) # Showcase the full dataset
-data(mobility)
 ?mobility
-print(mobility)
+```
 
-head(mobility) #Displays the first few lines of the dataset.
-#Allows you to specify the number of lines to view; here, it shows '5'
+```{r, eval=FALSE}
+data(covidcases) 
+data(mobility)
+```
+
+Displays the first few lines of the dataset.
+```{r, eval=FALSE}
+head(mobility) 
+```
+
+Allows you to specify the number of lines to view; here, it shows '5'
+```{r}
 head(mobility, n = 5) 
 #Displays median, mean, min/max ... etc
 summary(mobility) 
@@ -335,29 +366,37 @@ summary(mobility)
 
 ### Pre-processing the data (select and summarize)
 
+Check the names of the columns
 ```{r Understanding and pre-processing the data: use tidyverse - select and summarize}
-# Check the names of the columns
 colnames(covidcases)
 colnames(mobility)
+```
 
-# Display the frequency of unique values in the 'state' column
+
+Display the frequency of unique values in the 'state' column
+```{r, eval=FALSE}
 table(covidcases$state)
 table(mobility$state)
-
 ```
 
 Filter rows where the 'state' column is 'Hawaii' You could directly filter it or create a new dataframe with the filtered rows (recommended)
 
+Directly filter
+
 ```{r}
-# Directly filter
 covidcases |> 
   filter(state == "Hawaii")
+```
 
-## Create a new dataframe
+Create a new dataframe
+
+```{r}
 hawaii_covidcases <- covidcases |>
   filter(state == "Hawaii")
 print(hawaii_covidcases)
+```
 
+```{r, eval=FALSE}
 hawaii_mobility <- mobility |>
   filter(state == "Hawaii")
 print(hawaii_mobility)
@@ -374,14 +413,4 @@ nrow(hawaii_mobility)
 
 ## Summary: 
 
-You learned how to
-
-- Work with vectors, data frames, objects, lists, and matrices
-
-- Convert between data types
-
-- Use pipe operators for readable code
-
-- Clean and summarize real-world datasets
-
-Next, we will build on these skills to explore data visualization and interpretation.
+In this chapter, you learned how to work with core R structures such as vectors, data frames, objects, lists, and matrices. You also practiced converting between data types, using pipe operators to write clear and readable code, and cleaning and summarizing real-world datasets. These foundational skills prepare you to move from data preparation to analysis. In the next chapter, we will build on these concepts to explore data visualization and interpretation.
