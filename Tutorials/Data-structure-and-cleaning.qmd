@@ -88,11 +88,8 @@ combined[["fruits"]][1]
 
 ### 1.5 Matrices: Matrix and data frame
 Matrix: one data type, arranged in rows and columns
-```{r r, eval=FALSE}
+```{r}
 a <- matrix(0, nrow = 5, ncol = 5)
-a[1, 1]
-a[, 1]
-a[1, ]
 b <- matrix(rnorm(25), nrow = 5, ncol = 5)
 ```
 
