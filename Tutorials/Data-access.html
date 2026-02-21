@@ -187,6 +187,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">4. Data access: Social media API</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Tutorials/Text-as-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">6. Text as data: Basic textual analysis</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -327,9 +333,10 @@ Most queries return roughly up to 1,000 posts per subreddit or search. This work
 <span id="cb4-8"><a href="#cb4-8"></a><span class="fu">head</span>(weekly_dc_snow)</span>
 <span id="cb4-9"><a href="#cb4-9"></a><span class="fu">nrow</span>(weekly_dc_snow)</span>
 <span id="cb4-10"><a href="#cb4-10"></a></span>
-<span id="cb4-11"><a href="#cb4-11"></a><span class="fu">write.csv</span>(weekly_dc_snow, <span class="st">"weekly_DCsnow_reddit.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="fu">write.csv</span>(weekly_dc_snow, </span>
+<span id="cb4-12"><a href="#cb4-12"></a>          <span class="st">"weekly_DCsnow_reddit.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Multiple keywords:</p>
+<p>If you want to use multiple keywords (“a” OR “b” OR “c”):</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>keywords <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"snow"</span>, <span class="st">"blizzard"</span>, <span class="st">"ice"</span>)</span>
 <span id="cb5-2"><a href="#cb5-2"></a></span>
@@ -351,10 +358,12 @@ Most queries return roughly up to 1,000 posts per subreddit or search. This work
 <section id="step-3-extract-post-and-comment-content" class="level3">
 <h3 class="anchored" data-anchor-id="step-3-extract-post-and-comment-content">Step 3: Extract Post and Comment Content</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>thread_content <span class="ot">&lt;-</span> <span class="fu">get_thread_content</span>(thread_urls<span class="sc">$</span>url[<span class="dv">1</span>])</span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="fu">head</span>(thread_content)</span>
-<span id="cb6-3"><a href="#cb6-3"></a></span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="fu">write.csv</span>(thread_content, <span class="st">"DC_thread_content.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>thread_content <span class="ot">&lt;-</span> </span>
+<span id="cb6-2"><a href="#cb6-2"></a>  <span class="fu">get_thread_content</span>(thread_urls<span class="sc">$</span>url[<span class="dv">1</span>])</span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="fu">head</span>(thread_content)</span>
+<span id="cb6-4"><a href="#cb6-4"></a></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="fu">write.csv</span>(thread_content, </span>
+<span id="cb6-6"><a href="#cb6-6"></a>          <span class="st">"DC_thread_content.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="step-4-retrieve-data-from-a-specific-user" class="level3">
@@ -423,15 +432,16 @@ https://support.reddithelp.com/hc/en-us/articles/16160319875092-Reddit-Data-API-
 <h2 class="anchored" data-anchor-id="install-and-authenticate">Install and Authenticate</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">library</span>(devtools)</span>
-<span id="cb9-2"><a href="#cb9-2"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"soodoku/tuber"</span>, <span class="at">build_vignettes =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-3"><a href="#cb9-3"></a></span>
-<span id="cb9-4"><a href="#cb9-4"></a><span class="fu">library</span>(tuber)</span>
-<span id="cb9-5"><a href="#cb9-5"></a><span class="fu">options</span>(<span class="at">scipen =</span> <span class="dv">999</span>)</span>
-<span id="cb9-6"><a href="#cb9-6"></a></span>
-<span id="cb9-7"><a href="#cb9-7"></a>client_ID <span class="ot">&lt;-</span> <span class="st">"YOUR_CLIENT_ID"</span></span>
-<span id="cb9-8"><a href="#cb9-8"></a>client_secret <span class="ot">&lt;-</span> <span class="st">"YOUR_CLIENT_SECRET"</span></span>
-<span id="cb9-9"><a href="#cb9-9"></a></span>
-<span id="cb9-10"><a href="#cb9-10"></a><span class="fu">yt_oauth</span>(client_ID, client_secret, <span class="at">token =</span> <span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-2"><a href="#cb9-2"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"soodoku/tuber"</span>, </span>
+<span id="cb9-3"><a href="#cb9-3"></a>                         <span class="at">build_vignettes =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-4"><a href="#cb9-4"></a></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="fu">library</span>(tuber)</span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="fu">options</span>(<span class="at">scipen =</span> <span class="dv">999</span>)</span>
+<span id="cb9-7"><a href="#cb9-7"></a></span>
+<span id="cb9-8"><a href="#cb9-8"></a>client_ID <span class="ot">&lt;-</span> <span class="st">"YOUR_CLIENT_ID"</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a>client_secret <span class="ot">&lt;-</span> <span class="st">"YOUR_CLIENT_SECRET"</span></span>
+<span id="cb9-10"><a href="#cb9-10"></a></span>
+<span id="cb9-11"><a href="#cb9-11"></a><span class="fu">yt_oauth</span>(client_ID, client_secret, <span class="at">token =</span> <span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>After authentication, return to R when prompted.</p>
 <hr>
@@ -463,22 +473,27 @@ https://support.reddithelp.com/hc/en-us/articles/16160319875092-Reddit-Data-API-
 <span id="cb11-9"><a href="#cb11-9"></a><span class="fu">nrow</span>(protest_abcnews)</span>
 <span id="cb11-10"><a href="#cb11-10"></a><span class="fu">head</span>(protest_abcnews)</span>
 <span id="cb11-11"><a href="#cb11-11"></a></span>
-<span id="cb11-12"><a href="#cb11-12"></a><span class="fu">write.csv</span>(protest_abcnews, <span class="st">"protest_abcnews.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-12"><a href="#cb11-12"></a><span class="fu">write.csv</span>(protest_abcnews, </span>
+<span id="cb11-13"><a href="#cb11-13"></a>          <span class="st">"protest_abcnews.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
 </section>
 <section id="retrieve-video-details-and-comments" class="level2">
 <h2 class="anchored" data-anchor-id="retrieve-video-details-and-comments">Retrieve Video Details and Comments</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>details <span class="ot">&lt;-</span> <span class="fu">get_video_details</span>(<span class="at">video_id =</span> <span class="st">"Yvb6ko7ZWaI"</span>) <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>()</span>
-<span id="cb12-2"><a href="#cb12-2"></a>stats <span class="ot">&lt;-</span> <span class="fu">get_stats</span>(<span class="at">video_id =</span> <span class="st">"Yvb6ko7ZWaI"</span>) <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>()</span>
-<span id="cb12-3"><a href="#cb12-3"></a></span>
-<span id="cb12-4"><a href="#cb12-4"></a>ABC_comments <span class="ot">&lt;-</span> <span class="fu">get_comment_threads</span>(</span>
-<span id="cb12-5"><a href="#cb12-5"></a>  <span class="at">filter =</span> <span class="fu">c</span>(<span class="at">video_id =</span> <span class="st">"Yvb6ko7ZWaI"</span>),</span>
-<span id="cb12-6"><a href="#cb12-6"></a>  <span class="at">max_results =</span> <span class="dv">20</span></span>
-<span id="cb12-7"><a href="#cb12-7"></a>)</span>
-<span id="cb12-8"><a href="#cb12-8"></a></span>
-<span id="cb12-9"><a href="#cb12-9"></a><span class="fu">head</span>(ABC_comments)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>details <span class="ot">&lt;-</span> </span>
+<span id="cb12-2"><a href="#cb12-2"></a>  <span class="fu">get_video_details</span>(<span class="at">video_id =</span> <span class="st">"Yvb6ko7ZWaI"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-3"><a href="#cb12-3"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb12-4"><a href="#cb12-4"></a></span>
+<span id="cb12-5"><a href="#cb12-5"></a>stats <span class="ot">&lt;-</span> <span class="fu">get_stats</span>(<span class="at">video_id =</span> <span class="st">"Yvb6ko7ZWaI"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-6"><a href="#cb12-6"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb12-7"><a href="#cb12-7"></a></span>
+<span id="cb12-8"><a href="#cb12-8"></a>ABC_comments <span class="ot">&lt;-</span> <span class="fu">get_comment_threads</span>(</span>
+<span id="cb12-9"><a href="#cb12-9"></a>  <span class="at">filter =</span> <span class="fu">c</span>(<span class="at">video_id =</span> <span class="st">"Yvb6ko7ZWaI"</span>),</span>
+<span id="cb12-10"><a href="#cb12-10"></a>  <span class="at">max_results =</span> <span class="dv">20</span></span>
+<span id="cb12-11"><a href="#cb12-11"></a>)</span>
+<span id="cb12-12"><a href="#cb12-12"></a></span>
+<span id="cb12-13"><a href="#cb12-13"></a><span class="fu">head</span>(ABC_comments)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Optional table display:</p>
 <div class="cell">
@@ -584,21 +599,21 @@ https://support.reddithelp.com/hc/en-us/articles/16160319875092-Reddit-Data-API-
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>thread_contents <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
 <span id="cb24-2"><a href="#cb24-2"></a></span>
 <span id="cb24-3"><a href="#cb24-3"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>) {</span>
-<span id="cb24-4"><a href="#cb24-4"></a>  thread_contents[[i]] <span class="ot">&lt;-</span> <span class="fu">get_thread_content</span>(threads<span class="sc">$</span>url[i])</span>
-<span id="cb24-5"><a href="#cb24-5"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb24-4"><a href="#cb24-4"></a>  thread_contents[[i]] <span class="ot">&lt;-</span> </span>
+<span id="cb24-5"><a href="#cb24-5"></a>    <span class="fu">get_thread_content</span>(threads<span class="sc">$</span>url[i])</span>
+<span id="cb24-6"><a href="#cb24-6"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
 </section>
 </section>
 <section id="bonus-notifications-for-long-scripts" class="level1">
 <h1>Bonus: Notifications for Long Scripts</h1>
+<p>This plays a sound when code finishes running.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># install.packages("beepr")</span></span>
 <span id="cb25-2"><a href="#cb25-2"></a><span class="fu">library</span>(beepr)</span>
-<span id="cb25-3"><a href="#cb25-3"></a></span>
-<span id="cb25-4"><a href="#cb25-4"></a><span class="fu">beep</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb25-3"><a href="#cb25-3"></a><span class="fu">beep</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>This plays a sound when code finishes running.</p>
 <hr>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary:</h2>

@@ -187,6 +187,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">4. Data access: Social media API</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Tutorials/Text-as-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">6. Text as data: Basic textual analysis</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -198,9 +204,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#learning-goals" id="toc-learning-goals" class="nav-link active" data-scroll-target="#learning-goals">Learning goals</a></li>
-  <li><a href="#data-types-in-r" id="toc-data-types-in-r" class="nav-link" data-scroll-target="#data-types-in-r">1.Data types in R</a>
+  <li><a href="#data-types-and-structures-in-r" id="toc-data-types-and-structures-in-r" class="nav-link" data-scroll-target="#data-types-and-structures-in-r">1.Data types and structures in R</a>
   <ul class="collapse">
-  <li><a href="#key-terms-objects-and-data-structures-in-r" id="toc-key-terms-objects-and-data-structures-in-r" class="nav-link" data-scroll-target="#key-terms-objects-and-data-structures-in-r">Key terms: objects and data structures in R</a>
+  <li><a href="#data-types" id="toc-data-types" class="nav-link" data-scroll-target="#data-types">Data types</a></li>
+  <li><a href="#data-structures" id="toc-data-structures" class="nav-link" data-scroll-target="#data-structures">Data structures</a>
   <ul class="collapse">
   <li><a href="#vectors" id="toc-vectors" class="nav-link" data-scroll-target="#vectors">1.1 Vectors</a></li>
   <li><a href="#object" id="toc-object" class="nav-link" data-scroll-target="#object">1.2 Object</a></li>
@@ -210,7 +217,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#comparing-list-matrix-and-data-frame" id="toc-comparing-list-matrix-and-data-frame" class="nav-link" data-scroll-target="#comparing-list-matrix-and-data-frame">Comparing list, matrix, and data frame</a></li>
   <li><a href="#data-type-conversion" id="toc-data-type-conversion" class="nav-link" data-scroll-target="#data-type-conversion">1.6 Data type conversion</a></li>
   </ul></li>
-  <li><a href="#introduction-to-tidyverse-and-the-mtcars-dataset" id="toc-introduction-to-tidyverse-and-the-mtcars-dataset" class="nav-link" data-scroll-target="#introduction-to-tidyverse-and-the-mtcars-dataset">2. Introduction to tidyverse and the mtcars dataset</a></li>
+  <li><a href="#introduction-to-tidyverse-and-the-mtcars-dataset" id="toc-introduction-to-tidyverse-and-the-mtcars-dataset" class="nav-link" data-scroll-target="#introduction-to-tidyverse-and-the-mtcars-dataset">Introduction to tidyverse and the mtcars dataset</a></li>
   </ul></li>
   <li><a href="#data-cleaning-and-summarizing" id="toc-data-cleaning-and-summarizing" class="nav-link" data-scroll-target="#data-cleaning-and-summarizing">2. Data cleaning and summarizing</a>
   <ul class="collapse">
@@ -265,11 +272,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <hr>
 </section>
-<section id="data-types-in-r" class="level1">
-<h1>1.Data types in R</h1>
-<section id="key-terms-objects-and-data-structures-in-r" class="level2">
-<h2 class="anchored" data-anchor-id="key-terms-objects-and-data-structures-in-r">Key terms: objects and data structures in R</h2>
-<p>Before working with datasets, it helps to understand a few basic terms used in R.</p>
+<section id="data-types-and-structures-in-r" class="level1">
+<h1>1.Data types and structures in R</h1>
+<p>Before working with datasets, it helps to understand a few basic terms used in R. R stores information in different data types. Understanding these types helps ensure your data is read and analyzed correctly.</p>
+<section id="data-types" class="level2">
+<h2 class="anchored" data-anchor-id="data-types">Data types</h2>
+<ul>
+<li><p><strong>Numeric</strong><br>
+Numbers that can include decimals.<br>
+Example: <code>2.5</code> inches of snow.</p></li>
+<li><p><strong>Integer</strong><br>
+Whole numbers without decimals.<br>
+Example: number of cars = <code>2</code>.</p></li>
+<li><p><strong>Character (string)</strong><br>
+Text data such as letters, words, or sentences.<br>
+Example: <code>"Washington DC"</code>.</p></li>
+<li><p><strong>Logical</strong><br>
+Values that represent true or false.<br>
+In R, these are written as <code>TRUE</code> or <code>FALSE</code>.</p></li>
+<li><p><strong>Factor</strong><br>
+Categorical variables with a fixed set of possible values (called <em>levels</em>).<br>
+Examples: <code>"Child"</code> vs <code>"Adult"</code>, <code>"Group A"</code> vs <code>"Group B"</code>.</p></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When importing data, R may not always assign the correct type automatically. It is good practice to check and convert variable types before analysis.</p>
+</div>
+</div>
+</section>
+<section id="data-structures" class="level2">
+<h2 class="anchored" data-anchor-id="data-structures">Data structures</h2>
 <ul>
 <li><p><strong>Object</strong><br>
 A general term for anything you create and store in R’s memory. For example, when you assign a value using <code>&lt;-</code>, you are creating an object.</p></li>
@@ -429,7 +469,7 @@ $fruits
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a>df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(b)</span>
 <span id="cb39-2"><a href="#cb39-2"></a>df[<span class="dv">1</span>, <span class="dv">5</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.8995648</code></pre>
+<pre><code>[1] -0.3547531</code></pre>
 </div>
 </div>
 <p>Data frame: columns can be different types (each column is one type)</p>
@@ -591,7 +631,7 @@ Note
 </section>
 </section>
 <section id="introduction-to-tidyverse-and-the-mtcars-dataset" class="level2">
-<h2 class="anchored" data-anchor-id="introduction-to-tidyverse-and-the-mtcars-dataset">2. Introduction to tidyverse and the mtcars dataset</h2>
+<h2 class="anchored" data-anchor-id="introduction-to-tidyverse-and-the-mtcars-dataset">Introduction to tidyverse and the mtcars dataset</h2>
 <p>In this part of the module, we will now use mtcars, a built-in dataset from Motor Trend magazine (1974), to learn basic data cleaning and preprocessing.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
