@@ -220,8 +220,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#improve-the-n-gram-explanation-with-a-cleaning-step" id="toc-improve-the-n-gram-explanation-with-a-cleaning-step" class="nav-link" data-scroll-target="#improve-the-n-gram-explanation-with-a-cleaning-step">Improve the n-gram explanation with a cleaning step</a></li>
   <li><a href="#bi-gram-words-associated-with-a-keyword" id="toc-bi-gram-words-associated-with-a-keyword" class="nav-link" data-scroll-target="#bi-gram-words-associated-with-a-keyword">Bi-gram: Words associated with a keyword</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary:</a></li>
   </ul>
 </nav>
     </div>
@@ -275,37 +275,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3"></a><span class="fu">install.packages</span>(packages)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.4     ✔ readr     2.1.5
-✔ forcats   1.0.0     ✔ stringr   1.5.1
-✔ ggplot2   4.0.0     ✔ tibble    3.2.1
-✔ lubridate 1.9.4     ✔ tidyr     1.3.1
-✔ purrr     1.0.4     
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">library</span>(tidytext)</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="fu">library</span>(tokenizers)</span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="fu">library</span>(wordcloud)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: RColorBrewer</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">library</span>(textdata)</span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="fu">library</span>(htmltools)</span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">library</span>(tidytext)</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="fu">library</span>(tokenizers)</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="fu">library</span>(wordcloud)</span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="fu">library</span>(textdata)</span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="fu">library</span>(htmltools)</span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In this module, we use YouTube data collected via the YouTube API. The dataset was gathered using the keyword “protest” from 12-01-2024 to 02-01-2025.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/protest_YouTube.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/protest_YouTube.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Let’s create a subset with five key variables to begin the analysis.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>YT_data <span class="ot">&lt;-</span> data[, <span class="fu">c</span>(<span class="st">"channelTitle"</span>, <span class="st">"title"</span>, <span class="st">"description"</span>, </span>
-<span id="cb8-2"><a href="#cb8-2"></a>                    <span class="st">"publishedAt"</span>, <span class="st">"video_id"</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>YT_data <span class="ot">&lt;-</span> data[, <span class="fu">c</span>(<span class="st">"channelTitle"</span>, <span class="st">"title"</span>, <span class="st">"description"</span>, </span>
+<span id="cb4-2"><a href="#cb4-2"></a>                    <span class="st">"publishedAt"</span>, <span class="st">"video_id"</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="pre-processing-text" class="level1">
@@ -320,12 +305,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="tokenization">2-1. Tokenization</h2>
 <p>Common words like <strong>“the,” “and,” and “to”</strong> appear frequently but carry little meaning. These are called stopwords. Let’s tokenize the <code>description</code> column in YT_data and create a <code>word</code> column.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>YT_tokenized <span class="ot">&lt;-</span> YT_data <span class="sc">|&gt;</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a>  <span class="fu">unnest_tokens</span>(word, description)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>YT_tokenized <span class="ot">&lt;-</span> YT_data <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>  <span class="fu">unnest_tokens</span>(word, description)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Tokenization breaks text into individual words and removes sentence structure.If you examine the first 20 words, you’ll notice common words like “to,” “the,” “and,” and “of,” which add little (or no) meaning.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">head</span>(YT_tokenized<span class="sc">$</span>word, <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">head</span>(YT_tokenized<span class="sc">$</span>word, <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "people's"  "march"     "adviser"   "ash"       "lee"       "woodard"  
  [7] "henderson" "discusses" "the"       "upcoming"  "march"     "to"       
@@ -339,9 +324,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>One of the first steps in Natural Language Processing (NLP) is removing words that carry little to no meaningful information, such as “a,” “the,” and “is” These are known as stopwords.</p>
 <p>In tidytext, there is a predefined list of stopwords (<code>stop_words</code>).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>YT_tokenized_cleaned <span class="ot">&lt;-</span> YT_tokenized <span class="sc">|&gt;</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a>  <span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="st">"word"</span>)</span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="fu">head</span>(YT_tokenized_cleaned)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>YT_tokenized_cleaned <span class="ot">&lt;-</span> YT_tokenized <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>  <span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="st">"word"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="fu">head</span>(YT_tokenized_cleaned)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -362,16 +347,16 @@ Note
 <p>If there is a specific stopword you’d like to add—such as <strong>“lol”</strong>, you can create a custom stopword list and merge it with the existing tidytext stopwords dataset.For example, the following code adds “lol” to the stopword list (creating a new dataframe with your custom stopwords):</p>
 <p>Create a custom stopword list (e.g., adding “lol”):</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>custom_stop <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">word =</span> <span class="fu">c</span>(<span class="st">"lol"</span>), <span class="at">lexicon =</span> <span class="st">"custom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>custom_stop <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">word =</span> <span class="fu">c</span>(<span class="st">"lol"</span>), <span class="at">lexicon =</span> <span class="st">"custom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Combine the custom stopwords with the default stopwords</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>final_stop <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(stop_words, custom_stop)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>final_stop <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(stop_words, custom_stop)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This code removes unwanted words from the tokenized dataset.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>YT_tokenized_cleaned <span class="ot">&lt;-</span> YT_tokenized <span class="sc">|&gt;</span></span>
-<span id="cb15-2"><a href="#cb15-2"></a>  <span class="fu">anti_join</span>(final_stop, <span class="at">by =</span> <span class="st">"word"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>YT_tokenized_cleaned <span class="ot">&lt;-</span> YT_tokenized <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>  <span class="fu">anti_join</span>(final_stop, <span class="at">by =</span> <span class="st">"word"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Try: <code>head(YT_tokenized_cleaned$word, 20)</code> to display the cleaned words with stopwords removed.</p>
 </section>
@@ -380,9 +365,9 @@ Note
 <h1>3. Word frequency analysis</h1>
 <p>Count word frequencies</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>word_counts <span class="ot">&lt;-</span> YT_tokenized_cleaned <span class="sc">|&gt;</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb16-3"><a href="#cb16-3"></a><span class="fu">head</span>(word_counts, <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>word_counts <span class="ot">&lt;-</span> YT_tokenized_cleaned <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="fu">head</span>(word_counts, <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         word   n
 1     protest 180
@@ -422,21 +407,21 @@ Tip
 </div>
 <section id="visualization" class="level2">
 <h2 class="anchored" data-anchor-id="visualization">3-1. Visualization</h2>
-<p>You can also visualize this using ggplot2. For example, to display the top 15 most frequently occurring words:</p>
+<p>You can also visualize this using ggplot2. For example, to display the top 10 most frequently occurring words:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>word_counts <span class="ot">&lt;-</span> YT_tokenized_cleaned <span class="sc">|&gt;</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb18-3"><a href="#cb18-3"></a>  <span class="fu">slice_max</span>(n, <span class="at">n =</span> <span class="dv">15</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>word_counts <span class="ot">&lt;-</span> YT_tokenized_cleaned <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a>  <span class="fu">slice_max</span>(n, <span class="at">n =</span> <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Here, I selected top 15 words (If you don’t specify a number or use this function, the graph will include the entire dataset, which may be difficult to interpret).</p>
+<p>Here, I selected top 15 words. If you don’t specify a number or use this function, the graph will include the entire dataset, which may be difficult to interpret.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="fu">ggplot</span>(word_counts, </span>
-<span id="cb19-2"><a href="#cb19-2"></a>       <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(word, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
-<span id="cb19-3"><a href="#cb19-3"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb19-4"><a href="#cb19-4"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb19-5"><a href="#cb19-5"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 15 Most Frequent Words"</span>,</span>
-<span id="cb19-6"><a href="#cb19-6"></a>       <span class="at">x =</span> <span class="st">"Words"</span>,</span>
-<span id="cb19-7"><a href="#cb19-7"></a>       <span class="at">y =</span> <span class="st">"Frequency"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="fu">ggplot</span>(word_counts, </span>
+<span id="cb15-2"><a href="#cb15-2"></a>       <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(word, n), <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 15 Most Frequent Words"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6"></a>       <span class="at">x =</span> <span class="st">"Words"</span>,</span>
+<span id="cb15-7"><a href="#cb15-7"></a>       <span class="at">y =</span> <span class="st">"Frequency"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -451,19 +436,19 @@ Tip
 <section id="word-cloud" class="level1">
 <h1>4. Word cloud</h1>
 <p>You can also generate a word cloud, which visually represents the most common words in a text. In a word cloud, larger words indicate higher frequency. This can be a useful way to quickly identify the most important terms in a large dataset.</p>
-<p>Count word frequency</p>
+<p>Let’s count word frequency</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>word_counts <span class="ot">&lt;-</span> YT_tokenized_cleaned <span class="sc">|&gt;</span></span>
-<span id="cb20-2"><a href="#cb20-2"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>word_counts <span class="ot">&lt;-</span> YT_tokenized_cleaned <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Create a word cloud (using wordcloud and RColorBrewer)</p>
+<p>Also, create a word cloud (using <code>wordcloud</code> and <code>RColorBrewer</code>)</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="fu">wordcloud</span>(<span class="at">words =</span> word_counts<span class="sc">$</span>word,</span>
-<span id="cb21-2"><a href="#cb21-2"></a>          <span class="at">freq =</span> word_counts<span class="sc">$</span>n,</span>
-<span id="cb21-3"><a href="#cb21-3"></a>          <span class="at">min.freq =</span> <span class="dv">2</span>,</span>
-<span id="cb21-4"><a href="#cb21-4"></a>          <span class="at">max.words =</span> <span class="dv">100</span>,</span>
-<span id="cb21-5"><a href="#cb21-5"></a>          <span class="at">colors =</span> <span class="fu">brewer.pal</span>(<span class="dv">8</span>, <span class="st">"Dark2"</span>),</span>
-<span id="cb21-6"><a href="#cb21-6"></a>          <span class="at">random.order =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="fu">wordcloud</span>(<span class="at">words =</span> word_counts<span class="sc">$</span>word,</span>
+<span id="cb17-2"><a href="#cb17-2"></a>          <span class="at">freq =</span> word_counts<span class="sc">$</span>n,</span>
+<span id="cb17-3"><a href="#cb17-3"></a>          <span class="at">min.freq =</span> <span class="dv">2</span>,</span>
+<span id="cb17-4"><a href="#cb17-4"></a>          <span class="at">max.words =</span> <span class="dv">100</span>,</span>
+<span id="cb17-5"><a href="#cb17-5"></a>          <span class="at">colors =</span> <span class="fu">brewer.pal</span>(<span class="dv">8</span>, <span class="st">"Dark2"</span>),</span>
+<span id="cb17-6"><a href="#cb17-6"></a>          <span class="at">random.order =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -494,41 +479,36 @@ Tip
 <section id="n-gram-analysis" class="level1">
 <h1>5. N-gram analysis</h1>
 <p>An n-gram is a sequence of words. This analysis helps examine sequences of words in text data.</p>
-<p>A <em>bigram</em> consists of two consecutive words, such as “communication theory”. A <em>trigram</em> contains three words in sequence, like “school of communication”. A <em>5-gram (quintgram)</em> includes five consecutive words, for example, “communication theory and research foundation”.</p>
+<p>A <strong>bigram</strong> consists of two consecutive words, such as <code>communication theory</code>. A <strong>trigram</strong> contains three words in sequence, like <code>school of communication</code>. A <strong>5-gram (quintgram)</strong> includes five consecutive words, for example, <code>communication theory and research foundation</code>.</p>
 <p>You can use n-gram analysis in R using the <code>unnest_tokens()</code> function to extract meaningful word patterns from text. We previous tokenized our text and looked at each individual word, but if we want to analyze n-grams, we can set the token argument to “ngrams”.</p>
 <p>Bigrams (2-word sequence)</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>YT_bigram <span class="ot">&lt;-</span> YT_data <span class="sc">|&gt;</span></span>
-<span id="cb22-2"><a href="#cb22-2"></a>  <span class="fu">unnest_tokens</span>(bigram, description, <span class="at">token =</span> <span class="st">"ngrams"</span>, <span class="at">n =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>YT_bigram <span class="ot">&lt;-</span> YT_data <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a>  <span class="fu">unnest_tokens</span>(bigram, description, <span class="at">token =</span> <span class="st">"ngrams"</span>, <span class="at">n =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Trigrams (3-word sequence) Additionally, you can specify the n argument to define the length of the n-gram. For example, setting n = 3 will extract trigrams (three-word sequences).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>YT_trigram <span class="ot">&lt;-</span> YT_data <span class="sc">|&gt;</span></span>
-<span id="cb23-2"><a href="#cb23-2"></a>  <span class="fu">unnest_tokens</span>(trigram, description, <span class="at">token =</span> <span class="st">"ngrams"</span>, <span class="at">n =</span> <span class="dv">3</span>)</span>
-<span id="cb23-3"><a href="#cb23-3"></a><span class="fu">head</span>(YT_trigram<span class="sc">$</span>trigram)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>YT_trigram <span class="ot">&lt;-</span> YT_data <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a>  <span class="fu">unnest_tokens</span>(trigram, description, <span class="at">token =</span> <span class="st">"ngrams"</span>, <span class="at">n =</span> <span class="dv">3</span>)</span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="fu">head</span>(YT_trigram<span class="sc">$</span>trigram)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "people's march adviser"      "march adviser ash"          
 [3] "adviser ash lee"             "ash lee woodard"            
 [5] "lee woodard henderson"       "woodard henderson discusses"</code></pre>
 </div>
 </div>
-<p>Most common trigram</p>
+<p>Let’s identify top 5 trigram (by frequency)</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>YT_trigram <span class="sc">|&gt;</span></span>
-<span id="cb25-2"><a href="#cb25-2"></a>  <span class="fu">count</span>(trigram, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb25-3"><a href="#cb25-3"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>YT_trigram <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>  <span class="fu">count</span>(trigram, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb21-3"><a href="#cb21-3"></a>  <span class="fu">head</span>(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                      trigram   n
-1                        &lt;NA&gt; 119
-2            subscribe to sun  14
-3             news channel to  13
-4            sun news channel  13
-5        sunnews subscribe to  13
-6                 to sun news  13
-7  at markokacanski.com check   9
-8          barjak za očuvanje   9
-9             channel to stay   9
-10            check our games   9</code></pre>
+<pre><code>               trigram   n
+1                 &lt;NA&gt; 119
+2     subscribe to sun  14
+3      news channel to  13
+4     sun news channel  13
+5 sunnews subscribe to  13</code></pre>
 </div>
 </div>
 <section id="q.-how-do-we-use-it-in-our-research" class="level4">
@@ -539,12 +519,12 @@ Tip
 <h3 class="anchored" data-anchor-id="improve-the-n-gram-explanation-with-a-cleaning-step">Improve the n-gram explanation with a cleaning step</h3>
 <p>When doing bigrams, many results include stopwords like: ‘of the,’ ‘in the,’ ‘to the.’ You may want to remove stopwords from bigrams:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>YT_bigram_clean <span class="ot">&lt;-</span> YT_data <span class="sc">|&gt;</span></span>
-<span id="cb27-2"><a href="#cb27-2"></a>  <span class="fu">unnest_tokens</span>(bigram, description, </span>
-<span id="cb27-3"><a href="#cb27-3"></a>                <span class="at">token =</span> <span class="st">"ngrams"</span>, <span class="at">n =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
-<span id="cb27-4"><a href="#cb27-4"></a>  <span class="fu">separate</span>(bigram, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"word1"</span>, <span class="st">"word2"</span>), <span class="at">sep =</span> <span class="st">" "</span>) <span class="sc">|&gt;</span></span>
-<span id="cb27-5"><a href="#cb27-5"></a>  <span class="fu">filter</span>(<span class="sc">!</span>word1 <span class="sc">%in%</span> stop_words<span class="sc">$</span>word,</span>
-<span id="cb27-6"><a href="#cb27-6"></a>         <span class="sc">!</span>word2 <span class="sc">%in%</span> stop_words<span class="sc">$</span>word)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>YT_bigram_clean <span class="ot">&lt;-</span> YT_data <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a>  <span class="fu">unnest_tokens</span>(bigram, description, </span>
+<span id="cb23-3"><a href="#cb23-3"></a>                <span class="at">token =</span> <span class="st">"ngrams"</span>, <span class="at">n =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-4"><a href="#cb23-4"></a>  <span class="fu">separate</span>(bigram, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"word1"</span>, <span class="st">"word2"</span>), <span class="at">sep =</span> <span class="st">" "</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-5"><a href="#cb23-5"></a>  <span class="fu">filter</span>(<span class="sc">!</span>word1 <span class="sc">%in%</span> stop_words<span class="sc">$</span>word,</span>
+<span id="cb23-6"><a href="#cb23-6"></a>         <span class="sc">!</span>word2 <span class="sc">%in%</span> stop_words<span class="sc">$</span>word)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>YT_bigram_clean now contains two-word combinations, no stopwords, and cleaned phrases ready for frequency analysis</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -575,16 +555,16 @@ Note
 <p>For example, to find words that appear with “president,” we tokenize the text into bigrams using <code>unnest_tokens()</code>, split each bigram into two words, and filter for pairs that include <strong>“president”</strong>.</p>
 <p>Counting the accompanying words shows which terms most often co-occur with “president,” helping us see how the term is described or used in context.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>president_bigrams <span class="ot">&lt;-</span> YT_data <span class="sc">|&gt;</span></span>
-<span id="cb28-2"><a href="#cb28-2"></a>  <span class="fu">unnest_tokens</span>(bigram, description, </span>
-<span id="cb28-3"><a href="#cb28-3"></a>                <span class="at">token =</span> <span class="st">"ngrams"</span>, <span class="at">n =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
-<span id="cb28-4"><a href="#cb28-4"></a>  <span class="fu">separate</span>(bigram, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"word1"</span>, <span class="st">"word2"</span>), <span class="at">sep =</span> <span class="st">" "</span>) <span class="sc">|&gt;</span></span>
-<span id="cb28-5"><a href="#cb28-5"></a>  <span class="fu">filter</span>(word1 <span class="sc">==</span> <span class="st">"president"</span> <span class="sc">|</span> word2 <span class="sc">==</span> <span class="st">"president"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb28-6"><a href="#cb28-6"></a>  <span class="fu">count</span>(word1, word2, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>president_bigrams <span class="ot">&lt;-</span> YT_data <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2"></a>  <span class="fu">unnest_tokens</span>(bigram, description, </span>
+<span id="cb24-3"><a href="#cb24-3"></a>                <span class="at">token =</span> <span class="st">"ngrams"</span>, <span class="at">n =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-4"><a href="#cb24-4"></a>  <span class="fu">separate</span>(bigram, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"word1"</span>, <span class="st">"word2"</span>), <span class="at">sep =</span> <span class="st">" "</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-5"><a href="#cb24-5"></a>  <span class="fu">filter</span>(word1 <span class="sc">==</span> <span class="st">"president"</span> <span class="sc">|</span> word2 <span class="sc">==</span> <span class="st">"president"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-6"><a href="#cb24-6"></a>  <span class="fu">count</span>(word1, word2, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Let’s look at the results:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>president_bigrams</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>president_bigrams</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       word1      word2 n
 1  president     donald 7
@@ -622,14 +602,13 @@ Note
 </div>
 </div>
 <p>This captures immediate neighboring words (co-occurrences) such as “president trump” or “president elect.” We will also cover the semantic network analysis which allows us to looks at broader relationships among words across the dataset, not just adjacent ones.</p>
-<hr>
 </section>
-</section>
-<section id="summary" class="level1">
-<h1>Summary:</h1>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <p>In this module, you learned how to structure and clean textual data in R. You practiced tokenizing text, removing stopwords, analyzing word frequency, generating visualizations, and examining word sequences using n-grams. These techniques provide a foundation for computational text analysis and prepare you for more advanced methods such as sentiment analysis, topic modeling, and semantic network analysis.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
