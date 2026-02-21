@@ -1,6 +1,8 @@
 project:
   type: website
   output-dir: _site
+  resources:
+    - data/protest_YouTube.csv
 
 website:
   title: "Computational Social Science Textbook"
@@ -19,6 +21,7 @@ website:
         - Tutorials/Data-structure-and-cleaning.qmd
         - Tutorials/Data-preprocessing.qmd
         - Tutorials/Data-access.qmd
+        - Tutorials/Text-as-data.qmd
 
 format:
   html:

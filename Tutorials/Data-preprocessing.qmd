@@ -54,9 +54,9 @@ If your merge produces lots of missing values, date formats are often the reason
 
 ## Pre-processing and merging
 
-First, ensure mobility$date is a real Date object
-If mobility$date is already a Date, this will keep it as Date.
-If it's a character like "2020-04-01", this will parse it correctly.
+First, ensure values in the 'date' column in mobility is a real Date object
+If it is already a Date, this will keep it as Date.
+If it's a character like "2026-04-01", this will parse it correctly.
 
 ```{r preprocess}
 mobility <- mobility |>
@@ -67,7 +67,8 @@ Create a calendar date in covidcases based on the week number. Week 1 starts on 
 
 ```{r}
 covidcases <- covidcases |>
-  mutate(date = as.Date("2019-12-29") + weeks(week - 1))
+  mutate(date = as.Date("2019-12-29") + 
+           weeks(week - 1))
 ```
 
 ### Merge datasets by state and date
@@ -89,7 +90,8 @@ To make plots more interpretable, we often focus on a subset. Here we compare mo
 
 ```{r filter-three-states}
 filtered_data <- merged_data |>
-  filter(state %in% c("California", "Florida", "Hawaii"))
+  filter(state %in% 
+           c("California", "Florida", "Hawaii"))
 ```
 
 ## Line graph: trends over time
@@ -98,13 +100,13 @@ Of note, m50 represents the median of the max-distance mobility (the distance a 
 
 ```{r, warning=FALSE}
 m50trend <- ggplot(filtered_data, 
-                   aes(x = week, y = m50, color = state)) +
+                   aes(x = week, y = m50, 
+                       color = state)) +
   geom_line() +
   labs(
-    title = "Weekly Mobility Trends Across Three States",
+    title = "Weekly Mobility Across 3 States",
     x = "Week number",
-    y = "m50 (Median max-distance mobility)"
-  )
+    y = "m50 (Median max-distance mobility)")
 print(m50trend)
 ```
 
@@ -113,13 +115,12 @@ By default, ggsave() saves figures at 7 × 7 inches. You can change the width an
 
 ```{r save-plot, eval=FALSE}
 ggsave("mobility_line_graph.png", plot = m50trend)
-
+# Customizing the figure size
 ggsave(
   "mobility_line_graph_large.png",
   plot = m50trend,
   width = 10, height = 8, units = "in",
-  dpi = 300
-)
+  dpi = 300)
 ```
 
 :::callout-tip
@@ -132,22 +133,24 @@ You can change the size of texts, colors/thickness/types of the lines etc by usi
 ### 1. Change the size of texts (increase text size for instane)
 ```{r, warning=FALSE}
 m50trend_1 <- ggplot(filtered_data, 
-                     aes(x = week, y = m50, color = state)) +
+                     aes(x = week, y = m50, 
+                         color = state)) +
   geom_line() +
-  labs(title = "Weekly Mobility Trends Across Three States",
+  labs(title = "Weekly Mobility Across 3 States",
        x = "Week Number",
        y = "m50 (Median Max-Distance Mobility)") +
   theme_minimal() +
   theme(
-    # Bigger title
-    plot.title = element_text(size = 16, face = "bold"),  
-    # X-axis label size
+# Bigger title
+    plot.title = element_text(size = 16, 
+                              face = "bold"),  
+# X-axis label size
     axis.title.x = element_text(size = 14),  
-    # Y-axis label size
+# Y-axis label size
     axis.title.y = element_text(size = 14),  
-    # Legend text size
+# Legend text size
     legend.text = element_text(size = 12),  
-    # Legend title size
+# Legend title size
     legend.title = element_text(size = 14)  
   )
 print(m50trend_1)
@@ -158,9 +161,10 @@ You can adjust the number after size = to control how thick the line appears in 
 
 ```{r, warning=FALSE}
 m50trend_2 <- ggplot(filtered_data, 
-                     aes(x = week, y = m50, color = state)) +
+                     aes(x = week, y = m50, 
+                         color = state)) +
   geom_line(size = 1.5) +  # Increase line thickness
-  labs(title = "Weekly Mobility Trends Across Three States",
+  labs(title = "Weekly Mobility Across 3 States",
        x = "Week Number",
        y = "m50 (Median Max-Distance Mobility)") +
   theme_minimal()
@@ -172,9 +176,10 @@ If the figure will be printed in black and white, use different line types such 
 
 ```{r, warning=FALSE}
 m50trend_3 <- ggplot(filtered_data, 
-                     aes(x = week, y = m50, color = state, linetype = state)) +
+                     aes(x = week, y = m50, 
+                         color = state, linetype = state)) +
   geom_line(size = 1.2) +  # Thicker lines
-  labs(title = "Weekly Mobility Trends Across Three States",
+  labs(title = "Weekly Mobility Across 3 States",
        x = "Week Number",
        y = "m50 (Median Max-Distance Mobility)") +
   theme_minimal()
@@ -186,12 +191,13 @@ You can use the scale_color_manual() function and enter the colors of your choic
 
 ```{r, warning=FALSE}
 m50trend_4 <- ggplot(filtered_data, 
-                     aes(x = week, y = m50, color = state)) +
+                     aes(x = week, y = m50, 
+                         color = state)) +
   geom_line(size = 1.2) +
   scale_color_manual(values = c("California" = "blue", 
                                 "Florida" = "green", 
                                 "Hawaii" = "pink")) + 
-  labs(title = "Weekly Mobility Trends Across Three States",
+  labs(title = "Weekly Mobility Across 3 States",
        x = "Week Number",
        y = "m50 (Median Max-Distance Mobility)") +
   theme_minimal()
@@ -210,15 +216,21 @@ state_summary <- filtered_data |>
             .groups = "drop")
 ```
 
+We now have 'mean_m50' scores. We enter this to ggplot and its geom_col() function.
 ```{r}
 ggplot(state_summary, aes(x = state, y = mean_m50)) +
   geom_col() +
   labs(
-    title = "Average Mobility (m50) Across Three States",
+    title = "Average Mobility Across 3 States",
     x = "State",
     y = "Mean m50"
-  )
+    )
 ```
+
+:::callout-tip
+- If you already summarized your data: then use the	geom_col(). 
+- But if you want to use counts of rows: then use	geom_bar().
+:::
 
 Example 2. If we want to count how many observations exist for each state, we use geom_bar().
 geom_bar() automatically counts how many rows fall into each category.
@@ -232,11 +244,6 @@ ggplot(filtered_data, aes(x = state)) +
   )
 ```
 
-:::callout-tip
-You already summarized your data. Then use the	geom_col() 
-You want counts of rows. Then use	geom_bar()
-:::
-
 # Interactive plots with plotly
 
 To create interactive plots, use the plotly package. Interactive plots allow you to hover, zoom, and toggle groups. 
@@ -245,7 +252,8 @@ To create interactive plots, use the plotly package. Interactive plots allow you
 # install.packages("plotly")
 library(plotly)
 interactive_plot <- ggplot(filtered_data, 
-                           aes(x = week, y = m50, color = state)) +
+                           aes(x = week, y = m50, 
+                               color = state)) +
   geom_line()
 ggplotly(interactive_plot)
 ```

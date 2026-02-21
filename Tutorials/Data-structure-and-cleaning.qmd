@@ -14,10 +14,35 @@ By the end of this tutorial, you will be able to:
 
 ---
 
-# 1.Data types in R
-## Key terms: objects and data structures in R
+# 1.Data types and structures in R
+Before working with datasets, it helps to understand a few basic terms used in R. R stores information in different data types. Understanding these types helps ensure your data is read and analyzed correctly.
 
-Before working with datasets, it helps to understand a few basic terms used in R.
+## Data types
+- **Numeric**  
+  Numbers that can include decimals.  
+  Example: `2.5` inches of snow.
+
+- **Integer**  
+  Whole numbers without decimals.  
+  Example: number of cars = `2`.
+
+- **Character (string)**  
+  Text data such as letters, words, or sentences.  
+  Example: `"Washington DC"`.
+
+- **Logical**  
+  Values that represent true or false.  
+  In R, these are written as `TRUE` or `FALSE`.
+
+- **Factor**  
+  Categorical variables with a fixed set of possible values (called *levels*).  
+  Examples: `"Child"` vs `"Adult"`, `"Group A"` vs `"Group B"`.
+
+:::callout-note
+When importing data, R may not always assign the correct type automatically. It is good practice to check and convert variable types before analysis.
+:::
+
+## Data structures
 
 - **Object**  
   A general term for anything you create and store in R’s memory. For example, when you assign a value using `<-`, you are creating an object.
@@ -216,7 +241,7 @@ When coercion produces `NA`, it usually means the original value could not be co
 Always check for unexpected `NA` values after converting variables.
 :::
 
-## 2. Introduction to tidyverse and the mtcars dataset
+## Introduction to tidyverse and the mtcars dataset
 
 In this part of the module, we will now use mtcars, a built-in dataset from Motor Trend magazine (1974), to learn basic data cleaning and preprocessing.
 
