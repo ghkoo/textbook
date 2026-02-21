@@ -204,7 +204,7 @@ m50trend_4 <- ggplot(filtered_data,
 print(m50trend_4)
 ```
 
-## 4. Bar graph: comparing states
+## 3-4. Bar graph: comparing states
 
 Example 1. Here we calculate the average mobility for each state and then plot it.
 A bar chart usually use **summarized data** (one value per group), not raw daily rows. First, create a summarized dataset.
@@ -259,7 +259,7 @@ ggplotly(interactive_plot)
 ```
 
 
-## Summary:
+## Summary
 
 In this chapter, you practiced inspecting datasets, converting variables, and preparing data for analysis by aligning date formats and merging datasets.
 

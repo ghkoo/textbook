@@ -346,6 +346,6 @@ beep()
 
 ---
 
-## Summary: 
+## Summary
 
 This module introduced practical techniques for collecting digital data directly from online platforms. Because APIs and platform policies change frequently, always verify current documentation before starting a project.

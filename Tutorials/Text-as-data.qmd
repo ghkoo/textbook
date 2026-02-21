@@ -25,7 +25,7 @@ packages <- c("tidytext", "tokenizers", "wordcloud",
 install.packages(packages)
 ```
 
-```{r, results="hide"}
+```{r, results="hide", warning=FALSE, message=FALSE}
 library(tidyverse)
 library(tidytext)
 library(tokenizers)
@@ -126,14 +126,14 @@ It is natural for the keyword used in data collection to appear most frequently.
 :::
 
 ## 3-1. Visualization
-You can also visualize this using ggplot2. For example, to display the top 15 most frequently occurring words:
+You can also visualize this using ggplot2. For example, to display the top 10 most frequently occurring words:
 ```{r}
 word_counts <- YT_tokenized_cleaned |>
   count(word, sort = TRUE) |>
-  slice_max(n, n = 15)
+  slice_max(n, n = 10)
 ```
 
-Here, I selected top 15 words (If you don’t specify a number or use this function, the graph will include the entire dataset, which may be difficult to interpret).
+Here, I selected top 15 words. If you don’t specify a number or use this function, the graph will include the entire dataset, which may be difficult to interpret.
 
 ```{r}
 ggplot(word_counts, 
@@ -152,13 +152,13 @@ Word frequency does not capture context, sarcasm, or its underlying meaning. Tex
 # 4. Word cloud
 You can also generate a word cloud, which visually represents the most common words in a text. In a word cloud, larger words indicate higher frequency. This can be a useful way to quickly identify the most important terms in a large dataset.
 
-Count word frequency
+Let's count word frequency
 ```{r}
 word_counts <- YT_tokenized_cleaned |>
   count(word, sort = TRUE)
 ```
 
-Create a word cloud (using wordcloud and RColorBrewer)
+Also, create a word cloud (using `wordcloud` and `RColorBrewer`)
 ```{r}
 wordcloud(words = word_counts$word,
           freq = word_counts$n,
@@ -179,7 +179,7 @@ wordcloud(words = word_counts$word,
 # 5. N-gram analysis
 An n-gram is a sequence of words. This analysis helps examine sequences of words in text data. 
 
-A *bigram* consists of two consecutive words, such as "communication theory". A *trigram* contains three words in sequence, like "school of communication". A *5-gram (quintgram)* includes five consecutive words, for example, "communication theory and research foundation". 
+A **bigram** consists of two consecutive words, such as `communication theory`. A **trigram** contains three words in sequence, like `school of communication`. A **5-gram (quintgram)** includes five consecutive words, for example, `communication theory and research foundation`. 
 
 You can use n-gram analysis in R using the `unnest_tokens()` function to extract meaningful word patterns from text. We previous tokenized our text and looked at each individual word, but if we want to analyze n-grams, we can set the token argument to "ngrams". 
 
@@ -197,11 +197,11 @@ YT_trigram <- YT_data |>
 head(YT_trigram$trigram)
 ```
 
-Most common trigram
+Let's identify top 5 trigram (by frequency)
 ```{r}
 YT_trigram |>
   count(trigram, sort = TRUE) |>
-  head(10)
+  head(5)
 ```
 
 #### Q. How do we use it in our research?
@@ -255,8 +255,7 @@ president_bigrams
 
 This captures immediate neighboring words (co-occurrences) such as “president trump” or “president elect.” We will also cover the semantic network analysis which allows us to looks at broader relationships among words across the dataset, not just adjacent ones.
 
----
 
-# Summary: 
+## Summary
 
 In this module, you learned how to structure and clean textual data in R. You practiced tokenizing text, removing stopwords, analyzing word frequency, generating visualizations, and examining word sequences using n-grams. These techniques provide a foundation for computational text analysis and prepare you for more advanced methods such as sentiment analysis, topic modeling, and semantic network analysis.

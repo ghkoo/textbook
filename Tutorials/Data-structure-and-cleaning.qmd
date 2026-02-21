@@ -462,6 +462,6 @@ nrow(hawaii_mobility)
 
 ---
 
-## Summary: 
+## Summary 
 
 In this chapter, you learned how to work with core R structures such as vectors, data frames, objects, lists, and matrices. You also practiced converting between data types, using pipe operators to write clear and readable code, and cleaning and summarizing real-world datasets. These foundational skills prepare you to move from data preparation to analysis. In the next chapter, we will build on these concepts to explore data visualization and interpretation.
