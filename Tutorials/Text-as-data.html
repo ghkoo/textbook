@@ -214,6 +214,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#word-frequency-analysis" id="toc-word-frequency-analysis" class="nav-link" data-scroll-target="#word-frequency-analysis">3. Word frequency analysis</a>
   <ul class="collapse">
   <li><a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization">3-1. Visualization</a></li>
+  </ul></li>
   <li><a href="#word-cloud" id="toc-word-cloud" class="nav-link" data-scroll-target="#word-cloud">4. Word cloud</a></li>
   <li><a href="#n-gram-analysis" id="toc-n-gram-analysis" class="nav-link" data-scroll-target="#n-gram-analysis">5. N-gram analysis</a>
   <ul class="collapse">
@@ -221,7 +222,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#bi-gram-words-associated-with-a-keyword" id="toc-bi-gram-words-associated-with-a-keyword" class="nav-link" data-scroll-target="#bi-gram-words-associated-with-a-keyword">Bi-gram: Words associated with a keyword</a></li>
   </ul></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary:</a></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
@@ -268,7 +268,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="introduction" class="level1">
 <h1>1. Introduction</h1>
-<p>We will learn how to preprocess text data, remove noise, and analyze patterns in language. First, install and load the pacakages.</p>
+<p>We will learn how to preprocess text data, remove noise, and analyze patterns in language. First, install and load the packages</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"tidytext"</span>, <span class="st">"tokenizers"</span>, <span class="st">"wordcloud"</span>, </span>
 <span id="cb1-2"><a href="#cb1-2"></a>              <span class="st">"textdata"</span>, <span class="st">"RColorBrewer"</span>, <span class="st">"htmltools"</span>)</span>
@@ -312,13 +312,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>2. Pre-processing text</h1>
 <p>Text data is often unstructured, so it needs to be processed before analysis. One key step is tokenization, which splits text into individual words.</p>
 <ul>
-<li>Example sentence: “I am going to school today”</li>
-<li>Tokenized output: “I”, “am”, “going”, “to”, “school”, “today”</li>
+<li>Example sentence: <code>I am going to school today</code></li>
+<li>Tokenized output: <code>I</code>, <code>am</code>, <code>going</code>, <code>to</code>, <code>school</code>, <code>today</code></li>
 </ul>
 <p>This processed text data can then be used for various analyses, such as identifying word frequency (which words appear most often) or detecting sentiment by analyzing the presence of positive or negative words.</p>
 <section id="tokenization" class="level2">
 <h2 class="anchored" data-anchor-id="tokenization">2-1. Tokenization</h2>
-<p>Common words like “the,” “and,” and “to” appear frequently but carry little meaning. These are called stopwords. Let’s tokenize the ‘description’ column in YT_data and create a ‘word’ column.</p>
+<p>Common words like <strong>“the,” “and,” and “to”</strong> appear frequently but carry little meaning. These are called stopwords. Let’s tokenize the <code>description</code> column in YT_data and create a <code>word</code> column.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>YT_tokenized <span class="ot">&lt;-</span> YT_data <span class="sc">|&gt;</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>  <span class="fu">unnest_tokens</span>(word, description)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -337,7 +337,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="removing-stopwords" class="level2">
 <h2 class="anchored" data-anchor-id="removing-stopwords">2-2. Removing stopwords</h2>
 <p>One of the first steps in Natural Language Processing (NLP) is removing words that carry little to no meaningful information, such as “a,” “the,” and “is” These are known as stopwords.</p>
-<p>In tidytext, there is a predefined list of stopwords (‘stop_words’).</p>
+<p>In tidytext, there is a predefined list of stopwords (<code>stop_words</code>).</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>YT_tokenized_cleaned <span class="ot">&lt;-</span> YT_tokenized <span class="sc">|&gt;</span></span>
 <span id="cb12-2"><a href="#cb12-2"></a>  <span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="st">"word"</span>)</span>
@@ -359,7 +359,7 @@ Note
 </section>
 <section id="customize-stopwords" class="level2">
 <h2 class="anchored" data-anchor-id="customize-stopwords">2-3. Customize stopwords</h2>
-<p>If there is a specific stopword you’d like to add—such as “lol”, you can create a custom stopword list and merge it with the existing tidytext stopwords dataset.For example, the following code adds “lol” to the stopword list (creating a new dataframe with your custom stopwords):</p>
+<p>If there is a specific stopword you’d like to add—such as <strong>“lol”</strong>, you can create a custom stopword list and merge it with the existing tidytext stopwords dataset.For example, the following code adds “lol” to the stopword list (creating a new dataframe with your custom stopwords):</p>
 <p>Create a custom stopword list (e.g., adding “lol”):</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>custom_stop <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">word =</span> <span class="fu">c</span>(<span class="st">"lol"</span>), <span class="at">lexicon =</span> <span class="st">"custom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -373,7 +373,7 @@ Note
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>YT_tokenized_cleaned <span class="ot">&lt;-</span> YT_tokenized <span class="sc">|&gt;</span></span>
 <span id="cb15-2"><a href="#cb15-2"></a>  <span class="fu">anti_join</span>(final_stop, <span class="at">by =</span> <span class="st">"word"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Try: ‘head(YT_tokenized_cleaned$word, 20)’ to display the cleaned words with stopwords removed.</p>
+<p>Try: <code>head(YT_tokenized_cleaned$word, 20)</code> to display the cleaned words with stopwords removed.</p>
 </section>
 </section>
 <section id="word-frequency-analysis" class="level1">
@@ -447,8 +447,9 @@ Tip
 </div>
 <p>Word frequency does not capture context, sarcasm, or its underlying meaning. Text analysis should be interpreted carefully and ideally combined with qualitative review.</p>
 </section>
-<section id="word-cloud" class="level2">
-<h2 class="anchored" data-anchor-id="word-cloud">4. Word cloud</h2>
+</section>
+<section id="word-cloud" class="level1">
+<h1>4. Word cloud</h1>
 <p>You can also generate a word cloud, which visually represents the most common words in a text. In a word cloud, larger words indicate higher frequency. This can be a useful way to quickly identify the most important terms in a large dataset.</p>
 <p>Count word frequency</p>
 <div class="cell">
@@ -482,19 +483,19 @@ Tip
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>min.freq = Minimum frequency for a word to be displayed (display words that appear at least twice).</li>
-<li>max.words = Maximum words to show.</li>
-<li>colors = brewer.pal(8, “Dark2”) = Color palette (this palette use the max of 8 colors; you can change it). If you’d like to see what color palettes are available, you can use display.brewer.all().</li>
-<li>random.order = FALSE) Arrange by frequency.</li>
+<li><code>min.freq = Minimum frequency</code> for a word to be displayed (display words that appear at least twice).</li>
+<li><code>max.words</code> = Maximum words to show.</li>
+<li><code>colors = brewer.pal(8, "Dark2")</code> = Color palette (this palette use the max of 8 colors; you can change it). If you’d like to see what color palettes are available, you can use <code>display.brewer.all()</code>.</li>
+<li><code>random.order = FALSE</code> Arrange by frequency.</li>
 </ul>
 </div>
 </div>
 </section>
-<section id="n-gram-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="n-gram-analysis">5. N-gram analysis</h2>
+<section id="n-gram-analysis" class="level1">
+<h1>5. N-gram analysis</h1>
 <p>An n-gram is a sequence of words. This analysis helps examine sequences of words in text data.</p>
 <p>A <em>bigram</em> consists of two consecutive words, such as “communication theory”. A <em>trigram</em> contains three words in sequence, like “school of communication”. A <em>5-gram (quintgram)</em> includes five consecutive words, for example, “communication theory and research foundation”.</p>
-<p>You can use n-gram analysis in R using the unnest_tokens() function to extract meaningful word patterns from text. We previous tokenized our text and looked at each individual word, but if we want to analyze n-grams, we can set the token argument to “ngrams”.</p>
+<p>You can use n-gram analysis in R using the <code>unnest_tokens()</code> function to extract meaningful word patterns from text. We previous tokenized our text and looked at each individual word, but if we want to analyze n-grams, we can set the token argument to “ngrams”.</p>
 <p>Bigrams (2-word sequence)</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>YT_bigram <span class="ot">&lt;-</span> YT_data <span class="sc">|&gt;</span></span>
@@ -532,7 +533,7 @@ Tip
 </div>
 <section id="q.-how-do-we-use-it-in-our-research" class="level4">
 <h4 class="anchored" data-anchor-id="q.-how-do-we-use-it-in-our-research">Q. How do we use it in our research?</h4>
-<p>If you want to analyze how different phrases are used—for instance, if your bigrams show “vaccine mandate,” “vaccine hesitancy,” “vaccine conspiracy,” and “vaccine autism”—this dataset may primarily reflect anti-vaccine sentiment. By examining the frequency and context of these phrases, you can identify the patterns or trends of online discourse.</p>
+<p>If you want to analyze how different phrases are used—for instance, if your bigrams show <strong>“vaccine mandate,” “vaccine hesitancy,” “vaccine conspiracy,” and “vaccine autism”</strong>*, this dataset may primarily reflect anti-vaccine sentiment. By examining the frequency and context of these phrases, you can identify the patterns or trends of online discourse.</p>
 </section>
 <section id="improve-the-n-gram-explanation-with-a-cleaning-step" class="level3">
 <h3 class="anchored" data-anchor-id="improve-the-n-gram-explanation-with-a-cleaning-step">Improve the n-gram explanation with a cleaning step</h3>
@@ -557,13 +558,13 @@ Note
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>description is the text column being analyzed</li>
-<li>unnest_tokens() splits text into tokens</li>
-<li>token = “ngrams” tells R to create word sequences</li>
-<li>n = 2 means two-word sequences (bigrams)</li>
-<li>The new column created is named bigram</li>
+<li><code>description</code> is the text column being analyzed</li>
+<li><code>unnest_tokens()</code> splits text into tokens</li>
+<li><code>token = "ngrams"</code> tells R to create word sequences</li>
+<li><code>n = 2</code> means two-word sequences (bigrams)</li>
+<li>The new column created is named <code>bigram</code></li>
 <li>Each bigram like “people protest” is split into: word1 = “people” &amp; word2 = “protest”</li>
-<li>filter() removes bigrams where either word is a common stopword.</li>
+<li><code>filter()</code> removes bigrams where either word is a common stopword.</li>
 </ul>
 </div>
 </div>
@@ -571,7 +572,8 @@ Note
 <section id="bi-gram-words-associated-with-a-keyword" class="level3">
 <h3 class="anchored" data-anchor-id="bi-gram-words-associated-with-a-keyword">Bi-gram: Words associated with a keyword</h3>
 <p>We can identify words associated with specific keywords in the dataset.</p>
-<p>For example, to find words that appear with “president,” we tokenize the text into bigrams using unnest_tokens(), split each bigram into two words, and filter for pairs that include “president” Counting the accompanying words shows which terms most often co-occur with “president,” helping us see how the term is described or used in context.</p>
+<p>For example, to find words that appear with “president,” we tokenize the text into bigrams using <code>unnest_tokens()</code>, split each bigram into two words, and filter for pairs that include <strong>“president”</strong>.</p>
+<p>Counting the accompanying words shows which terms most often co-occur with “president,” helping us see how the term is described or used in context.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>president_bigrams <span class="ot">&lt;-</span> YT_data <span class="sc">|&gt;</span></span>
 <span id="cb28-2"><a href="#cb28-2"></a>  <span class="fu">unnest_tokens</span>(bigram, description, </span>
@@ -623,12 +625,11 @@ Note
 <hr>
 </section>
 </section>
-<section id="summary" class="level2">
-<h2 class="anchored" data-anchor-id="summary">Summary:</h2>
+<section id="summary" class="level1">
+<h1>Summary:</h1>
 <p>In this module, you learned how to structure and clean textual data in R. You practiced tokenizing text, removing stopwords, analyzing word frequency, generating visualizations, and examining word sequences using n-grams. These techniques provide a foundation for computational text analysis and prepare you for more advanced methods such as sentiment analysis, topic modeling, and semantic network analysis.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
