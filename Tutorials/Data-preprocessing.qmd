@@ -18,7 +18,7 @@ By the end of this tutorial, you will be able to:
 
 In the previous module, we explored data types and why they matter. R does not always import variables in the format you expect. For example, numbers may be read as character strings. When this happens, you must **convert (coerce)** the variable to the correct type before analysis and visualization.
 
-# Data types and coercion
+# 1. Data types and coercion
 
 ```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
@@ -27,7 +27,7 @@ library(HDSinRdata)
 library(ggplot2)
 ```
 
-# Data management and pre-processing
+# 2. Data management and pre-processing
 
 This week we practice importing, merging, aggregating, and renaming variables using two datasets from the **HDSinRdata** package:
 
@@ -43,7 +43,7 @@ head(covidcases)
 head(mobility)
 ```
 
-## Why date formats matter
+## 2-1. Why date formats matter
 
 Both datasets include time, but they record it differently. The COVID dataset uses a **week index**, while the mobility dataset uses a **calendar date**. Before merging, we must standardize the time variable.
 
@@ -52,7 +52,7 @@ Date parsing is one of the most common sources of errors in data analysis.
 If your merge produces lots of missing values, date formats are often the reason.
 :::
 
-## Pre-processing and merging
+## 2-2. Pre-processing and merging
 
 First, ensure values in the 'date' column in mobility is a real Date object
 If it is already a Date, this will keep it as Date.
@@ -84,7 +84,7 @@ Alternatively, you can also use right_join(), innter_join(), full_join()... etc:
 
 ---
 
-# Data visualization with ggplot2
+# 3. Data visualization with ggplot2
 
 To make plots more interpretable, we often focus on a subset. Here we compare mobility trends across three states: California, Florida, and Hawaii.
 
@@ -94,7 +94,7 @@ filtered_data <- merged_data |>
            c("California", "Florida", "Hawaii"))
 ```
 
-## Line graph: trends over time
+## 3-1. Line graph: trends over time
 You can add a title and label the x- and y-axes to make the plot more informative.
 Of note, m50 represents the median of the max-distance mobility (the distance a typical member of a given population moves in a day).
 
@@ -110,7 +110,7 @@ m50trend <- ggplot(filtered_data,
 print(m50trend)
 ```
 
-## Saving plots
+## 3-2. Saving plots
 By default, ggsave() saves figures at 7 × 7 inches. You can change the width and height to customize the figure size.
 
 ```{r save-plot, eval=FALSE}
@@ -127,10 +127,10 @@ ggsave(
 If `ggsave()` does not save where you expect, check your working directory with `getwd()`.
 :::
 
-## Customizing plot appearance
+## 3-3. Customizing plot appearance
 You can change the size of texts, colors/thickness/types of the lines etc by using different functions.
 
-### 1. Change the size of texts (increase text size for instane)
+### A. Change the size of texts (increase text size for instane)
 ```{r, warning=FALSE}
 m50trend_1 <- ggplot(filtered_data, 
                      aes(x = week, y = m50, 
@@ -156,7 +156,7 @@ m50trend_1 <- ggplot(filtered_data,
 print(m50trend_1)
 ```
 
-### 2. Change line thickness
+### B. Change line thickness
 You can adjust the number after size = to control how thick the line appears in the plot.
 
 ```{r, warning=FALSE}
@@ -171,7 +171,7 @@ m50trend_2 <- ggplot(filtered_data,
 print(m50trend_2)
 ```
 
-### 3. Change Line Type
+### C. Change Line Type
 If the figure will be printed in black and white, use different line types such as solid, dashed, or dotted to make each line easier to distinguish.
 
 ```{r, warning=FALSE}
@@ -186,7 +186,7 @@ m50trend_3 <- ggplot(filtered_data,
 print(m50trend_3)
 ```
 
-### 4. Assign Colors
+### D. Assign Colors
 You can use the scale_color_manual() function and enter the colors of your choice to customize the plot.
 
 ```{r, warning=FALSE}
@@ -204,7 +204,7 @@ m50trend_4 <- ggplot(filtered_data,
 print(m50trend_4)
 ```
 
-# Bar graph: comparing states
+## 4. Bar graph: comparing states
 
 Example 1. Here we calculate the average mobility for each state and then plot it.
 A bar chart usually use **summarized data** (one value per group), not raw daily rows. First, create a summarized dataset.
@@ -244,7 +244,7 @@ ggplot(filtered_data, aes(x = state)) +
   )
 ```
 
-# Interactive plots with plotly
+# 4. Interactive plots with plotly
 
 To create interactive plots, use the plotly package. Interactive plots allow you to hover, zoom, and toggle groups. 
 
@@ -258,7 +258,6 @@ interactive_plot <- ggplot(filtered_data,
 ggplotly(interactive_plot)
 ```
 
----
 
 ## Summary:
 
