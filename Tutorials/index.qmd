@@ -7,3 +7,4 @@ title: "Tutorials"
 - [Data pre-processing and visualization](Data-preprocessing.qmd)
 - [Data accss: Social media API](Data-access.qmd)
 - [Basic textual analysis](Text-as-data.qmd)
+- [Topic modeling](Topic-modeling.qmd)
