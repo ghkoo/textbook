@@ -65,8 +65,7 @@ library(ldatuning)    # LDA: Selecting number of topics
 For this example, we use a dataset retrieved from Media Cloud containing news coverage related to COVID-19. The dataset includes articles from four news outlets: CNN, New York Post, New York Times, Wall Street Journal.
 
 ```{r, warning=FALSE, message=FALSE}
-news_corpus <- 
-  read_csv("~/Desktop/covid_fournews.csv")
+news_corpus <- read_csv("data/covid_fournews.csv")
 ```
 
 
@@ -219,10 +218,10 @@ toptopics
 This extracts the topic with the highest theta value for each document, showing which topic is most strongly associated with each document. For example, the row with doc_id 2 is most strongly associated with topic 6.
 
 ### Assign topic to each document and create a new dataframe
+You can use write.csv() to save it into a csv file.
 ```{r}
 df <- merge(news_corpus, toptopics, by.x="doc_id")
 #View(df)
-#write.csv(df, file = "~/Desktop/covidwithtopics.csv")
 ```
 
 # LDA topic modeling
@@ -231,7 +230,7 @@ LDA is similar to STM topic modeling. For LDA, install two packages: topicmodels
 ## Step 1: Pre-process your data
 We are using the same dataset but I gave a different name for this dataframe to avoid confusion.
 ```{r, results="hide"}
-news_corpus0 <- read_csv("~/Desktop/covid_fournews.csv")
+news_corpus0 <- read_csv("data/covid_fournews.csv")
 ```
 
 ## Step 2: Add custom stopwords to the stop_words list in tidytext
