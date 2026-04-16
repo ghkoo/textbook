@@ -1,0 +1,328 @@
+---
+title: "9. Predictive analysis"
+author: "G.H. Koo"
+---
+
+## Learning goals
+
+By the end of this tutorial, you will be able to:
+
+- Understand the difference between **descriptive analysis** and **predictive analysis**.
+- Run a **correlation test** in R and interpret the result.
+- Run a simple **ANOVA** and understand when to use post-hoc tests.
+- Run a simple **linear regression** model in R.
+- Apply these tools to a practice dataset involving **COVID-19 cases** and **mobility**.
+
+---
+
+# Introduction to Predictive Analysis
+
+Descriptive analysis helps us summarize what is happening in a dataset. Predictive analysis goes one step further by testing whether variables are statistically associated with one another.
+
+In this tutorial, we introduce three common statistical tools:
+
+- **Correlation**
+- **ANOVA**
+- **Linear regression**
+
+These methods help us test relationships between variables and move beyond simple description.
+
+::: {.callout-note}
+This module is designed as a practical introduction. The goal is to help you understand when to use each test and how to interpret the results, rather than to cover all statistical details.
+:::
+
+---
+
+## Required Packages
+
+You only need to install packages once.
+
+```{r eval=FALSE}
+packages <- c(
+  "tidyverse",
+  "modelsummary",
+  "HDSinRdata",
+  "car",
+  "lubridate"
+)
+install.packages(packages)
+```
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(modelsummary)
+library(HDSinRdata)
+library(car)
+library(lubridate)
+set.seed(381)
+options(scipen = 999)
+```
+
+---
+
+# Part 1: Correlation
+
+## What is correlation?
+
+A correlation test examines whether two numeric variables tend to move together.
+
+- A **positive correlation** means that as one variable increases, the other also tends to increase.
+- A **negative correlation** means that as one variable increases, the other tends to decrease.
+- A correlation close to **0** suggests little or no linear relationship.
+
+Here, we use the built-in `mtcars` dataset.
+
+```{r}
+data(mtcars)
+head(mtcars)
+
+car_dataset <- mtcars
+```
+
+## Step 1: Calculate a correlation
+
+We test the relationship between car weight (`wt`) and horsepower (`hp`).
+
+```{r}
+cor(car_dataset$wt, car_dataset$hp)
+plot(car_dataset$wt, car_dataset$hp)
+```
+
+By default, `cor()` computes a **Pearson correlation**.
+
+## Step 2: Try a different correlation method
+
+You can also use a different method, such as **Spearman correlation**.
+
+```{r}
+cor(car_dataset$wt, car_dataset$hp, method = "spearman")
+```
+
+## Step 3: Report the p-value
+
+If you need the test statistic and p-value, use `cor.test()`.
+
+```{r}
+cor.test(car_dataset$wt, car_dataset$hp)
+```
+
+::: {.callout-tip}
+When reporting a correlation, it is useful to include:
+
+- the correlation coefficient (`r`)
+- the p-value
+- a brief interpretation of the direction and strength of the relationship
+:::
+
+---
+
+# Part 2: ANOVA
+
+## What is ANOVA?
+
+ANOVA, or **Analysis of Variance**, is used when:
+
+- the **independent variable (IV)** is categorical
+- the **dependent variable (DV)** is numeric
+
+Here, we test whether miles per gallon (`mpg`) differs across cars with different numbers of cylinders.
+
+## Step 1: Convert the IV to a factor
+
+```{r}
+car_dataset$cyl_factor <- as.factor(car_dataset$cyl)
+```
+
+## Step 2: Run ANOVA
+
+```{r}
+anova_model <- aov(mpg ~ cyl_factor, data = car_dataset)
+summary(anova_model)
+```
+
+## Step 3: Run a post-hoc test
+
+If the ANOVA result is statistically significant, a post-hoc test helps identify **which groups differ from one another**.
+
+```{r}
+TukeyHSD(anova_model)
+```
+
+::: {.callout-note}
+In ANOVA:
+
+- the IV should be a **factor**
+- the DV should be **numeric**
+:::
+
+---
+
+# Part 3: Linear Regression
+
+## What is linear regression?
+
+Linear regression estimates how much a numeric outcome changes as a predictor variable changes.
+
+Here, we predict miles per gallon (`mpg`) using number of cylinders (`cyl`).
+
+## Step 1: Run a simple regression
+
+```{r}
+reg_model <- lm(mpg ~ cyl, data = car_dataset)
+summary(reg_model)
+```
+
+You can also write the same model more compactly:
+
+```{r}
+lm(mpg ~ cyl, data = car_dataset) %>% summary()
+```
+
+## Step 2: Add another predictor
+
+If you want to control for an additional variable, you can include multiple predictors in the same model.
+
+```{r}
+model2 <- lm(mpg ~ cyl + wt, data = car_dataset)
+summary(model2)
+```
+
+## Bonus: Display a model summary table
+
+The `modelsummary` package provides a cleaner way to display regression results.
+
+```{r}
+modelsummary(model2)
+```
+
+---
+
+# Part 4: Practice Example with COVID-19 Cases and Mobility
+
+In this example, we use the `covidcases` and `mobility` datasets from the `HDSinRdata` package.
+
+```{r}
+data(covidcases)
+data(mobility)
+
+print(covidcases)
+print(mobility)
+```
+
+## Step 1: Prepare the dates
+
+Before merging the datasets, we need to make sure the date formats are compatible.
+
+```{r}
+mobility$date <- as.Date(mobility$date, formula = "%Y-%M-%D")
+
+covidcases$date <- as.Date("2019-12-29") + weeks(covidcases$week - 1)
+```
+
+## Step 2: Merge the datasets
+
+We merge the two datasets by `state` and `date`.
+
+```{r}
+merged_data <- mobility |>
+  left_join(covidcases, by = c("state", "date"))
+```
+
+## Step 3: Generate grouped summaries
+
+This gives a quick overview of average mobility and total cases by state.
+
+```{r}
+state_m50 <- merged_data %>%
+  group_by(state) %>%
+  summarise(
+    mean_m50 = mean(m50, na.rm = TRUE),
+    median_m50 = median(m50, na.rm = TRUE),
+    cases_total = sum(weekly_cases, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+print(state_m50)
+```
+
+## Step 4: Filter to three states
+
+For this example, we compare:
+
+- California
+- Florida
+- Hawaii
+
+```{r}
+filtered_data <- merged_data %>%
+  filter(state %in% c("California", "Florida", "Hawaii"))
+```
+
+## Step 5: Check the data structure
+
+To run ANOVA, the IV (`state`) should be a factor and the DV (`m50`) should be numeric.
+
+```{r}
+str(filtered_data)
+filtered_data$state <- as.factor(filtered_data$state)
+```
+
+## Step 6: Run ANOVA
+
+```{r}
+anova_model <- aov(m50 ~ state, data = filtered_data)
+summary(anova_model)
+```
+
+## Step 7: Run a post-hoc test
+
+```{r}
+TukeyHSD(anova_model)
+```
+
+---
+
+## Checking assumptions before ANOVA
+
+Technically, ANOVA assumes that group variances are reasonably equal. One common test is **Levene's test**.
+
+```{r}
+leveneTest(m50 ~ state, data = filtered_data)
+```
+
+If:
+
+- `p > 0.05`, the equal-variance assumption is met
+- `p < 0.05`, the assumption is not met
+
+If the assumption is not met, you can use **Welch's ANOVA** instead.
+
+```{r}
+welch_anova <- oneway.test(m50 ~ state, data = filtered_data, var.equal = FALSE)
+print(welch_anova)
+```
+
+## Post-hoc comparison after Welch's ANOVA
+
+Here, we use pairwise t-tests with a Bonferroni correction.
+
+```{r}
+pairwise.t.test(filtered_data$m50, filtered_data$state, p.adjust.method = "bonferroni")
+```
+
+::: {.callout-tip}
+You do not always need to run both standard ANOVA and Welch's ANOVA in a final analysis. In teaching, however, comparing them can help students understand why assumptions matter.
+:::
+
+---
+
+# Summary
+
+In this chapter, you learned how to:
+
+- calculate and interpret a correlation
+- run ANOVA and post-hoc tests
+- estimate a simple and multiple linear regression model
+- merge and analyze real-world datasets in R
+
+These methods are foundational for predictive analysis because they allow researchers to test whether variables are related in meaningful ways. In practice, choosing the right test depends on the type of variables you have and the research question you want to answer.

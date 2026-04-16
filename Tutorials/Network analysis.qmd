@@ -1,0 +1,349 @@
+---
+title: "8. Network analysis"
+author: "G.H. Koo"
+---
+
+## Learning goals
+
+By the end of this tutorial, you will be able to:
+
+- Understand the difference between **semantic networks** and **social networks**.
+- Build a **semantic network** from bigrams in text data.
+- Build a **social network** from user mentions and replies.
+- Interpret common network measures such as **degree**, **betweenness**, and **community structure**.
+- Visualize networks using **igraph** and **ggraph**.
+
+---
+
+# Introduction to Network Analysis
+
+Network analysis helps us study relationships rather than isolated observations. In text analysis, this can mean examining how words co-occur with one another. In social media research, it can mean examining how users interact through replies and mentions.
+
+In this tutorial, we cover two related applications:
+
+- **Semantic network analysis**, which maps connections among words
+- **Social network analysis**, which maps connections among users
+
+::: {.callout-note}
+A network has two basic parts:
+
+- **nodes**, which represent words or users
+- **edges**, which represent relationships between them
+:::
+
+---
+
+## Required Packages
+
+You only need to install packages once.
+
+```{r eval=FALSE}
+packages <- c(
+  "tidyverse",
+  "tidytext",
+  "tokenizers",
+  "igraph",
+  "ggraph",
+  "tidygraph",
+  "stringr"
+)
+install.packages(packages)
+```
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(dplyr)
+library(tokenizers)
+library(tidytext)
+library(igraph)
+library(ggraph)
+library(tidygraph)
+library(stringr)
+set.seed(381)
+options(scipen = 999)
+```
+
+## Importing data
+
+For this tutorial, we use a CSV file containing abortion-related Twitter data.
+
+```{r}
+tweets <- read.csv("~/Desktop/abortion_tweets.csv", header = TRUE, sep = ",")
+
+tweets_subset <- tweets %>%
+  select(
+    id,
+    author_id,
+    created_at,
+    text,
+    public_metrics.impression_count,
+    public_metrics.like_count,
+    public_metrics.quote_count,
+    public_metrics.reply_count,
+    public_metrics.retweet_count,
+    referenced_tweets,
+    in_reply_to_user_id,
+    entities.mentions
+  )
+
+head(tweets_subset)
+```
+
+---
+
+# Part 1: Semantic Network Analysis
+
+## What is a semantic network?
+
+A semantic network shows how words are connected based on their co-occurrence in text. Here, we use **bigrams** (two-word combinations) to identify words that frequently appear together.
+
+## Step 1: Clean retweet prefixes
+
+We begin by removing leading `RT @username` patterns so they do not dominate the network.
+
+```{r}
+tweets_cleaned <- tweets_subset %>%
+  mutate(text = str_remove_all(text, "^RT @\\w+"))
+```
+
+## Step 2: Extract bigrams and remove stopwords
+
+```{r}
+tw_bigram <- tweets_cleaned %>%
+  unnest_tokens(bigram, text, token = "ngrams", n = 2) %>%
+  separate(bigram, into = c("word1", "word2"), sep = " ") %>%
+  filter(
+    !word1 %in% stop_words$word,
+    !word2 %in% stop_words$word
+  ) %>%
+  unite(bigram, word1, word2, sep = " ") %>%
+  count(bigram, sort = TRUE)
+
+head(tw_bigram)
+```
+
+## Step 3: Separate bigrams into two words
+
+```{r}
+bigram_separated <- tw_bigram %>%
+  separate(bigram, into = c("word1", "word2"), sep = " ")
+```
+
+## Step 4: Filter infrequent bigrams
+
+```{r}
+bigram_filtered <- bigram_separated %>%
+  filter(n > 100)
+```
+
+::: {.callout-tip}
+The threshold used here (`n > 100`) is just an example. Lower thresholds keep more word pairs but can make the network harder to read.
+:::
+
+## Step 5: Build the network object
+
+```{r}
+bigram_graph <- graph_from_data_frame(bigram_filtered)
+```
+
+## Step 6: Visualize the semantic network
+
+```{r}
+ggraph(bigram_graph, layout = "fr") +
+  geom_edge_link() +
+  geom_node_point() +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  labs(title = "Semantic Network of Bigrams in Abortion Tweets") +
+  theme_void()
+```
+
+## Optional: Add directional edges
+
+```{r}
+direction_edges <- grid::arrow(type = "closed", length = unit(.2, "cm"))
+
+ggraph(bigram_graph, layout = "fr") +
+  geom_edge_link(aes(edge_alpha = n), arrow = direction_edges) +
+  geom_node_point(size = 2) +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  labs(title = "Semantic Network of Bigrams with Directional Information") +
+  theme_void()
+```
+
+## Describe the semantic network
+
+```{r}
+vcount(bigram_graph)
+ecount(bigram_graph)
+edge_density(bigram_graph)
+components(bigram_graph)$no
+```
+
+## Questions for interpretation
+
+1. Which words appear most connected?
+2. Are there clusters of words representing different themes?
+3. Do certain words act as bridges between themes?
+4. What does this suggest about how abortion is discussed in the dataset?
+
+---
+
+# Part 2: Social Network Analysis
+
+In social network analysis, users are the nodes and interactions among users are the edges.
+
+## Step 1: Prepare interaction data
+
+```{r}
+tweets_interaction <- tweets_subset %>%
+  select(author_id, in_reply_to_user_id, entities.mentions)
+```
+
+## Step 2: Build reply and mention edge lists
+
+```{r}
+replies <- tweets_interaction %>%
+  filter(!is.na(in_reply_to_user_id)) %>%
+  select(source = author_id, target = in_reply_to_user_id)
+
+mentions <- tweets_interaction %>%
+  filter(!is.na(entities.mentions)) %>%
+  unnest(entities.mentions) %>%
+  select(source = author_id, target = entities.mentions)
+
+replies <- replies %>%
+  mutate(source = as.character(source), target = as.character(target))
+
+mentions <- mentions %>%
+  mutate(source = as.character(source), target = as.character(target))
+
+edges <- bind_rows(replies, mentions) %>%
+  distinct()
+```
+
+## Step 3: Filter to highly connected users
+
+```{r}
+user_counts <- edges %>%
+  pivot_longer(cols = c(source, target), values_to = "user") %>%
+  count(user) %>%
+  filter(n > 500)
+
+user_counts
+```
+
+::: {.callout-note}
+A high count means a user appears often in the interaction data, but it does not automatically mean that the user is substantively important.
+:::
+
+## Step 4: Build and visualize the user network
+
+```{r}
+filtered_edges <- edges %>%
+  filter(source %in% user_counts$user, target %in% user_counts$user)
+
+user_graph <- graph_from_data_frame(filtered_edges, directed = TRUE)
+
+interaction_graph <- ggraph(user_graph, layout = "fr") +
+  geom_edge_link(aes(alpha = 0.5), arrow = arrow(type = "closed", length = unit(0.15, "cm"))) +
+  geom_node_point() +
+  geom_node_text(aes(label = name), repel = TRUE) +
+  labs(title = "Twitter User Interaction Network") +
+  theme_void()
+
+interaction_graph
+```
+
+## Interpret user interactions
+
+In this graph:
+
+- nodes represent Twitter users
+- edges represent mentions or replies
+- more connected nodes indicate users with more ties to others in the network
+
+If you want to inspect a specific user ID, you can sometimes search the platform directly using a format like `from:USER_ID`, as long as the account is still public and available.
+
+## Step 5: Degree and betweenness centrality
+
+```{r}
+degree_centrality <- degree(user_graph, mode = "all")
+top_users <- sort(degree_centrality, decreasing = TRUE)[1:10]
+print(top_users)
+
+betweenness_centrality <- betweenness(user_graph, directed = TRUE)
+top_influencers <- sort(betweenness_centrality, decreasing = TRUE)[1:10]
+print(top_influencers)
+```
+
+## Extra: Basic network description
+
+```{r}
+vcount(user_graph)
+ecount(user_graph)
+edge_density(user_graph)
+components(user_graph)$no
+```
+
+### How to interpret these numbers
+
+- More nodes means more unique users are involved.
+- More edges means more interactions are taking place.
+- Higher density means users are more interconnected.
+- More components means the network contains separate groups that are not connected to each other.
+
+## Extra: Compare in-degree and out-degree
+
+```{r}
+in_degree <- degree(user_graph, mode = "in")
+top_in_degree <- sort(in_degree, decreasing = TRUE)[1:10]
+print(top_in_degree)
+
+out_degree <- degree(user_graph, mode = "out")
+top_out_degree <- sort(out_degree, decreasing = TRUE)[1:10]
+print(top_out_degree)
+```
+
+### How to interpret this
+
+- High in-degree users are frequently mentioned or replied to.
+- High out-degree users are highly active in reaching out to others.
+- These are not always the same users.
+
+## Extra: Detect communities in the network
+
+```{r}
+user_graph_undirected <- as_undirected(user_graph, mode = "collapse")
+comm <- cluster_louvain(user_graph_undirected)
+length(comm)
+modularity(comm)
+```
+
+## Extra: Visualize communities
+
+```{r}
+community_graph <- as_tbl_graph(user_graph_undirected) %>%
+  activate(nodes) %>%
+  mutate(community = as.factor(membership(comm)))
+
+community_plot <- ggraph(community_graph, layout = "fr") +
+  geom_edge_link(alpha = 0.15) +
+  geom_node_point(aes(color = community), size = 3) +
+  labs(title = "Communities in the Twitter Interaction Network") +
+  theme_void()
+
+print(community_plot)
+```
+
+---
+
+# Summary
+
+In this tutorial, you learned how to:
+
+- construct a semantic network from bigrams
+- visualize relationships among words using `igraph` and `ggraph`
+- construct a social network from user mentions and replies
+- interpret common network measures such as degree, betweenness, density, and modularity
+
+Network analysis is useful because it helps us move from isolated units of text or users to the broader relational structure that shapes communication.

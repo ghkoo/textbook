@@ -1,0 +1,291 @@
+---
+title: "7. Sentiment analysis"
+author: "G.H. Koo"
+---
+
+## Learning goals
+
+By the end of this tutorial, you will be able to:
+
+- Understand what **dictionary-based sentiment analysis** is and when it is useful.
+- Preprocess social media text for sentiment analysis in R.
+- Apply the **AFINN lexicon** to estimate tweet-level sentiment.
+- Summarize and interpret sentiment scores across tweets.
+- Explore whether sentiment is associated with **engagement metrics**.
+
+---
+
+# Introduction to Sentiment Analysis
+
+Sentiment analysis is a computational method used to identify the **emotional tone** of text. In communication research, it is often used to classify text as positive, negative, or neutral, or to estimate emotional intensity using predefined dictionaries.
+
+In this tutorial, we use a **dictionary-based approach** to analyze sentiment in Twitter data containing the keyword **"abortion"** from **June 24, 2022, to December 31, 2022**.
+
+Because social media text is unstructured, the first step is always **cleaning and preprocessing** the data. This helps reduce noise and improves the clarity of the analysis.
+
+::: {.callout-note}
+Since this dataset was collected when the platform was still called **Twitter**, I refer to it as Twitter rather than X in this tutorial.
+:::
+
+::: {.callout-tip}
+As of February 2023, Twitter (now X) no longer provides free API access. If you need social media data for practice, you may want to explore public archives such as:
+
+- [Harvard Dataverse](https://dataverse.harvard.edu/)
+- [r/datasets](https://www.reddit.com/r/datasets/)
+- [Twitter/X API documentation](https://developer.x.com/en/docs/x-api)
+:::
+
+---
+
+## Required Packages
+
+You only need to install packages once.
+
+```{r eval=FALSE}
+packages <- c(
+  "tidyverse",
+  "tidytext",
+  "tokenizers",
+  "stringr"
+)
+install.packages(packages)
+```
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(dplyr)
+library(tokenizers)
+library(tidytext)
+library(stringr)
+set.seed(381)
+options(scipen = 999)
+```
+
+## Importing data
+
+For this tutorial, we use a CSV file containing abortion-related Twitter data.
+
+```{r, warning=FALSE, message=FALSE}
+tweets <- read.csv("~/Desktop/abortion_tweets.csv", header = TRUE, sep = ",")
+
+tweets_subset <- tweets %>%
+  select(
+    id,
+    author_id,
+    created_at,
+    text,
+    public_metrics.impression_count,
+    public_metrics.like_count,
+    public_metrics.quote_count,
+    public_metrics.reply_count,
+    public_metrics.retweet_count,
+    referenced_tweets
+  )
+```
+
+---
+
+# Part 1: Preprocessing Text
+
+## Step 1: Tokenize the text
+
+To prepare the tweets for sentiment analysis, we:
+
+- preserve the original text
+- remove URLs
+- tokenize the tweets into individual words
+- convert all words to lowercase
+- remove stopwords
+
+```{r}
+tweets_tokenized <- tweets_subset %>%
+  mutate(original_text = text) %>%
+  mutate(text = str_remove_all(text, "\\bhttps[^\\s]+")) %>%
+  unnest_tokens(word, text, to_lower = TRUE) %>%
+  anti_join(stop_words, by = "word")
+
+head(tweets_tokenized)
+```
+
+::: {.callout-tip}
+If you want to inspect the most common words before running sentiment analysis, try:
+
+```{r eval=FALSE}
+tweets_tokenized %>%
+  count(word, sort = TRUE)
+```
+:::
+
+---
+
+# Part 2: Dictionary-Based Sentiment Analysis
+
+## What is the AFINN lexicon?
+
+In dictionary-based sentiment analysis, we use a predefined lexicon that assigns sentiment values to words.
+
+In this tutorial, we use the AFINN lexicon, which assigns words scores ranging from -5 (very negative) to +5 (very positive).
+
+Other commonly used lexicons include:
+
+- Bing: positive / negative
+- NRC: eight emotions plus positive / negative
+- Lexicoder: often used in political communication
+- LIWC: sentiment and broader psychological categories
+
+Each dictionary has different strengths and limitations. Because language is complex, researchers should always interpret dictionary results carefully.
+
+```{r}
+afinn_dictionary <- get_sentiments("afinn")
+head(afinn_dictionary)
+subset(afinn_dictionary, word == "love")
+subset(afinn_dictionary, word == "terrible")
+```
+
+## Step 2: Match tweet words to the sentiment dictionary
+
+We use `inner_join()` to keep only the words in our dataset that also appear in the AFINN dictionary.
+
+```{r}
+tweets_sentiment <- tweets_tokenized %>%
+  inner_join(afinn_dictionary, by = "word")
+
+head(tweets_sentiment)
+```
+
+The `value` column shows the sentiment score assigned to each word.
+
+## Step 3: Identify the most negative and most positive words
+
+```{r}
+most_negative_words <- tweets_sentiment %>%
+  arrange(value) %>%
+  select(word, value) %>%
+  distinct() %>%
+  head(10)
+most_negative_words
+```
+
+```{r}
+most_positive_words <- tweets_sentiment %>%
+  arrange(desc(value)) %>%
+  select(word, value) %>%
+  distinct() %>%
+  head(10)
+most_positive_words
+```
+
+These outputs help us see which words in the dataset contribute most strongly to negative and positive sentiment.
+
+## Step 4: Calculate tweet-level sentiment scores
+
+Next, we summarize the sentiment values within each tweet. Since `id` is the unique tweet identifier, we group by `id` and sum the sentiment values.
+
+```{r}
+tweets_summarized <- tweets_sentiment %>%
+  group_by(id) %>%
+  summarize(sentiment = sum(value), .groups = "drop")
+head(tweets_summarized)
+```
+
+Now we merge these sentiment scores back into the original tweet-level dataset.
+
+```{r}
+tweets_final <- tweets_subset %>%
+  full_join(tweets_summarized, by = "id")
+```
+
+## Step 5: Replace missing sentiment values with 0
+
+Some tweets will not contain any words found in the AFINN dictionary. In those cases, sentiment will appear as `NA`. We replace those missing values with `0`.
+
+```{r}
+tweets_final$sentiment[is.na(tweets_final$sentiment)] <- 0
+```
+
+---
+
+# Part 3: Describing and Interpreting Sentiment
+
+## Distribution of sentiment scores
+
+```{r}
+table(tweets_final$sentiment)
+```
+
+This gives a simple overview of how sentiment is distributed across the tweets.
+
+## Inspect negative and positive tweets
+
+Negative tweets:
+
+```{r}
+negative_tweets <- tweets_final %>%
+  filter(sentiment <= -1) %>%
+  select(text, sentiment)
+head(negative_tweets)
+```
+
+Positive tweets:
+
+```{r}
+positive_tweets <- tweets_final %>%
+  filter(sentiment >= 1) %>%
+  select(text, sentiment)
+head(positive_tweets)
+```
+
+Looking directly at tweet examples helps researchers evaluate whether the sentiment scores make sense in context.
+
+::: {.callout-note}
+This step is important because dictionary-based sentiment analysis cannot fully capture sarcasm, irony, humor, or context-dependent meanings.
+:::
+
+---
+
+# Part 4: Sentiment and Engagement
+
+## Step 1: Examine the relationship with likes
+
+As a simple extension, we can test whether more positive or negative tweets tend to receive more likes.
+
+```{r}
+cor.test(
+  tweets_final$sentiment,
+  tweets_final$public_metrics.like_count,
+  method = "spearman",
+  use = "complete.obs"
+)
+```
+
+## Step 2: Visualize sentiment and likes
+
+```{r}
+ggplot(tweets_final, aes(x = sentiment, y = public_metrics.like_count)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(method = "lm", se = FALSE, color = "steelblue") +
+  labs(
+    title = "Sentiment and Likes in Abortion Tweets",
+    x = "Sentiment score",
+    y = "Like count"
+  ) +
+  theme_minimal()
+```
+
+::: {.callout-tip}
+Engagement variables such as likes, replies, and retweets are often highly skewed. In substantive research, it is a good idea to inspect their distributions before choosing a model.
+:::
+
+---
+
+# Summary
+
+In this tutorial, you learned how to:
+
+- preprocess tweets for dictionary-based sentiment analysis
+- apply the AFINN lexicon to estimate tweet-level sentiment
+- identify strongly positive and negative words in the dataset
+- interpret sentiment scores using both summary tables and tweet examples
+- explore whether sentiment is associated with a simple engagement metric
+
+Dictionary-based sentiment analysis is easy to implement and useful for introductory text analysis, but it should always be interpreted with care because sentiment depends heavily on context.

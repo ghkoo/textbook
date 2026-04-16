@@ -3,6 +3,9 @@ project:
   output-dir: _site
   resources:
     - data/protest_YouTube.csv
+    - data/covid_fournews.csv
+    - Tutorials/data/image_demo
+
 
 website:
   title: "Computational Social Science Textbook"
@@ -23,6 +26,10 @@ website:
         - Tutorials/Data-access.qmd
         - Tutorials/Text-as-data.qmd
         - Tutorials/Topic-modeling.qmd
+        - Tutorials/Sentiment analysis.qmd
+        - Tutorials/Network analysis.qmd
+        - Tutorials/Predictive analysis.qmd
+        - Tutorials/Image-as-data.qmd
 
 format:
   html:

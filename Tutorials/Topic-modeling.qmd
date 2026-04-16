@@ -46,8 +46,7 @@ packages <- c(
   "tidytext",
   "tokenizers",
   "stm",
-  "topicmodels",
-  "ldatuning"
+  "topicmodels"
 )
 install.packages(packages)
 ```
@@ -58,7 +57,6 @@ library(tidytext)
 library(tokenizers)
 library(stm)          # Structural Topic Modeling
 library(topicmodels)  # Latent Dirichlet Allocation
-library(ldatuning)    # LDA: Selecting number of topics
 ```
 
 ## Importing data
@@ -72,27 +70,18 @@ news_corpus <- read_csv("data/covid_fournews.csv")
 # STM topic modeling 
 
 ## Step 1: Text Pre-processing 
-Before estimating a topic model, text must be cleaned and standardized. Common preprocessing steps include: removing stopwords removing numbers removing punctuation converting text to lowercase The textProcessor() function in the stm package performs many of these steps automatically. Let's use the 'full_article' column. 
+Before estimating a topic model, text must be cleaned and standardized. Common preprocessing steps include: removing stopwords removing numbers removing punctuation converting text to lowercase The `textProcessor` function in the stm package performs many of these steps automatically. Let's use the 'full_article' column. 
 
 ```{r, results="hide"}
 news_processed <- textProcessor(news_corpus$full_article, 
                                 metadata = news_corpus,
-                                customstopwords = c("said", "don't", "will", "like", "use",
-                                                    "can", "'re", "one", "get", "know",
-                                                    "new", "told", "accord", "don’t", "’re",
-                                                    "according", "show", "say", "people",
-                                                    "report", "just", "want", "think", "now",
-                                                    "make", "time", "come", "back", "say",
-                                                    "see", "äî", "äôs", "also",
-                                                    "read","vaccin", "covid-", "covid",
-                                                    "vaccine", "vaccination", "äù", 
-                                                    "äôre", "COVID-19", "äô", "äôt"),
+                                customstopwords = c("said", "don't", "will", "like", "use", "can", "'re", "one", "get", "know", "new", "told", "accord", "don’t", "’re", "according", "show", "say", "people", "report", "just", "want", "think", "now", "make", "time", "come", "back", "say", "see", "äî", "äôs", "also", "read","vaccin", "covid-", "covid", "vaccine", "vaccination", "äù", "äôre", "COVID-19", "äô", "äôt"),
                                  lowercase = TRUE,
                                  striphtml = TRUE)
 ```
 
 ## Step 2: Prepare Documents for Modeling. 
-Next, we convert the processed text into the format required for STM. We use the function prepDocuments() to clean the data.
+Next, we convert the processed text into the format required for STM. We use the function `prepDocuments` to clean the data.
 ```{r}
 out <- prepDocuments(news_processed$documents, 
                      news_processed$vocab, 
@@ -110,10 +99,10 @@ The argument `lower.thresh = 50` means that any word appearing in **fewer than 5
 
 You can also use `upper.thresh` to set an **upper limit**, excluding words that appear too frequently across documents. Adjusting these thresholds allows researchers to **control which terms are included** in the analysis and refine the model based on predefined constraints.
 
-- prepDocuments() cleans and filters the processed text data. Then we extract the cleaned components:
-- out$documents → filtered document data
-- out$vocab → updated vocabulary
-- out$meta → corresponding metadata
+- `prepDocuments` cleans and filters the processed text data. Then we extract the cleaned components:
+- `out$documents` → filtered document data
+- `out$vocab` → updated vocabulary
+- `out$meta` → corresponding metadata
 :::
 
 ## Step 3 Choosing the number of topics
@@ -137,7 +126,7 @@ See https://juliasilge.com/blog/evaluating-stm/ to interpret this result.
 ## Step 4: Run STM topic modeling
 
 ::: {.callout-note}
-The code estimates a Structural Topic Model using the `stm()` function. Each argument controls a specific aspect of the model.
+The code estimates a Structural Topic Model using the `stm` function. Each argument controls a specific aspect of the model.
 
 - `K = 7` specifies the number of topics to estimate.
 - `max.em.its = 50` sets the maximum number of **Expectation–Maximization (EM)** iterations used to fit the model.
@@ -160,7 +149,7 @@ This code will also take some time to run.
 
 
 ## Step 5 Examine topics
-After estimating the topic model, we can examine the **most important words associated with each topic**. These words help researchers interpret the themes captured by the model. The `labelTopics()` function extracts the most representative terms for each topic. In this example, topics **1 through 7** are displayed.
+After estimating the topic model, we can examine the **most important words associated with each topic**. These words help researchers interpret the themes captured by the model. The `labelTopics` function extracts the most representative terms for each topic. In this example, topics **1 through 7** are displayed.
 ```{r Results}
 labelTopics(news_stm, c(1:7)) 
 ```
@@ -170,6 +159,7 @@ Visualize the prevalence of topics in the dataset:
 plot.STM(news_stm, type = "summary") 
 plot.STM(news_stm, type = "labels") 
 ```
+You can use 
 
 Interpreting Topics:
 Once topics are estimated, the researcher must interpret them. Key questions include: 
@@ -178,7 +168,7 @@ Once topics are estimated, the researcher must interpret them. Key questions inc
 - Do the topics align with theoretical expectations? 
 
 ## Finding correlations
-Using the topicCorr() function, you can identify correlations between topics. If a line appears between topics in the resulting network diagram, it indicates a correlation between them. This visualization helps reveal relationships and connections between different topics.
+Using the `topicCorr` function, you can identify correlations between topics. If a line appears between topics in the resulting network diagram, it indicates a correlation between them. This visualization helps reveal relationships and connections between different topics.
 
 ```{r Correlation between topics}
 set.seed(381)
@@ -208,7 +198,7 @@ topics_long <- theta_scores %>%
 ```
 
 ### Extract top thetas
-Here, we use by group_by() and treat the 'doc_id' column as an unique ID of each row. We use  slice_max() to select the highest theta value per document
+Here, we use by `group_by` and treat the 'doc_id' column as an unique ID of each row. We use  `slice_max` to select the highest theta value per document
 ```{r}
 toptopics <- topics_long %>%
   group_by(doc_id) %>% 
@@ -218,14 +208,14 @@ toptopics
 This extracts the topic with the highest theta value for each document, showing which topic is most strongly associated with each document. For example, the row with doc_id 2 is most strongly associated with topic 6.
 
 ### Assign topic to each document and create a new dataframe
-You can use write.csv() to save it into a csv file.
+You can use `write.csv` to save it into a csv file.
 ```{r}
 df <- merge(news_corpus, toptopics, by.x="doc_id")
 #View(df)
 ```
 
 # LDA topic modeling
-LDA is similar to STM topic modeling. For LDA, install two packages: topicmodels and ldatuning
+LDA is similar to STM topic modeling. For LDA, install `topicmodels`.
 
 ## Step 1: Pre-process your data
 We are using the same dataset but I gave a different name for this dataframe to avoid confusion.
@@ -235,20 +225,13 @@ news_corpus0 <- read_csv("data/covid_fournews.csv")
 
 ## Step 2: Add custom stopwords to the stop_words list in tidytext
 ```{r}
-final_stop <- data.frame(word = c("said", "don't", "will", "like", 
-                                  "use", "can", "'re", "one", "get", 
-                                  "know", "new", "told", "accord", "don’t", 
-                                  "’re", "according", "show", "say", "people", 
-                                  "report", "just", "want", "think", "now", 
-                                  "make", "time", "come", "back", "say", 
-                                  "see", "äî", "äôs", "also", "read","vaccin", 
-                                  "covid-", "covid", "vaccine", "vaccination", 
-                                  "äù", "äôre", "COVID-19", "äô", "äôt"),
+final_stop <- data.frame(word = 
+                           c("said", "don't", "will", "like", "use", "can", "'re", "one", "get", "know", "new", "told", "accord", "don’t", "’re", "according", "show", "say", "people", "report", "just", "want", "think", "now", "make", "time", "come", "back", "say", "see", "äî", "äôs", "also", "read","vaccin", "covid-", "covid", "vaccine", "vaccination", "äù", "äôre", "COVID-19", "äô", "äôt"), 
                          lexicon = "custom") %>%
   rbind(stop_words)
 ```
 
-## Step 3: Use cast_dtm() function and create document-term matric (DTM) to prepare the document
+## Step 3: Use `cast_dtm` function and create document-term matric (DTM) to prepare the document
 The code performs several steps in sequence:
 
 - `unnest_tokens(word, full_article)` tokenizes each article into individual words.
@@ -265,7 +248,7 @@ data_dtm <- news_corpus0 %>%
 data_dtm
 ```
 
-You can use the LDA() function from the topicmodels package to perform LDA topic modeling. In this example, we will classify the dataset into seven topics (k = 7). 
+You can use the `LDA` function from the topicmodels package to perform LDA topic modeling. In this example, we will classify the dataset into seven topics (k = 7). 
 
 The LDA algorithm offers two fitting methods: VEM (Variational Expectation-Maximization) and Gibbs sampling. Selecting a different method may lead to slight variations in the results. For more about key differences, see: https://www.quora.com/Could-latent-Dirichlet-allocation-solved-by-Gibbs-sampling-versus-variational-EM-yield-different-results
 
@@ -318,7 +301,7 @@ Gamma values represent the probability of each document belonging to a given top
 topics_doc <- tidy(lda_model, matrix="gamma") 
 ```
 
-### pivot_wider() your data frame
+### `pivot_wider` your data frame
 ```{r}
 topics_wide <- topics_doc %>%
   pivot_wider(names_from = topic,
@@ -352,9 +335,6 @@ news_corpus1 %>%
        y = "Number of Articles") +
   theme_minimal()
 ```
-
-### Finding the k
-You can use the ldatuning package and use FindTopicsNumber() function to find your k (number of topics). Ultimately, it is up to you to determine the optimal K based on these results. The plot presents various metrics, and their interpretation may vary depending on individual research approaches and methodologies.
 
 
 ::: {.callout-tip}
