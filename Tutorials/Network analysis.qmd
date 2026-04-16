@@ -204,21 +204,29 @@ tweets_interaction <- tweets_subset %>%
 ```{r}
 replies <- tweets_interaction %>%
   filter(!is.na(in_reply_to_user_id)) %>%
-  select(source = author_id, target = in_reply_to_user_id)
+  transmute(
+    source = as.character(author_id),
+    target = as.character(in_reply_to_user_id)
+  )
 
 mentions <- tweets_interaction %>%
-  filter(!is.na(entities.mentions)) %>%
-  unnest(entities.mentions) %>%
-  select(source = author_id, target = entities.mentions)
-
-replies <- replies %>%
-  mutate(source = as.character(source), target = as.character(target))
-
-mentions <- mentions %>%
-  mutate(source = as.character(source), target = as.character(target))
+  mutate(
+    entities.mentions = as.character(entities.mentions),
+    mention_ids = str_extract_all(entities.mentions, "(?<!\\d)\\d{4,}(?!\\d)")
+  ) %>%
+  select(source = author_id, mention_ids) %>%
+  unnest(mention_ids) %>%
+  filter(!is.na(mention_ids), mention_ids != "") %>%
+  transmute(
+    source = as.character(source),
+    target = as.character(mention_ids)
+  )
 
 edges <- bind_rows(replies, mentions) %>%
+  filter(!is.na(source), !is.na(target), source != "", target != "") %>%
   distinct()
+
+head(edges)
 ```
 
 ## Step 3: Filter to highly connected users
@@ -226,28 +234,45 @@ edges <- bind_rows(replies, mentions) %>%
 ```{r}
 user_counts <- edges %>%
   pivot_longer(cols = c(source, target), values_to = "user") %>%
-  count(user) %>%
-  filter(n > 500)
+  count(user, sort = TRUE)
 
-user_counts
+user_counts %>%
+  head(10)
+
+popular_users <- user_counts %>%
+  slice_max(order_by = n, n = 30, with_ties = FALSE)
+
+popular_users
 ```
 
 ::: {.callout-note}
-A high count means a user appears often in the interaction data, but it does not automatically mean that the user is substantively important.
+In this dataset, a very high threshold can leave too few users to visualize. Here we keep the top 30 most connected users so the network remains readable but still shows more structure.
 :::
 
 ## Step 4: Build and visualize the user network
 
 ```{r}
 filtered_edges <- edges %>%
-  filter(source %in% user_counts$user, target %in% user_counts$user)
+  filter(source %in% popular_users$user, target %in% popular_users$user) %>%
+  count(source, target, sort = TRUE, name = "weight")
 
 user_graph <- graph_from_data_frame(filtered_edges, directed = TRUE)
 
+V(user_graph)$degree_total <- degree(user_graph, mode = "all")
+V(user_graph)$degree_in <- degree(user_graph, mode = "in")
+V(user_graph)$degree_out <- degree(user_graph, mode = "out")
+
 interaction_graph <- ggraph(user_graph, layout = "fr") +
-  geom_edge_link(aes(alpha = 0.5), arrow = arrow(type = "closed", length = unit(0.15, "cm"))) +
-  geom_node_point() +
-  geom_node_text(aes(label = name), repel = TRUE) +
+  geom_edge_link(
+    aes(width = weight, alpha = weight),
+    arrow = arrow(type = "closed", length = unit(0.12, "cm")),
+    end_cap = circle(2.5, "mm")
+  ) +
+  geom_node_point(aes(size = degree_total), color = "steelblue4") +
+  geom_node_text(aes(label = name), repel = TRUE, size = 3) +
+  scale_edge_width(range = c(0.2, 1.5)) +
+  scale_edge_alpha(range = c(0.2, 0.7)) +
+  scale_size(range = c(2, 8)) +
   labs(title = "Twitter User Interaction Network") +
   theme_void()
 
@@ -267,13 +292,21 @@ If you want to inspect a specific user ID, you can sometimes search the platform
 ## Step 5: Degree and betweenness centrality
 
 ```{r}
-degree_centrality <- degree(user_graph, mode = "all")
-top_users <- sort(degree_centrality, decreasing = TRUE)[1:10]
-print(top_users)
+centrality_table <- tibble(
+  user = names(degree(user_graph, mode = "all")),
+  degree_total = as.numeric(degree(user_graph, mode = "all")),
+  degree_in = as.numeric(degree(user_graph, mode = "in")),
+  degree_out = as.numeric(degree(user_graph, mode = "out")),
+  betweenness = as.numeric(betweenness(user_graph, directed = TRUE))
+)
 
-betweenness_centrality <- betweenness(user_graph, directed = TRUE)
-top_influencers <- sort(betweenness_centrality, decreasing = TRUE)[1:10]
-print(top_influencers)
+centrality_table %>%
+  arrange(desc(degree_total)) %>%
+  slice_head(n = 10)
+
+centrality_table %>%
+  arrange(desc(betweenness)) %>%
+  slice_head(n = 10)
 ```
 
 ## Extra: Basic network description
@@ -295,13 +328,19 @@ components(user_graph)$no
 ## Extra: Compare in-degree and out-degree
 
 ```{r}
-in_degree <- degree(user_graph, mode = "in")
-top_in_degree <- sort(in_degree, decreasing = TRUE)[1:10]
-print(top_in_degree)
+in_out_table <- centrality_table %>%
+  select(user, degree_in, degree_out) %>%
+  arrange(desc(degree_in), desc(degree_out))
 
-out_degree <- degree(user_graph, mode = "out")
-top_out_degree <- sort(out_degree, decreasing = TRUE)[1:10]
-print(top_out_degree)
+top_in_degree <- in_out_table %>%
+  arrange(desc(degree_in)) %>%
+  slice_head(n = 10)
+top_in_degree
+
+top_out_degree <- in_out_table %>%
+  arrange(desc(degree_out)) %>%
+  slice_head(n = 10)
+top_out_degree
 ```
 
 ### How to interpret this

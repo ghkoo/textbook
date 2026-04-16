@@ -3,6 +3,18 @@ title: "1. Introduction to R"
 author: "G.H. Koo"
 ---
 
+## Learning goals
+
+By the end of this tutorial, you will be able to:
+
+- Create and store objects in R using the assignment operator.
+- Perform basic arithmetic and use simple built-in functions.
+- Create, inspect, and modify a data frame.
+- Access values in a data frame using `$` and indexing.
+- Create new variables and apply basic transformations in R.
+
+---
+
 In this first tutorial, we begin with the core building blocks of R. We will explore data structures in more detail in Chapter 2.
 
 ```{r}
