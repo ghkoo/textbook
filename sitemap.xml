@@ -5,16 +5,24 @@
     <lastmod>2026-02-02T03:25:30.510Z</lastmod>
   </url>
   <url>
-    <loc>https://ghkoo.github.io/textbook/Tutorials/Data-preprocessing.html</loc>
-    <lastmod>2026-02-21T19:06:49.379Z</lastmod>
+    <loc>https://ghkoo.github.io/textbook/Tutorials/Network analysis.html</loc>
+    <lastmod>2026-04-16T15:24:10.783Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ghkoo.github.io/textbook/Tutorials/Text-as-data.html</loc>
+    <lastmod>2026-02-21T19:11:46.282Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ghkoo.github.io/textbook/Tutorials/Image-as-data.html</loc>
+    <lastmod>2026-04-16T15:31:47.340Z</lastmod>
   </url>
   <url>
     <loc>https://ghkoo.github.io/textbook/Tutorials/index.html</loc>
-    <lastmod>2026-03-05T18:36:41.438Z</lastmod>
+    <lastmod>2026-04-16T15:33:16.773Z</lastmod>
   </url>
   <url>
     <loc>https://ghkoo.github.io/textbook/Tutorials/Topic-modeling.html</loc>
-    <lastmod>2026-03-05T18:50:12.141Z</lastmod>
+    <lastmod>2026-04-16T15:47:54.560Z</lastmod>
   </url>
   <url>
     <loc>https://ghkoo.github.io/textbook/summary.html</loc>
@@ -41,7 +49,15 @@
     <lastmod>2026-02-21T19:06:28.830Z</lastmod>
   </url>
   <url>
-    <loc>https://ghkoo.github.io/textbook/Tutorials/Text-as-data.html</loc>
-    <lastmod>2026-02-21T19:11:46.282Z</lastmod>
+    <loc>https://ghkoo.github.io/textbook/Tutorials/Data-preprocessing.html</loc>
+    <lastmod>2026-02-21T19:06:49.379Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ghkoo.github.io/textbook/Tutorials/Sentiment analysis.html</loc>
+    <lastmod>2026-04-16T15:24:10.785Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ghkoo.github.io/textbook/Tutorials/Predictive analysis.html</loc>
+    <lastmod>2026-04-16T15:28:54.352Z</lastmod>
   </url>
 </urlset>

@@ -199,6 +199,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">6. Topic modeling</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Tutorials/Sentiment analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">7. Sentiment analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Tutorials/Network analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">8. Network analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Tutorials/Predictive analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">9. Predictive analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Tutorials/Image-as-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">10. Image as data</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -233,7 +257,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#step-1-pre-process-your-data" id="toc-step-1-pre-process-your-data" class="nav-link" data-scroll-target="#step-1-pre-process-your-data">Step 1: Pre-process your data</a></li>
   <li><a href="#step-2-add-custom-stopwords-to-the-stop_words-list-in-tidytext" id="toc-step-2-add-custom-stopwords-to-the-stop_words-list-in-tidytext" class="nav-link" data-scroll-target="#step-2-add-custom-stopwords-to-the-stop_words-list-in-tidytext">Step 2: Add custom stopwords to the stop_words list in tidytext</a></li>
-  <li><a href="#step-3-use-cast_dtm-function-and-create-document-term-matric-dtm-to-prepare-the-document" id="toc-step-3-use-cast_dtm-function-and-create-document-term-matric-dtm-to-prepare-the-document" class="nav-link" data-scroll-target="#step-3-use-cast_dtm-function-and-create-document-term-matric-dtm-to-prepare-the-document">Step 3: Use cast_dtm() function and create document-term matric (DTM) to prepare the document</a></li>
+  <li><a href="#step-3-use-cast_dtm-function-and-create-document-term-matric-dtm-to-prepare-the-document" id="toc-step-3-use-cast_dtm-function-and-create-document-term-matric-dtm-to-prepare-the-document" class="nav-link" data-scroll-target="#step-3-use-cast_dtm-function-and-create-document-term-matric-dtm-to-prepare-the-document">Step 3: Use <code>cast_dtm</code> function and create document-term matric (DTM) to prepare the document</a></li>
   <li><a href="#step-4-run-lda" id="toc-step-4-run-lda" class="nav-link" data-scroll-target="#step-4-run-lda">Step 4: Run LDA</a>
   <ul class="collapse">
   <li><a href="#extract-beta" id="toc-extract-beta" class="nav-link" data-scroll-target="#extract-beta">Extract beta</a></li>
@@ -242,12 +266,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#visualize-your-topics" id="toc-visualize-your-topics" class="nav-link" data-scroll-target="#visualize-your-topics">Visualize your topics</a></li>
   <li><a href="#use-gamma-values" id="toc-use-gamma-values" class="nav-link" data-scroll-target="#use-gamma-values">Use gamma values</a></li>
-  <li><a href="#pivot_wider-your-data-frame" id="toc-pivot_wider-your-data-frame" class="nav-link" data-scroll-target="#pivot_wider-your-data-frame">pivot_wider() your data frame</a></li>
+  <li><a href="#pivot_wider-your-data-frame" id="toc-pivot_wider-your-data-frame" class="nav-link" data-scroll-target="#pivot_wider-your-data-frame"><code>pivot_wider</code> your data frame</a></li>
   </ul></li>
   <li><a href="#assign-a-topic-to-each-document" id="toc-assign-a-topic-to-each-document" class="nav-link" data-scroll-target="#assign-a-topic-to-each-document">Assign a topic to each document</a>
   <ul class="collapse">
   <li><a href="#plot-the-distribution-of-topics-across-articles" id="toc-plot-the-distribution-of-topics-across-articles" class="nav-link" data-scroll-target="#plot-the-distribution-of-topics-across-articles">Plot the distribution of topics across articles</a></li>
-  <li><a href="#finding-the-k" id="toc-finding-the-k" class="nav-link" data-scroll-target="#finding-the-k">Finding the k</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
@@ -321,7 +344,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4"></a>  <span class="st">"tokenizers"</span>,</span>
 <span id="cb1-5"><a href="#cb1-5"></a>  <span class="st">"stm"</span>,</span>
 <span id="cb1-6"><a href="#cb1-6"></a>  <span class="st">"topicmodels"</span>,</span>
-<span id="cb1-7"><a href="#cb1-7"></a>  <span class="st">"ldatuning"</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>  <span class="st">"reshape2"</span></span>
 <span id="cb1-8"><a href="#cb1-8"></a>)</span>
 <span id="cb1-9"><a href="#cb1-9"></a><span class="fu">install.packages</span>(packages)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -330,8 +353,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-2"><a href="#cb2-2"></a><span class="fu">library</span>(tidytext)</span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="fu">library</span>(tokenizers)</span>
 <span id="cb2-4"><a href="#cb2-4"></a><span class="fu">library</span>(stm)          <span class="co"># Structural Topic Modeling</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="fu">library</span>(topicmodels)  <span class="co"># Latent Dirichlet Allocation</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="fu">library</span>(ldatuning)    <span class="co"># LDA: Selecting number of topics</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="fu">library</span>(topicmodels)  <span class="co"># Latent Dirichlet Allocation</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="importing-data" class="level2">
@@ -346,27 +368,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>STM topic modeling</h1>
 <section id="step-1-text-pre-processing" class="level2">
 <h2 class="anchored" data-anchor-id="step-1-text-pre-processing">Step 1: Text Pre-processing</h2>
-<p>Before estimating a topic model, text must be cleaned and standardized. Common preprocessing steps include: removing stopwords removing numbers removing punctuation converting text to lowercase The textProcessor() function in the stm package performs many of these steps automatically. Let’s use the ‘full_article’ column.</p>
+<p>Before estimating a topic model, text must be cleaned and standardized. Common preprocessing steps include: removing stopwords removing numbers removing punctuation converting text to lowercase The <code>textProcessor</code> function in the stm package performs many of these steps automatically. Let’s use the ‘full_article’ column.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>news_processed <span class="ot">&lt;-</span> <span class="fu">textProcessor</span>(news_corpus<span class="sc">$</span>full_article, </span>
 <span id="cb4-2"><a href="#cb4-2"></a>                                <span class="at">metadata =</span> news_corpus,</span>
-<span id="cb4-3"><a href="#cb4-3"></a>                                <span class="at">customstopwords =</span> <span class="fu">c</span>(<span class="st">"said"</span>, <span class="st">"don't"</span>, <span class="st">"will"</span>, <span class="st">"like"</span>, <span class="st">"use"</span>,</span>
-<span id="cb4-4"><a href="#cb4-4"></a>                                                    <span class="st">"can"</span>, <span class="st">"'re"</span>, <span class="st">"one"</span>, <span class="st">"get"</span>, <span class="st">"know"</span>,</span>
-<span id="cb4-5"><a href="#cb4-5"></a>                                                    <span class="st">"new"</span>, <span class="st">"told"</span>, <span class="st">"accord"</span>, <span class="st">"don’t"</span>, <span class="st">"’re"</span>,</span>
-<span id="cb4-6"><a href="#cb4-6"></a>                                                    <span class="st">"according"</span>, <span class="st">"show"</span>, <span class="st">"say"</span>, <span class="st">"people"</span>,</span>
-<span id="cb4-7"><a href="#cb4-7"></a>                                                    <span class="st">"report"</span>, <span class="st">"just"</span>, <span class="st">"want"</span>, <span class="st">"think"</span>, <span class="st">"now"</span>,</span>
-<span id="cb4-8"><a href="#cb4-8"></a>                                                    <span class="st">"make"</span>, <span class="st">"time"</span>, <span class="st">"come"</span>, <span class="st">"back"</span>, <span class="st">"say"</span>,</span>
-<span id="cb4-9"><a href="#cb4-9"></a>                                                    <span class="st">"see"</span>, <span class="st">"äî"</span>, <span class="st">"äôs"</span>, <span class="st">"also"</span>,</span>
-<span id="cb4-10"><a href="#cb4-10"></a>                                                    <span class="st">"read"</span>,<span class="st">"vaccin"</span>, <span class="st">"covid-"</span>, <span class="st">"covid"</span>,</span>
-<span id="cb4-11"><a href="#cb4-11"></a>                                                    <span class="st">"vaccine"</span>, <span class="st">"vaccination"</span>, <span class="st">"äù"</span>, </span>
-<span id="cb4-12"><a href="#cb4-12"></a>                                                    <span class="st">"äôre"</span>, <span class="st">"COVID-19"</span>, <span class="st">"äô"</span>, <span class="st">"äôt"</span>),</span>
+<span id="cb4-3"><a href="#cb4-3"></a>                                <span class="at">customstopwords =</span> <span class="fu">c</span>(<span class="st">"said"</span>, <span class="st">"don't"</span>, <span class="st">"will"</span>, <span class="st">"like"</span>, </span>
+<span id="cb4-4"><a href="#cb4-4"></a>                                                    <span class="st">"use"</span>, <span class="st">"can"</span>, <span class="st">"'re"</span>, <span class="st">"one"</span>, <span class="st">"get"</span>, </span>
+<span id="cb4-5"><a href="#cb4-5"></a>                                                    <span class="st">"know"</span>, <span class="st">"new"</span>, <span class="st">"told"</span>, <span class="st">"accord"</span>, </span>
+<span id="cb4-6"><a href="#cb4-6"></a>                                                    <span class="st">"don’t"</span>, <span class="st">"’re"</span>, <span class="st">"according"</span>, <span class="st">"show"</span>, </span>
+<span id="cb4-7"><a href="#cb4-7"></a>                                                    <span class="st">"say"</span>, <span class="st">"people"</span>, <span class="st">"report"</span>, <span class="st">"just"</span>, </span>
+<span id="cb4-8"><a href="#cb4-8"></a>                                                    <span class="st">"want"</span>, <span class="st">"think"</span>, <span class="st">"now"</span>, <span class="st">"make"</span>, <span class="st">"time"</span>, </span>
+<span id="cb4-9"><a href="#cb4-9"></a>                                                    <span class="st">"come"</span>, <span class="st">"back"</span>, <span class="st">"say"</span>, <span class="st">"see"</span>, <span class="st">"äî"</span>, </span>
+<span id="cb4-10"><a href="#cb4-10"></a>                                                    <span class="st">"äôs"</span>, <span class="st">"also"</span>, <span class="st">"read"</span>,<span class="st">"vaccin"</span>, </span>
+<span id="cb4-11"><a href="#cb4-11"></a>                                                    <span class="st">"covid-"</span>, <span class="st">"covid"</span>, <span class="st">"vaccine"</span>, <span class="st">"vaccination"</span>, </span>
+<span id="cb4-12"><a href="#cb4-12"></a>                                                    <span class="st">"äù"</span>, <span class="st">"äôre"</span>, <span class="st">"COVID-19"</span>, <span class="st">"äô"</span>, <span class="st">"äôt"</span>),</span>
 <span id="cb4-13"><a href="#cb4-13"></a>                                 <span class="at">lowercase =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb4-14"><a href="#cb4-14"></a>                                 <span class="at">striphtml =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="step-2-prepare-documents-for-modeling." class="level2">
 <h2 class="anchored" data-anchor-id="step-2-prepare-documents-for-modeling.">Step 2: Prepare Documents for Modeling.</h2>
-<p>Next, we convert the processed text into the format required for STM. We use the function prepDocuments() to clean the data.</p>
+<p>Next, we convert the processed text into the format required for STM. We use the function <code>prepDocuments</code> to clean the data.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>out <span class="ot">&lt;-</span> <span class="fu">prepDocuments</span>(news_processed<span class="sc">$</span>documents, </span>
 <span id="cb5-2"><a href="#cb5-2"></a>                     news_processed<span class="sc">$</span>vocab, </span>
@@ -393,10 +415,10 @@ Your corpus now has 2394 documents, 2192 terms and 469418 tokens.</code></pre>
 <p>The argument <code>lower.thresh = 50</code> means that any word appearing in <strong>fewer than 50 documents</strong> will be automatically excluded from the analysis. Removing these rare words helps make the dataset <strong>less sparse</strong>, which can improve the stability and interpretability of the topic model.</p>
 <p>You can also use <code>upper.thresh</code> to set an <strong>upper limit</strong>, excluding words that appear too frequently across documents. Adjusting these thresholds allows researchers to <strong>control which terms are included</strong> in the analysis and refine the model based on predefined constraints.</p>
 <ul>
-<li>prepDocuments() cleans and filters the processed text data. Then we extract the cleaned components:</li>
-<li>out$documents → filtered document data</li>
-<li>out$vocab → updated vocabulary</li>
-<li>out$meta → corresponding metadata</li>
+<li><code>prepDocuments</code> cleans and filters the processed text data. Then we extract the cleaned components:</li>
+<li><code>out$documents</code> → filtered document data</li>
+<li><code>out$vocab</code> → updated vocabulary</li>
+<li><code>out$meta</code> → corresponding metadata</li>
 </ul>
 </div>
 </div>
@@ -447,7 +469,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The code estimates a Structural Topic Model using the <code>stm()</code> function. Each argument controls a specific aspect of the model.</p>
+<p>The code estimates a Structural Topic Model using the <code>stm</code> function. Each argument controls a specific aspect of the model.</p>
 <ul>
 <li><code>K = 7</code> specifies the number of topics to estimate.</li>
 <li><code>max.em.its = 50</code> sets the maximum number of <strong>Expectation–Maximization (EM)</strong> iterations used to fit the model.</li>
@@ -471,7 +493,7 @@ Note
 </section>
 <section id="step-5-examine-topics" class="level2">
 <h2 class="anchored" data-anchor-id="step-5-examine-topics">Step 5 Examine topics</h2>
-<p>After estimating the topic model, we can examine the <strong>most important words associated with each topic</strong>. These words help researchers interpret the themes captured by the model. The <code>labelTopics()</code> function extracts the most representative terms for each topic. In this example, topics <strong>1 through 7</strong> are displayed.</p>
+<p>After estimating the topic model, we can examine the <strong>most important words associated with each topic</strong>. These words help researchers interpret the themes captured by the model. The <code>labelTopics</code> function extracts the most representative terms for each topic. In this example, topics <strong>1 through 7</strong> are displayed.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">labelTopics</span>(news_stm, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -531,11 +553,12 @@ Topic 7 Top Words:
 </div>
 </div>
 </div>
+<p>You can use</p>
 <p>Interpreting Topics: Once topics are estimated, the researcher must interpret them. Key questions include: - What words define each topic? - What theme connects these words? - Do the topics align with theoretical expectations?</p>
 </section>
 <section id="finding-correlations" class="level2">
 <h2 class="anchored" data-anchor-id="finding-correlations">Finding correlations</h2>
-<p>Using the topicCorr() function, you can identify correlations between topics. If a line appears between topics in the resulting network diagram, it indicates a correlation between them. This visualization helps reveal relationships and connections between different topics.</p>
+<p>Using the <code>topicCorr</code> function, you can identify correlations between topics. If a line appears between topics in the resulting network diagram, it indicates a correlation between them. This visualization helps reveal relationships and connections between different topics.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="fu">set.seed</span>(<span class="dv">381</span>)</span>
 <span id="cb14-2"><a href="#cb14-2"></a>mod.out.corr <span class="ot">&lt;-</span> <span class="fu">topicCorr</span>(news_stm)</span>
@@ -567,7 +590,7 @@ Topic 7 Top Words:
 </div>
 <section id="extract-top-thetas" class="level3">
 <h3 class="anchored" data-anchor-id="extract-top-thetas">Extract top thetas</h3>
-<p>Here, we use by group_by() and treat the ‘doc_id’ column as an unique ID of each row. We use slice_max() to select the highest theta value per document</p>
+<p>Here, we use by <code>group_by</code> and treat the ‘doc_id’ column as an unique ID of each row. We use <code>slice_max</code> to select the highest theta value per document</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>toptopics <span class="ot">&lt;-</span> topics_long <span class="sc">%&gt;%</span></span>
 <span id="cb17-2"><a href="#cb17-2"></a>  <span class="fu">group_by</span>(doc_id) <span class="sc">%&gt;%</span> </span>
@@ -595,7 +618,7 @@ Topic 7 Top Words:
 </section>
 <section id="assign-topic-to-each-document-and-create-a-new-dataframe" class="level3">
 <h3 class="anchored" data-anchor-id="assign-topic-to-each-document-and-create-a-new-dataframe">Assign topic to each document and create a new dataframe</h3>
-<p>You can use write.csv() to save it into a csv file.</p>
+<p>You can use <code>write.csv</code> to save it into a csv file.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>df <span class="ot">&lt;-</span> <span class="fu">merge</span>(news_corpus, toptopics, <span class="at">by.x=</span><span class="st">"doc_id"</span>)</span>
 <span id="cb19-2"><a href="#cb19-2"></a><span class="co">#View(df)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -605,7 +628,7 @@ Topic 7 Top Words:
 </section>
 <section id="lda-topic-modeling" class="level1">
 <h1>LDA topic modeling</h1>
-<p>LDA is similar to STM topic modeling. For LDA, install two packages: topicmodels and ldatuning</p>
+<p>LDA is similar to STM topic modeling. For LDA, install <code>topicmodels</code>.</p>
 <section id="step-1-pre-process-your-data" class="level2">
 <h2 class="anchored" data-anchor-id="step-1-pre-process-your-data">Step 1: Pre-process your data</h2>
 <p>We are using the same dataset but I gave a different name for this dataframe to avoid confusion.</p>
@@ -626,21 +649,14 @@ dbl (1): doc_id
 <section id="step-2-add-custom-stopwords-to-the-stop_words-list-in-tidytext" class="level2">
 <h2 class="anchored" data-anchor-id="step-2-add-custom-stopwords-to-the-stop_words-list-in-tidytext">Step 2: Add custom stopwords to the stop_words list in tidytext</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>final_stop <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">word =</span> <span class="fu">c</span>(<span class="st">"said"</span>, <span class="st">"don't"</span>, <span class="st">"will"</span>, <span class="st">"like"</span>, </span>
-<span id="cb22-2"><a href="#cb22-2"></a>                                  <span class="st">"use"</span>, <span class="st">"can"</span>, <span class="st">"'re"</span>, <span class="st">"one"</span>, <span class="st">"get"</span>, </span>
-<span id="cb22-3"><a href="#cb22-3"></a>                                  <span class="st">"know"</span>, <span class="st">"new"</span>, <span class="st">"told"</span>, <span class="st">"accord"</span>, <span class="st">"don’t"</span>, </span>
-<span id="cb22-4"><a href="#cb22-4"></a>                                  <span class="st">"’re"</span>, <span class="st">"according"</span>, <span class="st">"show"</span>, <span class="st">"say"</span>, <span class="st">"people"</span>, </span>
-<span id="cb22-5"><a href="#cb22-5"></a>                                  <span class="st">"report"</span>, <span class="st">"just"</span>, <span class="st">"want"</span>, <span class="st">"think"</span>, <span class="st">"now"</span>, </span>
-<span id="cb22-6"><a href="#cb22-6"></a>                                  <span class="st">"make"</span>, <span class="st">"time"</span>, <span class="st">"come"</span>, <span class="st">"back"</span>, <span class="st">"say"</span>, </span>
-<span id="cb22-7"><a href="#cb22-7"></a>                                  <span class="st">"see"</span>, <span class="st">"äî"</span>, <span class="st">"äôs"</span>, <span class="st">"also"</span>, <span class="st">"read"</span>,<span class="st">"vaccin"</span>, </span>
-<span id="cb22-8"><a href="#cb22-8"></a>                                  <span class="st">"covid-"</span>, <span class="st">"covid"</span>, <span class="st">"vaccine"</span>, <span class="st">"vaccination"</span>, </span>
-<span id="cb22-9"><a href="#cb22-9"></a>                                  <span class="st">"äù"</span>, <span class="st">"äôre"</span>, <span class="st">"COVID-19"</span>, <span class="st">"äô"</span>, <span class="st">"äôt"</span>),</span>
-<span id="cb22-10"><a href="#cb22-10"></a>                         <span class="at">lexicon =</span> <span class="st">"custom"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb22-11"><a href="#cb22-11"></a>  <span class="fu">rbind</span>(stop_words)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>final_stop <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">word =</span> </span>
+<span id="cb22-2"><a href="#cb22-2"></a>                           <span class="fu">c</span>(<span class="st">"said"</span>, <span class="st">"don't"</span>, <span class="st">"will"</span>, <span class="st">"like"</span>, <span class="st">"use"</span>, <span class="st">"can"</span>, <span class="st">"'re"</span>, <span class="st">"one"</span>, <span class="st">"get"</span>, <span class="st">"know"</span>, <span class="st">"new"</span>, <span class="st">"told"</span>, <span class="st">"accord"</span>, <span class="st">"don’t"</span>, <span class="st">"’re"</span>, <span class="st">"according"</span>, <span class="st">"show"</span>, <span class="st">"say"</span>, <span class="st">"people"</span>, <span class="st">"report"</span>, <span class="st">"just"</span>, <span class="st">"want"</span>, <span class="st">"think"</span>, <span class="st">"now"</span>, <span class="st">"make"</span>, <span class="st">"time"</span>, <span class="st">"come"</span>, <span class="st">"back"</span>, <span class="st">"say"</span>, <span class="st">"see"</span>, <span class="st">"äî"</span>, <span class="st">"äôs"</span>, <span class="st">"also"</span>, <span class="st">"read"</span>,<span class="st">"vaccin"</span>, <span class="st">"covid-"</span>, <span class="st">"covid"</span>, <span class="st">"vaccine"</span>, <span class="st">"vaccination"</span>, <span class="st">"äù"</span>, <span class="st">"äôre"</span>, <span class="st">"COVID-19"</span>, <span class="st">"äô"</span>, <span class="st">"äôt"</span>), </span>
+<span id="cb22-3"><a href="#cb22-3"></a>                         <span class="at">lexicon =</span> <span class="st">"custom"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-4"><a href="#cb22-4"></a>  <span class="fu">rbind</span>(stop_words)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="step-3-use-cast_dtm-function-and-create-document-term-matric-dtm-to-prepare-the-document" class="level2">
-<h2 class="anchored" data-anchor-id="step-3-use-cast_dtm-function-and-create-document-term-matric-dtm-to-prepare-the-document">Step 3: Use cast_dtm() function and create document-term matric (DTM) to prepare the document</h2>
+<h2 class="anchored" data-anchor-id="step-3-use-cast_dtm-function-and-create-document-term-matric-dtm-to-prepare-the-document">Step 3: Use <code>cast_dtm</code> function and create document-term matric (DTM) to prepare the document</h2>
 <p>The code performs several steps in sequence:</p>
 <ul>
 <li><code>unnest_tokens(word, full_article)</code> tokenizes each article into individual words.</li>
@@ -663,7 +679,7 @@ Maximal term length: NA
 Weighting          : term frequency (tf)</code></pre>
 </div>
 </div>
-<p>You can use the LDA() function from the topicmodels package to perform LDA topic modeling. In this example, we will classify the dataset into seven topics (k = 7).</p>
+<p>You can use the <code>LDA</code> function from the topicmodels package to perform LDA topic modeling. In this example, we will classify the dataset into seven topics (k = 7).</p>
 <p>The LDA algorithm offers two fitting methods: VEM (Variational Expectation-Maximization) and Gibbs sampling. Selecting a different method may lead to slight variations in the results. For more about key differences, see: https://www.quora.com/Could-latent-Dirichlet-allocation-solved-by-Gibbs-sampling-versus-variational-EM-yield-different-results</p>
 <p>Each word in a topic is assigned a beta value, which represents its significance within that topic. A higher beta score indicates that the word is more strongly associated with the topic. In other words, when a document contains that word, it is more likely to be classified into the corresponding topic cluster.</p>
 </section>
@@ -680,8 +696,9 @@ Weighting          : term frequency (tf)</code></pre>
 </div>
 <section id="extract-beta" class="level3">
 <h3 class="anchored" data-anchor-id="extract-beta">Extract beta</h3>
+<p><code>tidy()</code> for LDA models uses the <code>reshape2</code> package behind the scenes, so make sure it is installed before running this step.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>topics <span class="ot">&lt;-</span> <span class="fu">tidy</span>(lda_model, <span class="at">matrix=</span><span class="st">"beta"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>topics <span class="ot">&lt;-</span> <span class="fu">tidy</span>(lda_model, <span class="at">matrix =</span> <span class="st">"beta"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Based on the beta values that you extracted, identify and visualize the most important words for each topic in an LDA model (which indicate the probability of a word belonging to a given topic).</p>
 </section>
@@ -726,7 +743,7 @@ Weighting          : term frequency (tf)</code></pre>
 </div>
 </section>
 <section id="pivot_wider-your-data-frame" class="level3">
-<h3 class="anchored" data-anchor-id="pivot_wider-your-data-frame">pivot_wider() your data frame</h3>
+<h3 class="anchored" data-anchor-id="pivot_wider-your-data-frame"><code>pivot_wider</code> your data frame</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>topics_wide <span class="ot">&lt;-</span> topics_doc <span class="sc">%&gt;%</span></span>
 <span id="cb31-2"><a href="#cb31-2"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> topic,</span>
@@ -769,10 +786,6 @@ Weighting          : term frequency (tf)</code></pre>
 </div>
 </div>
 </div>
-</section>
-<section id="finding-the-k" class="level3">
-<h3 class="anchored" data-anchor-id="finding-the-k">Finding the k</h3>
-<p>You can use the ldatuning package and use FindTopicsNumber() function to find your k (number of topics). Ultimately, it is up to you to determine the optimal K based on these results. The plot presents various metrics, and their interpretation may vary depending on individual research approaches and methodologies.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">

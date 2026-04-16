@@ -7,102 +7,465 @@
     "text": "References"
   },
   {
-    "objectID": "Tutorials/Data-preprocessing.html",
-    "href": "Tutorials/Data-preprocessing.html",
-    "title": "3. Data pre-processing and visualization",
+    "objectID": "Tutorials/Network analysis.html",
+    "href": "Tutorials/Network analysis.html",
+    "title": "8. Network analysis",
     "section": "",
-    "text": "By the end of this tutorial, you will be able to:\n\nInspect and prepare datasets for analysis by checking structure and formats\nClean and pre-process data by creating variables and standardizing dates\nMerge datasets using shared keys such as state and date\nCreate basic visualizations using ggplot2, including line graphs and bar charts\nCustomize plots with titles, labels, and themes\nExport and save visualizations for reports or presentations\n\n\nIn the previous module, we explored data types and why they matter. R does not always import variables in the format you expect. For example, numbers may be read as character strings. When this happens, you must convert (coerce) the variable to the correct type before analysis and visualization.",
+    "text": "By the end of this tutorial, you will be able to:\n\nUnderstand the difference between semantic networks and social networks.\nBuild a semantic network from bigrams in text data.\nBuild a social network from user mentions and replies.\nInterpret common network measures such as degree, betweenness, and community structure.\nVisualize networks using igraph and ggraph.",
     "crumbs": [
       "Tutorials",
-      "3. Data pre-processing and visualization"
+      "8. Network analysis"
     ]
   },
   {
-    "objectID": "Tutorials/Data-preprocessing.html#learning-goals",
-    "href": "Tutorials/Data-preprocessing.html#learning-goals",
-    "title": "3. Data pre-processing and visualization",
+    "objectID": "Tutorials/Network analysis.html#learning-goals",
+    "href": "Tutorials/Network analysis.html#learning-goals",
+    "title": "8. Network analysis",
     "section": "",
-    "text": "By the end of this tutorial, you will be able to:\n\nInspect and prepare datasets for analysis by checking structure and formats\nClean and pre-process data by creating variables and standardizing dates\nMerge datasets using shared keys such as state and date\nCreate basic visualizations using ggplot2, including line graphs and bar charts\nCustomize plots with titles, labels, and themes\nExport and save visualizations for reports or presentations\n\n\nIn the previous module, we explored data types and why they matter. R does not always import variables in the format you expect. For example, numbers may be read as character strings. When this happens, you must convert (coerce) the variable to the correct type before analysis and visualization.",
+    "text": "By the end of this tutorial, you will be able to:\n\nUnderstand the difference between semantic networks and social networks.\nBuild a semantic network from bigrams in text data.\nBuild a social network from user mentions and replies.\nInterpret common network measures such as degree, betweenness, and community structure.\nVisualize networks using igraph and ggraph.",
     "crumbs": [
       "Tutorials",
-      "3. Data pre-processing and visualization"
+      "8. Network analysis"
     ]
   },
   {
-    "objectID": "Tutorials/Data-preprocessing.html#why-date-formats-matter",
-    "href": "Tutorials/Data-preprocessing.html#why-date-formats-matter",
-    "title": "3. Data pre-processing and visualization",
-    "section": "2-1. Why date formats matter",
-    "text": "2-1. Why date formats matter\nBoth datasets include time, but they record it differently. The COVID dataset uses a week index, while the mobility dataset uses a calendar date. Before merging, we must standardize the time variable.\n\n\n\n\n\n\nNote\n\n\n\nDate parsing is one of the most common sources of errors in data analysis. If your merge produces lots of missing values, date formats are often the reason.",
+    "objectID": "Tutorials/Network analysis.html#required-packages",
+    "href": "Tutorials/Network analysis.html#required-packages",
+    "title": "8. Network analysis",
+    "section": "Required Packages",
+    "text": "Required Packages\nYou only need to install packages once.\n\npackages &lt;- c(\n  \"tidyverse\",\n  \"tidytext\",\n  \"tokenizers\",\n  \"igraph\",\n  \"ggraph\",\n  \"tidygraph\",\n  \"stringr\"\n)\ninstall.packages(packages)\n\n\nlibrary(tidyverse)\nlibrary(dplyr)\nlibrary(tokenizers)\nlibrary(tidytext)\nlibrary(igraph)\nlibrary(ggraph)\nlibrary(tidygraph)\nlibrary(stringr)\nset.seed(381)\noptions(scipen = 999)",
     "crumbs": [
       "Tutorials",
-      "3. Data pre-processing and visualization"
+      "8. Network analysis"
     ]
   },
   {
-    "objectID": "Tutorials/Data-preprocessing.html#pre-processing-and-merging",
-    "href": "Tutorials/Data-preprocessing.html#pre-processing-and-merging",
-    "title": "3. Data pre-processing and visualization",
-    "section": "2-2. Pre-processing and merging",
-    "text": "2-2. Pre-processing and merging\nFirst, ensure values in the ‘date’ column in mobility is a real Date object If it is already a Date, this will keep it as Date. If it’s a character like “2026-04-01”, this will parse it correctly.\n\nmobility &lt;- mobility |&gt;\n  mutate(date = as.Date(date))\n\nCreate a calendar date in covidcases based on the week number. Week 1 starts on 2019-12-29\n\ncovidcases &lt;- covidcases |&gt;\n  mutate(date = as.Date(\"2019-12-29\") + \n           weeks(week - 1))\n\n\nMerge datasets by state and date\n\nmerged_data &lt;- mobility |&gt;\n  left_join(covidcases, by = c(\"state\", \"date\"))\nglimpse(merged_data)\n\nRows: 77,518\nColumns: 9\nGroups: state [51]\n$ state         &lt;chr&gt; \"Alabama\", \"Alabama\", \"Alabama\", \"Alabama\", \"Alabama\", \"…\n$ date          &lt;date&gt; 2020-03-01, 2020-03-02, 2020-03-03, 2020-03-04, 2020-03…\n$ samples       &lt;int&gt; 267652, 287264, 292018, 298704, 288218, 282982, 282326, …\n$ m50           &lt;dbl&gt; 10.871941, 14.345132, 14.244603, 13.083015, 14.815029, 1…\n$ m50_index     &lt;dbl&gt; 76.92647, 98.57353, 98.25000, 89.69118, 102.38235, 126.2…\n$ county        &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, \"Shelby\", \"Baldwin\", \"Lee\", …\n$ week          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, 11, 11, 11, 11, 11, 11, 11, …\n$ weekly_cases  &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, 4, 1, 3, 1, 21, 2, 3, 1, 1, …\n$ weekly_deaths &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n\n\n\n\n\n\n\n\nNote\n\n\n\nAlternatively, you can also use right_join(), innter_join(), full_join()… etc: for more, see: https://alicepaul.github.io/health-data-science-using-r/book/merging_data.html",
+    "objectID": "Tutorials/Network analysis.html#importing-data",
+    "href": "Tutorials/Network analysis.html#importing-data",
+    "title": "8. Network analysis",
+    "section": "Importing data",
+    "text": "Importing data\nFor this tutorial, we use a CSV file containing abortion-related Twitter data.\n\ntweets &lt;- read.csv(\"~/Desktop/abortion_tweets.csv\", header = TRUE, sep = \",\")\n\ntweets_subset &lt;- tweets %&gt;%\n  select(\n    id,\n    author_id,\n    created_at,\n    text,\n    public_metrics.impression_count,\n    public_metrics.like_count,\n    public_metrics.quote_count,\n    public_metrics.reply_count,\n    public_metrics.retweet_count,\n    referenced_tweets,\n    in_reply_to_user_id,\n    entities.mentions\n  )\n\nhead(tweets_subset)\n\n                   id           author_id               created_at\n1 1608879536376262656 1293292839963631616 2022-12-30T17:35:47.000Z\n2 1608879534690160640 1407429095005245440 2022-12-30T17:35:47.000Z\n3 1608879520039448320  925802396609073280 2022-12-30T17:35:43.000Z\n4 1608879519641002240            99833187 2022-12-30T17:35:43.000Z\n5 1608879518382718720           228617818 2022-12-30T17:35:43.000Z\n6 1608879503165780224          3206943202 2022-12-30T17:35:39.000Z\n                                                                                                                                              text\n1     RT @KelseyDotOrg: Today my piece for @atrupar’s Public Notice on abortion access in Missouri and Kansas is up. Thank you Aaron for the oppo…\n2                                        You know any of these hags? Get Paid!  $10,000 Reward for Info https://t.co/mgpx6PoQTo via @gatewaypundit\n3     RT @mjs_DC: After being denied basic miscarriage care during two separate visits to the ER because of Louisiana's abortion ban, Kaitlyn Jos…\n4 RT @MrAndyNgo: Jennifer Thompson, an extremist abortion &amp; BLM activist in Portland, has shared in graphic detail her recent decision to end…\n5     RT @LifeNewsToo: The FBI has arrested a dozen pro-life Americans for peacefully protesting abortion, but not one single leftist for firebom…\n6                                                                              RT @Moneymykpt2: Them Weeks Fly when you tryna get that Abortion 😭\n  public_metrics.impression_count public_metrics.like_count\n1                               0                         0\n2                              10                         1\n3                               0                         0\n4                               0                         0\n5                               0                         0\n6                               0                         0\n  public_metrics.quote_count public_metrics.reply_count\n1                          0                          0\n2                          0                          0\n3                          0                          0\n4                          0                          0\n5                          0                          0\n6                          0                          0\n  public_metrics.retweet_count              referenced_tweets\n1                          190 retweeted, 1608817588376834048\n2                            1                               \n3                         1027 retweeted, 1608871631765786624\n4                         2278 retweeted, 1529674574266257408\n5                           41 retweeted, 1608860717515423744\n6                          367 retweeted, 1603919700890640389\n  in_reply_to_user_id\n1                  NA\n2                  NA\n3                  NA\n4                  NA\n5                  NA\n6                  NA\n                                                                entities.mentions\n1 c(3, 37), c(16, 45), c(\"KelseyDotOrg\", \"atrupar\"), c(\"1375165814\", \"288277167\")\n2                                                91, 105, gatewaypundit, 19211550\n3                                                         3, 10, mjs_DC, 88215673\n4                                                    3, 13, MrAndyNgo, 2835451658\n5                                                    3, 15, LifeNewsToo, 74552263\n6                                         3, 15, Moneymykpt2, 1153357658268819457",
     "crumbs": [
       "Tutorials",
-      "3. Data pre-processing and visualization"
+      "8. Network analysis"
     ]
   },
   {
-    "objectID": "Tutorials/Data-preprocessing.html#line-graph-trends-over-time",
-    "href": "Tutorials/Data-preprocessing.html#line-graph-trends-over-time",
-    "title": "3. Data pre-processing and visualization",
-    "section": "3-1. Line graph: trends over time",
-    "text": "3-1. Line graph: trends over time\nYou can add a title and label the x- and y-axes to make the plot more informative. Of note, m50 represents the median of the max-distance mobility (the distance a typical member of a given population moves in a day).\n\nm50trend &lt;- ggplot(filtered_data, \n                   aes(x = week, y = m50, \n                       color = state)) +\n  geom_line() +\n  labs(\n    title = \"Weekly Mobility Across 3 States\",\n    x = \"Week number\",\n    y = \"m50 (Median max-distance mobility)\")\nprint(m50trend)",
+    "objectID": "Tutorials/Network analysis.html#what-is-a-semantic-network",
+    "href": "Tutorials/Network analysis.html#what-is-a-semantic-network",
+    "title": "8. Network analysis",
+    "section": "What is a semantic network?",
+    "text": "What is a semantic network?\nA semantic network shows how words are connected based on their co-occurrence in text. Here, we use bigrams (two-word combinations) to identify words that frequently appear together.",
     "crumbs": [
       "Tutorials",
-      "3. Data pre-processing and visualization"
+      "8. Network analysis"
     ]
   },
   {
-    "objectID": "Tutorials/Data-preprocessing.html#saving-plots",
-    "href": "Tutorials/Data-preprocessing.html#saving-plots",
-    "title": "3. Data pre-processing and visualization",
-    "section": "3-2. Saving plots",
-    "text": "3-2. Saving plots\nBy default, ggsave() saves figures at 7 × 7 inches. You can change the width and height to customize the figure size.\n\nggsave(\"mobility_line_graph.png\", plot = m50trend)\n# Customizing the figure size\nggsave(\n  \"mobility_line_graph_large.png\",\n  plot = m50trend,\n  width = 10, height = 8, units = \"in\",\n  dpi = 300)\n\n\n\n\n\n\n\nTip\n\n\n\nIf ggsave() does not save where you expect, check your working directory with getwd().",
+    "objectID": "Tutorials/Network analysis.html#step-1-clean-retweet-prefixes",
+    "href": "Tutorials/Network analysis.html#step-1-clean-retweet-prefixes",
+    "title": "8. Network analysis",
+    "section": "Step 1: Clean retweet prefixes",
+    "text": "Step 1: Clean retweet prefixes\nWe begin by removing leading RT @username patterns so they do not dominate the network.\n\ntweets_cleaned &lt;- tweets_subset %&gt;%\n  mutate(text = str_remove_all(text, \"^RT @\\\\w+\"))",
     "crumbs": [
       "Tutorials",
-      "3. Data pre-processing and visualization"
+      "8. Network analysis"
     ]
   },
   {
-    "objectID": "Tutorials/Data-preprocessing.html#customizing-plot-appearance",
-    "href": "Tutorials/Data-preprocessing.html#customizing-plot-appearance",
-    "title": "3. Data pre-processing and visualization",
-    "section": "3-3. Customizing plot appearance",
-    "text": "3-3. Customizing plot appearance\nYou can change the size of texts, colors/thickness/types of the lines etc by using different functions.\n\nA. Change the size of texts (increase text size for instane)\n\nm50trend_1 &lt;- ggplot(filtered_data, \n                     aes(x = week, y = m50, \n                         color = state)) +\n  geom_line() +\n  labs(title = \"Weekly Mobility Across 3 States\",\n       x = \"Week Number\",\n       y = \"m50 (Median Max-Distance Mobility)\") +\n  theme_minimal() +\n  theme(\n# Bigger title\n    plot.title = element_text(size = 16, \n                              face = \"bold\"),  \n# X-axis label size\n    axis.title.x = element_text(size = 14),  \n# Y-axis label size\n    axis.title.y = element_text(size = 14),  \n# Legend text size\n    legend.text = element_text(size = 12),  \n# Legend title size\n    legend.title = element_text(size = 14)  \n  )\nprint(m50trend_1)\n\n\n\n\n\n\n\n\n\n\nB. Change line thickness\nYou can adjust the number after size = to control how thick the line appears in the plot.\n\nm50trend_2 &lt;- ggplot(filtered_data, \n                     aes(x = week, y = m50, \n                         color = state)) +\n  geom_line(size = 1.5) +  # Increase line thickness\n  labs(title = \"Weekly Mobility Across 3 States\",\n       x = \"Week Number\",\n       y = \"m50 (Median Max-Distance Mobility)\") +\n  theme_minimal()\nprint(m50trend_2)\n\n\n\n\n\n\n\n\n\n\nC. Change Line Type\nIf the figure will be printed in black and white, use different line types such as solid, dashed, or dotted to make each line easier to distinguish.\n\nm50trend_3 &lt;- ggplot(filtered_data, \n                     aes(x = week, y = m50, \n                         color = state, linetype = state)) +\n  geom_line(size = 1.2) +  # Thicker lines\n  labs(title = \"Weekly Mobility Across 3 States\",\n       x = \"Week Number\",\n       y = \"m50 (Median Max-Distance Mobility)\") +\n  theme_minimal()\nprint(m50trend_3)\n\n\n\n\n\n\n\n\n\n\nD. Assign Colors\nYou can use the scale_color_manual() function and enter the colors of your choice to customize the plot.\n\nm50trend_4 &lt;- ggplot(filtered_data, \n                     aes(x = week, y = m50, \n                         color = state)) +\n  geom_line(size = 1.2) +\n  scale_color_manual(values = c(\"California\" = \"blue\", \n                                \"Florida\" = \"green\", \n                                \"Hawaii\" = \"pink\")) + \n  labs(title = \"Weekly Mobility Across 3 States\",\n       x = \"Week Number\",\n       y = \"m50 (Median Max-Distance Mobility)\") +\n  theme_minimal()\nprint(m50trend_4)",
+    "objectID": "Tutorials/Network analysis.html#step-2-extract-bigrams-and-remove-stopwords",
+    "href": "Tutorials/Network analysis.html#step-2-extract-bigrams-and-remove-stopwords",
+    "title": "8. Network analysis",
+    "section": "Step 2: Extract bigrams and remove stopwords",
+    "text": "Step 2: Extract bigrams and remove stopwords\n\ntw_bigram &lt;- tweets_cleaned %&gt;%\n  unnest_tokens(bigram, text, token = \"ngrams\", n = 2) %&gt;%\n  separate(bigram, into = c(\"word1\", \"word2\"), sep = \" \") %&gt;%\n  filter(\n    !word1 %in% stop_words$word,\n    !word2 %in% stop_words$word\n  ) %&gt;%\n  unite(bigram, word1, word2, sep = \" \") %&gt;%\n  count(bigram, sort = TRUE)\n\nhead(tw_bigram)\n\n           bigram    n\n1      https t.co 2491\n2        12 weeks  677\n3        pro life  495\n4   anti abortion  386\n5 abortion rights  286\n6    abortion ban  270",
     "crumbs": [
       "Tutorials",
-      "3. Data pre-processing and visualization"
+      "8. Network analysis"
     ]
   },
   {
-    "objectID": "Tutorials/Data-preprocessing.html#bar-graph-comparing-states",
-    "href": "Tutorials/Data-preprocessing.html#bar-graph-comparing-states",
-    "title": "3. Data pre-processing and visualization",
-    "section": "3-4. Bar graph: comparing states",
-    "text": "3-4. Bar graph: comparing states\nExample 1. Here we calculate the average mobility for each state and then plot it. A bar chart usually use summarized data (one value per group), not raw daily rows. First, create a summarized dataset.\n\nstate_summary &lt;- filtered_data |&gt;\n  group_by(state) |&gt;\n  summarise(mean_m50 = mean(m50, na.rm = TRUE), \n            .groups = \"drop\")\n\nWe now have ‘mean_m50’ scores. We enter this to ggplot and its geom_col() function.\n\nggplot(state_summary, aes(x = state, y = mean_m50)) +\n  geom_col() +\n  labs(\n    title = \"Average Mobility Across 3 States\",\n    x = \"State\",\n    y = \"Mean m50\"\n    )\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTip\n\n\n\n\nIf you already summarized your data: then use the geom_col().\nBut if you want to use counts of rows: then use geom_bar().\n\n\n\nExample 2. If we want to count how many observations exist for each state, we use geom_bar(). geom_bar() automatically counts how many rows fall into each category.\n\nggplot(filtered_data, aes(x = state)) +\n  geom_bar() +\n  labs(\n    title = \"Number of Observations by State\",\n    x = \"State\",\n    y = \"Count\"\n  )",
+    "objectID": "Tutorials/Network analysis.html#step-3-separate-bigrams-into-two-words",
+    "href": "Tutorials/Network analysis.html#step-3-separate-bigrams-into-two-words",
+    "title": "8. Network analysis",
+    "section": "Step 3: Separate bigrams into two words",
+    "text": "Step 3: Separate bigrams into two words\n\nbigram_separated &lt;- tw_bigram %&gt;%\n  separate(bigram, into = c(\"word1\", \"word2\"), sep = \" \")",
     "crumbs": [
       "Tutorials",
-      "3. Data pre-processing and visualization"
+      "8. Network analysis"
     ]
   },
   {
-    "objectID": "Tutorials/Data-preprocessing.html#summary",
-    "href": "Tutorials/Data-preprocessing.html#summary",
-    "title": "3. Data pre-processing and visualization",
+    "objectID": "Tutorials/Network analysis.html#step-4-filter-infrequent-bigrams",
+    "href": "Tutorials/Network analysis.html#step-4-filter-infrequent-bigrams",
+    "title": "8. Network analysis",
+    "section": "Step 4: Filter infrequent bigrams",
+    "text": "Step 4: Filter infrequent bigrams\n\nbigram_filtered &lt;- bigram_separated %&gt;%\n  filter(n &gt; 100)\n\n\n\n\n\n\n\nTip\n\n\n\nThe threshold used here (n &gt; 100) is just an example. Lower thresholds keep more word pairs but can make the network harder to read.",
+    "crumbs": [
+      "Tutorials",
+      "8. Network analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Network analysis.html#step-5-build-the-network-object",
+    "href": "Tutorials/Network analysis.html#step-5-build-the-network-object",
+    "title": "8. Network analysis",
+    "section": "Step 5: Build the network object",
+    "text": "Step 5: Build the network object\n\nbigram_graph &lt;- graph_from_data_frame(bigram_filtered)",
+    "crumbs": [
+      "Tutorials",
+      "8. Network analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Network analysis.html#step-6-visualize-the-semantic-network",
+    "href": "Tutorials/Network analysis.html#step-6-visualize-the-semantic-network",
+    "title": "8. Network analysis",
+    "section": "Step 6: Visualize the semantic network",
+    "text": "Step 6: Visualize the semantic network\n\nggraph(bigram_graph, layout = \"fr\") +\n  geom_edge_link() +\n  geom_node_point() +\n  geom_node_text(aes(label = name), repel = TRUE) +\n  labs(title = \"Semantic Network of Bigrams in Abortion Tweets\") +\n  theme_void()",
+    "crumbs": [
+      "Tutorials",
+      "8. Network analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Network analysis.html#optional-add-directional-edges",
+    "href": "Tutorials/Network analysis.html#optional-add-directional-edges",
+    "title": "8. Network analysis",
+    "section": "Optional: Add directional edges",
+    "text": "Optional: Add directional edges\n\ndirection_edges &lt;- grid::arrow(type = \"closed\", length = unit(.2, \"cm\"))\n\nggraph(bigram_graph, layout = \"fr\") +\n  geom_edge_link(aes(edge_alpha = n), arrow = direction_edges) +\n  geom_node_point(size = 2) +\n  geom_node_text(aes(label = name), repel = TRUE) +\n  labs(title = \"Semantic Network of Bigrams with Directional Information\") +\n  theme_void()",
+    "crumbs": [
+      "Tutorials",
+      "8. Network analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Network analysis.html#describe-the-semantic-network",
+    "href": "Tutorials/Network analysis.html#describe-the-semantic-network",
+    "title": "8. Network analysis",
+    "section": "Describe the semantic network",
+    "text": "Describe the semantic network\n\nvcount(bigram_graph)\n\n[1] 42\n\necount(bigram_graph)\n\n[1] 32\n\nedge_density(bigram_graph)\n\n[1] 0.01858304\n\ncomponents(bigram_graph)$no\n\n[1] 10",
+    "crumbs": [
+      "Tutorials",
+      "8. Network analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Network analysis.html#questions-for-interpretation",
+    "href": "Tutorials/Network analysis.html#questions-for-interpretation",
+    "title": "8. Network analysis",
+    "section": "Questions for interpretation",
+    "text": "Questions for interpretation\n\nWhich words appear most connected?\nAre there clusters of words representing different themes?\nDo certain words act as bridges between themes?\nWhat does this suggest about how abortion is discussed in the dataset?",
+    "crumbs": [
+      "Tutorials",
+      "8. Network analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Network analysis.html#step-1-prepare-interaction-data",
+    "href": "Tutorials/Network analysis.html#step-1-prepare-interaction-data",
+    "title": "8. Network analysis",
+    "section": "Step 1: Prepare interaction data",
+    "text": "Step 1: Prepare interaction data\n\ntweets_interaction &lt;- tweets_subset %&gt;%\n  select(author_id, in_reply_to_user_id, entities.mentions)",
+    "crumbs": [
+      "Tutorials",
+      "8. Network analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Network analysis.html#step-2-build-reply-and-mention-edge-lists",
+    "href": "Tutorials/Network analysis.html#step-2-build-reply-and-mention-edge-lists",
+    "title": "8. Network analysis",
+    "section": "Step 2: Build reply and mention edge lists",
+    "text": "Step 2: Build reply and mention edge lists\n\nreplies &lt;- tweets_interaction %&gt;%\n  filter(!is.na(in_reply_to_user_id)) %&gt;%\n  select(source = author_id, target = in_reply_to_user_id)\n\nmentions &lt;- tweets_interaction %&gt;%\n  filter(!is.na(entities.mentions)) %&gt;%\n  unnest(entities.mentions) %&gt;%\n  select(source = author_id, target = entities.mentions)\n\nreplies &lt;- replies %&gt;%\n  mutate(source = as.character(source), target = as.character(target))\n\nmentions &lt;- mentions %&gt;%\n  mutate(source = as.character(source), target = as.character(target))\n\nedges &lt;- bind_rows(replies, mentions) %&gt;%\n  distinct()",
+    "crumbs": [
+      "Tutorials",
+      "8. Network analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Network analysis.html#step-3-filter-to-highly-connected-users",
+    "href": "Tutorials/Network analysis.html#step-3-filter-to-highly-connected-users",
+    "title": "8. Network analysis",
+    "section": "Step 3: Filter to highly connected users",
+    "text": "Step 3: Filter to highly connected users\n\nuser_counts &lt;- edges %&gt;%\n  pivot_longer(cols = c(source, target), values_to = \"user\") %&gt;%\n  count(user) %&gt;%\n  filter(n &gt; 500)\n\nuser_counts\n\n# A tibble: 3 × 2\n  user                                          n\n  &lt;chr&gt;                                     &lt;int&gt;\n1 \"\"                                          994\n2 \"3, 10, mjs_DC, 88215673\"                   788\n3 \"3, 15, ThisIsKyleR, 1467931973616386052\"   521\n\n\n\n\n\n\n\n\nNote\n\n\n\nA high count means a user appears often in the interaction data, but it does not automatically mean that the user is substantively important.",
+    "crumbs": [
+      "Tutorials",
+      "8. Network analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Network analysis.html#step-4-build-and-visualize-the-user-network",
+    "href": "Tutorials/Network analysis.html#step-4-build-and-visualize-the-user-network",
+    "title": "8. Network analysis",
+    "section": "Step 4: Build and visualize the user network",
+    "text": "Step 4: Build and visualize the user network\n\nfiltered_edges &lt;- edges %&gt;%\n  filter(source %in% user_counts$user, target %in% user_counts$user)\n\nuser_graph &lt;- graph_from_data_frame(filtered_edges, directed = TRUE)\n\ninteraction_graph &lt;- ggraph(user_graph, layout = \"fr\") +\n  geom_edge_link(aes(alpha = 0.5), arrow = arrow(type = \"closed\", length = unit(0.15, \"cm\"))) +\n  geom_node_point() +\n  geom_node_text(aes(label = name), repel = TRUE) +\n  labs(title = \"Twitter User Interaction Network\") +\n  theme_void()\n\ninteraction_graph",
+    "crumbs": [
+      "Tutorials",
+      "8. Network analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Network analysis.html#interpret-user-interactions",
+    "href": "Tutorials/Network analysis.html#interpret-user-interactions",
+    "title": "8. Network analysis",
+    "section": "Interpret user interactions",
+    "text": "Interpret user interactions\nIn this graph:\n\nnodes represent Twitter users\nedges represent mentions or replies\nmore connected nodes indicate users with more ties to others in the network\n\nIf you want to inspect a specific user ID, you can sometimes search the platform directly using a format like from:USER_ID, as long as the account is still public and available.",
+    "crumbs": [
+      "Tutorials",
+      "8. Network analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Network analysis.html#step-5-degree-and-betweenness-centrality",
+    "href": "Tutorials/Network analysis.html#step-5-degree-and-betweenness-centrality",
+    "title": "8. Network analysis",
+    "section": "Step 5: Degree and betweenness centrality",
+    "text": "Step 5: Degree and betweenness centrality\n\ndegree_centrality &lt;- degree(user_graph, mode = \"all\")\ntop_users &lt;- sort(degree_centrality, decreasing = TRUE)[1:10]\nprint(top_users)\n\n&lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; \n  NA   NA   NA   NA   NA   NA   NA   NA   NA   NA \n\nbetweenness_centrality &lt;- betweenness(user_graph, directed = TRUE)\ntop_influencers &lt;- sort(betweenness_centrality, decreasing = TRUE)[1:10]\nprint(top_influencers)\n\n&lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; \n  NA   NA   NA   NA   NA   NA   NA   NA   NA   NA",
+    "crumbs": [
+      "Tutorials",
+      "8. Network analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Network analysis.html#extra-basic-network-description",
+    "href": "Tutorials/Network analysis.html#extra-basic-network-description",
+    "title": "8. Network analysis",
+    "section": "Extra: Basic network description",
+    "text": "Extra: Basic network description\n\nvcount(user_graph)\n\n[1] 0\n\necount(user_graph)\n\n[1] 0\n\nedge_density(user_graph)\n\n[1] NaN\n\ncomponents(user_graph)$no\n\n[1] 0\n\n\n\nHow to interpret these numbers\n\nMore nodes means more unique users are involved.\nMore edges means more interactions are taking place.\nHigher density means users are more interconnected.\nMore components means the network contains separate groups that are not connected to each other.",
+    "crumbs": [
+      "Tutorials",
+      "8. Network analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Network analysis.html#extra-compare-in-degree-and-out-degree",
+    "href": "Tutorials/Network analysis.html#extra-compare-in-degree-and-out-degree",
+    "title": "8. Network analysis",
+    "section": "Extra: Compare in-degree and out-degree",
+    "text": "Extra: Compare in-degree and out-degree\n\nin_degree &lt;- degree(user_graph, mode = \"in\")\ntop_in_degree &lt;- sort(in_degree, decreasing = TRUE)[1:10]\nprint(top_in_degree)\n\n&lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; \n  NA   NA   NA   NA   NA   NA   NA   NA   NA   NA \n\nout_degree &lt;- degree(user_graph, mode = \"out\")\ntop_out_degree &lt;- sort(out_degree, decreasing = TRUE)[1:10]\nprint(top_out_degree)\n\n&lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; \n  NA   NA   NA   NA   NA   NA   NA   NA   NA   NA \n\n\n\nHow to interpret this\n\nHigh in-degree users are frequently mentioned or replied to.\nHigh out-degree users are highly active in reaching out to others.\nThese are not always the same users.",
+    "crumbs": [
+      "Tutorials",
+      "8. Network analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Network analysis.html#extra-detect-communities-in-the-network",
+    "href": "Tutorials/Network analysis.html#extra-detect-communities-in-the-network",
+    "title": "8. Network analysis",
+    "section": "Extra: Detect communities in the network",
+    "text": "Extra: Detect communities in the network\n\nuser_graph_undirected &lt;- as_undirected(user_graph, mode = \"collapse\")\ncomm &lt;- cluster_louvain(user_graph_undirected)\nlength(comm)\n\n[1] 0\n\nmodularity(comm)\n\n[1] NaN",
+    "crumbs": [
+      "Tutorials",
+      "8. Network analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Network analysis.html#extra-visualize-communities",
+    "href": "Tutorials/Network analysis.html#extra-visualize-communities",
+    "title": "8. Network analysis",
+    "section": "Extra: Visualize communities",
+    "text": "Extra: Visualize communities\n\ncommunity_graph &lt;- as_tbl_graph(user_graph_undirected) %&gt;%\n  activate(nodes) %&gt;%\n  mutate(community = as.factor(membership(comm)))\n\ncommunity_plot &lt;- ggraph(community_graph, layout = \"fr\") +\n  geom_edge_link(alpha = 0.15) +\n  geom_node_point(aes(color = community), size = 3) +\n  labs(title = \"Communities in the Twitter Interaction Network\") +\n  theme_void()\n\nprint(community_plot)",
+    "crumbs": [
+      "Tutorials",
+      "8. Network analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Text-as-data.html",
+    "href": "Tutorials/Text-as-data.html",
+    "title": "5. Basic textual analysis",
+    "section": "",
+    "text": "By the end of this tutorial, you will be able to:\n\nUnderstand how text data is structured for analysis in R\nTokenize text into words and n-grams\nRemove stopwords and clean textual data\nCalculate word frequencies and visualize them\nCreate word clouds\nIdentify co-occurring words using bigrams",
+    "crumbs": [
+      "Tutorials",
+      "5. Basic textual analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Text-as-data.html#learning-goals",
+    "href": "Tutorials/Text-as-data.html#learning-goals",
+    "title": "5. Basic textual analysis",
+    "section": "",
+    "text": "By the end of this tutorial, you will be able to:\n\nUnderstand how text data is structured for analysis in R\nTokenize text into words and n-grams\nRemove stopwords and clean textual data\nCalculate word frequencies and visualize them\nCreate word clouds\nIdentify co-occurring words using bigrams",
+    "crumbs": [
+      "Tutorials",
+      "5. Basic textual analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Text-as-data.html#tokenization",
+    "href": "Tutorials/Text-as-data.html#tokenization",
+    "title": "5. Basic textual analysis",
+    "section": "2-1. Tokenization",
+    "text": "2-1. Tokenization\nCommon words like “the,” “and,” and “to” appear frequently but carry little meaning. These are called stopwords. Let’s tokenize the description column in YT_data and create a word column.\n\nYT_tokenized &lt;- YT_data |&gt;\n  unnest_tokens(word, description)\n\nTokenization breaks text into individual words and removes sentence structure.If you examine the first 20 words, you’ll notice common words like “to,” “the,” “and,” and “of,” which add little (or no) meaning.\n\nhead(YT_tokenized$word, 20)\n\n [1] \"people's\"  \"march\"     \"adviser\"   \"ash\"       \"lee\"       \"woodard\"  \n [7] \"henderson\" \"discusses\" \"the\"       \"upcoming\"  \"march\"     \"to\"       \n[13] \"protest\"   \"donald\"    \"trump's\"   \"second\"    \"term\"      \"and\"      \n[19] \"ahead\"     \"of\"",
+    "crumbs": [
+      "Tutorials",
+      "5. Basic textual analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Text-as-data.html#removing-stopwords",
+    "href": "Tutorials/Text-as-data.html#removing-stopwords",
+    "title": "5. Basic textual analysis",
+    "section": "2-2. Removing stopwords",
+    "text": "2-2. Removing stopwords\nOne of the first steps in Natural Language Processing (NLP) is removing words that carry little to no meaningful information, such as “a,” “the,” and “is” These are known as stopwords.\nIn tidytext, there is a predefined list of stopwords (stop_words).\n\nYT_tokenized_cleaned &lt;- YT_tokenized |&gt;\n  anti_join(stop_words, by = \"word\")\nhead(YT_tokenized_cleaned)\n\n\n\n\n\n\n\nNote\n\n\n\nTo view some preset stopwords, you can simply run ‘stop_words’",
+    "crumbs": [
+      "Tutorials",
+      "5. Basic textual analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Text-as-data.html#customize-stopwords",
+    "href": "Tutorials/Text-as-data.html#customize-stopwords",
+    "title": "5. Basic textual analysis",
+    "section": "2-3. Customize stopwords",
+    "text": "2-3. Customize stopwords\nIf there is a specific stopword you’d like to add—such as “lol”, you can create a custom stopword list and merge it with the existing tidytext stopwords dataset.For example, the following code adds “lol” to the stopword list (creating a new dataframe with your custom stopwords):\nCreate a custom stopword list (e.g., adding “lol”):\n\ncustom_stop &lt;- data.frame(word = c(\"lol\"), lexicon = \"custom\")\n\nCombine the custom stopwords with the default stopwords\n\nfinal_stop &lt;- bind_rows(stop_words, custom_stop)\n\nThis code removes unwanted words from the tokenized dataset.\n\nYT_tokenized_cleaned &lt;- YT_tokenized |&gt;\n  anti_join(final_stop, by = \"word\")\n\nTry: head(YT_tokenized_cleaned$word, 20) to display the cleaned words with stopwords removed.",
+    "crumbs": [
+      "Tutorials",
+      "5. Basic textual analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Text-as-data.html#visualization",
+    "href": "Tutorials/Text-as-data.html#visualization",
+    "title": "5. Basic textual analysis",
+    "section": "3-1. Visualization",
+    "text": "3-1. Visualization\nYou can also visualize this using ggplot2. For example, to display the top 10 most frequently occurring words:\n\nword_counts &lt;- YT_tokenized_cleaned |&gt;\n  count(word, sort = TRUE) |&gt;\n  slice_max(n, n = 10)\n\nHere, I selected top 15 words. If you don’t specify a number or use this function, the graph will include the entire dataset, which may be difficult to interpret.\n\nggplot(word_counts, \n       aes(x = reorder(word, n), y = n)) +\n  geom_col() +\n  coord_flip() +\n  labs(title = \"Top 15 Most Frequent Words\",\n       x = \"Words\",\n       y = \"Frequency\")\n\n\n\n\n\n\n\n\nWord frequency does not capture context, sarcasm, or its underlying meaning. Text analysis should be interpreted carefully and ideally combined with qualitative review.",
+    "crumbs": [
+      "Tutorials",
+      "5. Basic textual analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Text-as-data.html#summary",
+    "href": "Tutorials/Text-as-data.html#summary",
+    "title": "5. Basic textual analysis",
     "section": "Summary",
-    "text": "Summary\nIn this chapter, you practiced inspecting datasets, converting variables, and preparing data for analysis by aligning date formats and merging datasets.\nYou also created visualizations using ggplot2 to examine trends and compare groups. These steps (cleaning, organizing, and visualizing data) are essential for turning raw data into meaningful insights.\nIn the next chapter, we will build on these skills by moving from data preparation to data analysis and interpretation.",
+    "text": "Summary\nIn this module, you learned how to structure and clean textual data in R. You practiced tokenizing text, removing stopwords, analyzing word frequency, generating visualizations, and examining word sequences using n-grams. These techniques provide a foundation for computational text analysis and prepare you for more advanced methods such as sentiment analysis, topic modeling, and semantic network analysis.",
     "crumbs": [
       "Tutorials",
-      "3. Data pre-processing and visualization"
+      "5. Basic textual analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Image-as-data.html",
+    "href": "Tutorials/Image-as-data.html",
+    "title": "10. Image as data",
+    "section": "",
+    "text": "By the end of this tutorial, you will be able to:\n\nUnderstand how images can be turned into numeric data.\nExtract simple image features such as color and brightness.\nImport images from both local folders and web URLs.\nUse DeepFace through reticulate for face, gender, and emotion detection.\nInterpret image-analysis outputs critically and recognize their limitations.",
+    "crumbs": [
+      "Tutorials",
+      "10. Image as data"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Image-as-data.html#learning-goals",
+    "href": "Tutorials/Image-as-data.html#learning-goals",
+    "title": "10. Image as data",
+    "section": "",
+    "text": "By the end of this tutorial, you will be able to:\n\nUnderstand how images can be turned into numeric data.\nExtract simple image features such as color and brightness.\nImport images from both local folders and web URLs.\nUse DeepFace through reticulate for face, gender, and emotion detection.\nInterpret image-analysis outputs critically and recognize their limitations.",
+    "crumbs": [
+      "Tutorials",
+      "10. Image as data"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Image-as-data.html#required-packages",
+    "href": "Tutorials/Image-as-data.html#required-packages",
+    "title": "10. Image as data",
+    "section": "Required Packages",
+    "text": "Required Packages\nYou only need to install packages once. With recent versions of reticulate, you usually do not need to manually choose a Python path with use_python(). Instead, you can declare the Python packages you need with py_require(), and reticulate will usually manage a temporary Python environment automatically.\nOn the first run, reticulate may take a little extra time while it resolves that Python environment and installs the required Python packages.\n\ninstall.packages(c(\"magick\", \"tidyverse\", \"reticulate\", \"purrr\"))\nreticulate::py_require(c(\"pillow\", \"deepface\", \"tf-keras\"))\n\n\nlibrary(magick)\nlibrary(tidyverse)\nlibrary(reticulate)\nset.seed(381)\noptions(scipen = 999)\n\nUseful packages in this module include:\n\nmagick, which reads, displays, edits, and writes image files in R\ntidyverse, which helps organize data and create plots\nreticulate, which connects R to Python tools\nPillow, which helps handle image files in Python\ndeepface, which supports face detection and emotion analysis\ntf-keras, which helps deepface run correctly with TensorFlow/Keras",
+    "crumbs": [
+      "Tutorials",
+      "10. Image as data"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Image-as-data.html#case-1-images-stored-on-your-computer",
+    "href": "Tutorials/Image-as-data.html#case-1-images-stored-on-your-computer",
+    "title": "10. Image as data",
+    "section": "Case 1: Images stored on your computer",
+    "text": "Case 1: Images stored on your computer\nThis first example shows how to analyze images that are already saved in a folder on your computer. You can download this folder from Canvas (image demo.zip).\nWe begin by telling R where the image folder is. Then we create a list of all image files in that folder.\n\nbase_dir &lt;- \"data/image_demo\"\n\nimage_files &lt;- list.files(\n  base_dir,\n  pattern = \"\\\\.(jpg|jpeg|png)$\",\n  full.names = TRUE,\n  ignore.case = TRUE\n)\nimage_files\n\n [1] \"data/image_demo/File 1.png\"  \"data/image_demo/File 10.png\"\n [3] \"data/image_demo/File 11.png\" \"data/image_demo/File 12.png\"\n [5] \"data/image_demo/File 13.png\" \"data/image_demo/File 14.png\"\n [7] \"data/image_demo/File 2.png\"  \"data/image_demo/File 3.png\" \n [9] \"data/image_demo/File 4.png\"  \"data/image_demo/File 5.png\" \n[11] \"data/image_demo/File 6.png\"  \"data/image_demo/File 7.png\" \n[13] \"data/image_demo/File 8.png\"  \"data/image_demo/File 9.png\" \n\n\nTo see how many image files are in the folder:\n\nlength(image_files)\n\n[1] 14",
+    "crumbs": [
+      "Tutorials",
+      "10. Image as data"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Image-as-data.html#image-features-color-and-brightness",
+    "href": "Tutorials/Image-as-data.html#image-features-color-and-brightness",
+    "title": "10. Image as data",
+    "section": "Image features: color and brightness",
+    "text": "Image features: color and brightness\nNext, we create a function that reads one image at a time and calculates a few simple visual features.\nHere is what each step does:\n\nimage_read() opens the image file.\nimage_resize() makes every image the same size so the measurements are comparable.\nimage_data() turns the image into red, green, and blue pixel values.\ntibble() stores the results in a clean table.\n\n\nget_image_features &lt;- function(path) {\n  img &lt;- image_read(path)\n  img_small &lt;- image_resize(img, \"100x100!\")\n  arr &lt;- image_data(img_small, channels = \"rgb\")\n  arr &lt;- as.integer(arr)\n\n  tibble(\n    file = basename(path),\n    mean_red = mean(arr[1, , ]),\n    mean_green = mean(arr[2, , ]),\n    mean_blue = mean(arr[3, , ]),\n    sd_red = sd(as.vector(arr[1, , ])),\n    sd_green = sd(as.vector(arr[2, , ])),\n    sd_blue = sd(as.vector(arr[3, , ])),\n    brightness = mean((arr[1, , ] + arr[2, , ] + arr[3, , ]) / 3)\n  )\n}\n\n\nWhat these features mean\n\nmean_red, mean_green, and mean_blue measure the average amount of red, green, and blue in the image.\nsd_red, sd_green, and sd_blue measure how much variation there is in each color channel.\nbrightness measures the overall lightness of the image by averaging the red, green, and blue values across pixels.\n\nNow we apply the function to every image in the folder. map_dfr() means “run this function on each file, then combine the results into one data frame.”\n\nimage_features &lt;- map_dfr(image_files, get_image_features)\nimage_features\n\n# A tibble: 14 × 8\n   file        mean_red mean_green mean_blue sd_red sd_green sd_blue brightness\n   &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;      &lt;dbl&gt;\n 1 File 1.png      8.68       9.64      11.1   12.2     13.3    14.9       9.81\n 2 File 10.png   101.       101.       102.    40.5     42.1    42.6     101.  \n 3 File 11.png   138.       137.       139.    35.5     37.0    36.9     138.  \n 4 File 12.png   182.       181.       177.    34.2     34.5    37.8     180.  \n 5 File 13.png    28.0       28.1       28.4   31.5     31.1    31.0      28.2 \n 6 File 14.png    18.3       28.2       45.3   13.6     29.8    59.3      30.6 \n 7 File 2.png    176.        70.6       68.4   17.7     41.8    43.1     105.  \n 8 File 3.png    123.        56.0       58.6   25.3     39.1    39.8      79.1 \n 9 File 4.png    134.       134.       133.    49.9     50.1    49.2     134.  \n10 File 5.png    217.       170.       173.    29.5     66.1    65.7     187.  \n11 File 6.png     81.6       79         78.9   56.8     52.4    52.5      79.8 \n12 File 7.png     93.3       96.6       96.9   21.8     20.4    20.6      95.6 \n13 File 8.png    150.       150.       151.    22.7     22.8    22.5     150.  \n14 File 9.png     22.1       20.2       25.3   21.0     19.9    19.6      22.6 \n\n\nA table is useful, but plotting the features makes the differences easier to see. In the graph below, each bar is one image, and each panel is a different visual feature.\n\nimage_features %&gt;%\n  pivot_longer(\n    cols = c(mean_red, mean_green, mean_blue, brightness),\n    names_to = \"feature\",\n    values_to = \"value\"\n  ) %&gt;%\n  ggplot(aes(x = file, y = value, fill = file)) +\n  geom_col(show.legend = FALSE) +\n  facet_wrap(~ feature, scales = \"free_y\") +\n  theme_minimal() +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1))\n\n\n\n\n\n\n\n\nThese graphs show average brightness and average red, green, and blue intensity, allowing us to compare images numerically.",
+    "crumbs": [
+      "Tutorials",
+      "10. Image as data"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Image-as-data.html#case-2-importing-images-from-a-url",
+    "href": "Tutorials/Image-as-data.html#case-2-importing-images-from-a-url",
+    "title": "10. Image as data",
+    "section": "Case 2: Importing images from a URL",
+    "text": "Case 2: Importing images from a URL\nSometimes images are not stored on your computer. Instead, they are available online through a web address, or URL. In R, we can import an online image if we have the direct image URL.\nA direct image URL usually ends in an image file type such as .jpg, .jpeg, .png, or .webp. This is different from an article URL. An article URL points to the whole webpage, while a direct image URL points only to the image file.\nWe can use image_read() from the magick package to read an online image directly into R.\nIn this example, we use images from an Al Jazeera visual explainer about NASA’s Artemis II moon mission. The article contains multiple graphics, such as the mission path, astronaut information, and comparisons between Earth and the moon.\n\nimg_url &lt;- \"https://www.aljazeera.com/wp-content/uploads/2026/03/Interactive_Artemis2_March30_2026-01-1774947591.png?quality=80\"\n\nartemis_img &lt;- image_read(img_url)\nartemis_img\n\n\n\n\n\n\n\nimage_write(\n  artemis_img,\n  path = \"~/Desktop/artemis_aljazeera_image.png\"\n)\n\nIf an article contains multiple images, we can store all of the direct image URLs in a vector and download them together.\nFor a small number of images, copying image URLs manually is often easiest. For many images, we can use web scraping tools such as rvest, but this may not work on all websites because pages store images differently or restrict automated access.\n\naljazeera_urls &lt;- c(\n  \"https://www.aljazeera.com/wp-content/uploads/2026/04/INTERACTIVE-Moon-poster-image-1775455632.png?quality=80&resize=770%2C513\",\n  \"https://www.aljazeera.com/wp-content/uploads/2026/03/Interactive_Artemis2_March30_2026-01-1774947591.png?quality=80\",\n  \"https://www.aljazeera.com/wp-content/uploads/2026/03/INTERACTIVE-Who-is-on-board-Artemis-II-1774960222.png?quality=80\",\n  \"https://www.aljazeera.com/wp-content/uploads/2026/04/INTERACTIVE-Photo-from-Artemis-II-Hello-World-1775450513.png?quality=80\",\n  \"https://www.aljazeera.com/wp-content/uploads/2026/04/INTERACTIVE-How-big-is-the-moon-Artemis-1775450509.png?quality=80\",\n  \"https://www.aljazeera.com/wp-content/uploads/2026/04/INTERACTIVE-Mission-to-the-moon-Artemis-china-india-ussr-us-1775450511.png?quality=80\",\n  \"https://www.aljazeera.com/wp-content/uploads/2026/04/INTERACTIVE-Astronauts-walked-the-moon-NASA-Artemis-1775450507.png?quality=80\"\n)\n\nTo save the images to your computer:\n\ndir.create(\"~/Desktop/aljazeera_artemis_images\", showWarnings = FALSE)\n\naljazeera_files &lt;- file.path(\n  \"~/Desktop/aljazeera_artemis_images\",\n  paste0(\"artemis_\", seq_along(aljazeera_urls), \".png\")\n)\n\nwalk2(\n  aljazeera_urls,\n  aljazeera_files,\n  ~ image_read(.x) %&gt;% image_write(.y)\n)\n\naljazeera_image_files &lt;- list.files(\n  \"~/Desktop/aljazeera_artemis_images\",\n  pattern = \"\\\\.png$\",\n  full.names = TRUE\n)\n\naljazeera_imgs &lt;- image_read(aljazeera_image_files)\nimage_montage(aljazeera_imgs, tile = \"3x3\", geometry = \"300x300+5+5\")\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThis workflow works best with publicly accessible image URLs. If an article is behind a paywall or login page, R may not be able to read the image directly. Do not bypass paywalls; instead, use open-access images or images you have permission to use.",
+    "crumbs": [
+      "Tutorials",
+      "10. Image as data"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Image-as-data.html#case-3-using-images-from-a-public-dataset",
+    "href": "Tutorials/Image-as-data.html#case-3-using-images-from-a-public-dataset",
+    "title": "10. Image as data",
+    "section": "Case 3: Using images from a public dataset",
+    "text": "Case 3: Using images from a public dataset\nHere we use a public-domain collection of official photos of members of the U.S. Congress from unitedstates/images.\nThe next chunk builds image URLs from Bioguide IDs and downloads the files into a folder on your Desktop.\n\ndir.create(\"~/Desktop/congress_images\", showWarnings = FALSE)\n\nmembers &lt;- tibble(\n  bioguide = c(\"P000197\", \"O000172\", \"S001168\")\n) %&gt;%\n  mutate(\n    url = paste0(\n      \"https://unitedstates.github.io/images/congress/225x275/\",\n      bioguide,\n      \".jpg\"\n    ),\n    dest = file.path(path.expand(\"~/Desktop/congress_images\"), paste0(bioguide, \".jpg\"))\n  )\n\nwalk2(\n  members$url,\n  members$dest,\n  ~ if (!file.exists(.y)) download.file(.x, .y, mode = \"wb\")\n)\n\nOnce the files are downloaded, we can list them, read one image, and display it.\n\ncongress_dir &lt;- \"~/Desktop/congress_images\"\n\ncongress_files &lt;- list.files(\n  congress_dir,\n  pattern = \"\\\\.jpg$\",\n  full.names = TRUE\n)\n\ncongress_files\n\n[1] \"/Users/howard/Desktop/congress_images/O000172.jpg\"\n[2] \"/Users/howard/Desktop/congress_images/P000197.jpg\"\n[3] \"/Users/howard/Desktop/congress_images/S001168.jpg\"\n\n\nLet’s read the first image in that list into R using magick.\n\nimg &lt;- image_read(congress_files[1])\nimg\n\n\n\n\n\n\n\n\nBecause the Congress photos are now just local image files, we can reuse the same feature-extraction function from above.\n\ncongress_features &lt;- map_dfr(congress_files, get_image_features)\ncongress_features\n\n# A tibble: 3 × 8\n  file        mean_red mean_green mean_blue sd_red sd_green sd_blue brightness\n  &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;      &lt;dbl&gt;\n1 O000172.jpg     88.5       88.6      91.1   39.7     39.1    41.1       89.4\n2 P000197.jpg    114.       115.      115.    23.0     23.0    22.9      114. \n3 S001168.jpg    117.       117.      118.    16.5     16.4    16.9      117.",
+    "crumbs": [
+      "Tutorials",
+      "10. Image as data"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Image-as-data.html#face-detection",
+    "href": "Tutorials/Image-as-data.html#face-detection",
+    "title": "10. Image as data",
+    "section": "Face detection",
+    "text": "Face detection\nBefore doing emotion detection, it helps to start with a simpler task: counting how many faces the model finds in each image.\nThe function below sends one image to DeepFace, asks it to detect faces, and then returns a small table with the number of faces and the model’s confidence.\n\ndetect_faces &lt;- function(path) {\n  faces &lt;- DeepFace$extract_faces(\n    img_path = path,\n    detector_backend = \"opencv\",\n    enforce_detection = FALSE\n  )\n\n  face_confidence &lt;- if (length(faces) &gt; 0 && !is.null(faces[[1]]$confidence)) {\n    as.numeric(faces[[1]]$confidence)\n  } else {\n    NA_real_\n  }\n\n  tibble(\n    file = basename(path),\n    n_faces = length(faces),\n    face_detected = length(faces) &gt; 0,\n    face_confidence = face_confidence\n  )\n}\n\nNow we apply the face-detection function to all Congress photos.\n\nface_results &lt;- map_dfr(congress_files, detect_faces)\nface_results\n\n# A tibble: 3 × 4\n  file        n_faces face_detected face_confidence\n  &lt;chr&gt;         &lt;int&gt; &lt;lgl&gt;                   &lt;dbl&gt;\n1 O000172.jpg       1 TRUE                     0.89\n2 P000197.jpg       1 TRUE                     0.9 \n3 S001168.jpg       1 TRUE                     0.89\n\n\n\nHow to interpret these results\n\nn_faces tells us how many faces the model detected in each image.\nface_detected shows whether the model found at least one face.\nface_confidence shows how confident the model was about the detected face.\nIf all photos are official portraits, we would usually expect one face per image.",
+    "crumbs": [
+      "Tutorials",
+      "10. Image as data"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Image-as-data.html#gender-prediction",
+    "href": "Tutorials/Image-as-data.html#gender-prediction",
+    "title": "10. Image as data",
+    "section": "Gender prediction",
+    "text": "Gender prediction\nWe can also ask the model to predict gender categories from the face in each image. This is a classification task, but note that these are model-generated labels, not ground truth about a person’s identity.\n\nanalyze_gender &lt;- function(path) {\n  result &lt;- DeepFace$analyze(\n    img_path = path,\n    actions = list(\"gender\"),\n    detector_backend = \"opencv\",\n    enforce_detection = FALSE\n  )\n\n  obj &lt;- if (is.list(result) && length(result) &gt; 0 && !is.null(result[[1]]$gender)) {\n    result[[1]]\n  } else {\n    result\n  }\n\n  tibble(\n    file = basename(path),\n    dominant_gender = as.character(obj$dominant_gender),\n    woman_score = as.numeric(obj$gender$Woman),\n    man_score = as.numeric(obj$gender$Man),\n    face_confidence = as.numeric(obj$face_confidence)\n  )\n}\n\nNow we apply the gender-prediction function to the images.\n\ngender_results &lt;- map_dfr(congress_files, analyze_gender)\ngender_results\n\n# A tibble: 3 × 5\n  file        dominant_gender woman_score man_score face_confidence\n  &lt;chr&gt;       &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;           &lt;dbl&gt;\n1 O000172.jpg Man                  26.1    73.9                0.89\n2 P000197.jpg Woman               100.0     0.00120            0.9 \n3 S001168.jpg Man                   0.113  99.9                0.89\n\n\n\nHow to interpret these results\n\ndominant_gender is the model’s top predicted gender category for the image.\nwoman_score and man_score show the model’s relative confidence in each category.\nThese are model-generated labels, not confirmed information about a person’s identity.\nThis output is useful for showing how classification works, but it should be discussed critically.",
+    "crumbs": [
+      "Tutorials",
+      "10. Image as data"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Image-as-data.html#emotion-detection",
+    "href": "Tutorials/Image-as-data.html#emotion-detection",
+    "title": "10. Image as data",
+    "section": "Emotion detection",
+    "text": "Emotion detection\nThe next step is emotion detection. On the first run, DeepFace may take a little longer because it may need to download model weights.\nThe function below asks DeepFace to estimate emotion probabilities for one image. We extract the dominant emotion plus the scores for several common emotion categories.\n\nanalyze_emotion &lt;- function(path) {\n  result &lt;- DeepFace$analyze(\n    img_path = path,\n    actions = list(\"emotion\"),\n    detector_backend = \"opencv\",\n    enforce_detection = FALSE\n  )\n\n  obj &lt;- if (is.list(result) && length(result) &gt; 0 && !is.null(result[[1]]$emotion)) {\n    result[[1]]\n  } else {\n    result\n  }\n\n  tibble(\n    file = basename(path),\n    dominant_emotion = as.character(obj$dominant_emotion),\n    happy = as.numeric(obj$emotion$happy),\n    neutral = as.numeric(obj$emotion$neutral),\n    sad = as.numeric(obj$emotion$sad),\n    angry = as.numeric(obj$emotion$angry),\n    surprise = as.numeric(obj$emotion$surprise),\n    fear = as.numeric(obj$emotion$fear),\n    disgust = as.numeric(obj$emotion$disgust),\n    face_confidence = as.numeric(obj$face_confidence)\n  )\n}\n\nNow we run the emotion model on each image and collect the results.\n\nemotion_results &lt;- map_dfr(congress_files, analyze_emotion)\nemotion_results\n\n# A tibble: 3 × 10\n  file        dominant_emotion happy neutral       sad   angry surprise     fear\n  &lt;chr&gt;       &lt;chr&gt;            &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;\n1 O000172.jpg happy             92.9  5.49     1.17e-1 9.34e-2  4.92e-1 8.82e- 1\n2 P000197.jpg happy             99.0  0.538    2.13e-3 4.48e-4  4.92e-1 4.06e- 4\n3 S001168.jpg happy            100.0  0.0137   1.36e-8 4.48e-7  1.50e-7 1.81e-11\n# ℹ 2 more variables: disgust &lt;dbl&gt;, face_confidence &lt;dbl&gt;\n\n\nA simple summary is to count which dominant emotion appears most often in the small sample.\n\nemotion_results %&gt;%\n  count(dominant_emotion, sort = TRUE)\n\n# A tibble: 1 × 2\n  dominant_emotion     n\n  &lt;chr&gt;            &lt;int&gt;\n1 happy                3\n\n\nWe can also visualize the emotion scores. This plot reshapes the data from wide form to long form so each emotion becomes its own bar.\n\nemotion_results %&gt;%\n  select(file, happy, neutral, sad, angry, surprise, fear, disgust) %&gt;%\n  pivot_longer(\n    cols = -file,\n    names_to = \"emotion\",\n    values_to = \"score\"\n  ) %&gt;%\n  ggplot(aes(x = emotion, y = score, fill = emotion)) +\n  geom_col(show.legend = FALSE) +\n  facet_wrap(~ file) +\n  theme_minimal() +\n  labs(\n    title = \"Emotion scores estimated by DeepFace\",\n    x = \"Emotion category\",\n    y = \"Model score\"\n  )",
+    "crumbs": [
+      "Tutorials",
+      "10. Image as data"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Image-as-data.html#smile-classification",
+    "href": "Tutorials/Image-as-data.html#smile-classification",
+    "title": "10. Image as data",
+    "section": "Smile classification",
+    "text": "Smile classification\nThere is not a separate smile label in this workflow, but we can build a simple smile indicator using the emotion scores. Here, we classify an image as smiling when the model’s happy score is greater than the neutral score.\nThis is a simple rule-based classification, so it should be treated as a teaching example rather than a definitive measure.\n\nsmile_results &lt;- emotion_results %&gt;%\n  mutate(\n    smile_label = if_else(happy &gt; neutral, \"smiling\", \"not_smiling\")\n  ) %&gt;%\n  select(file, happy, neutral, smile_label)\n\nsmile_results\n\n# A tibble: 3 × 4\n  file        happy neutral smile_label\n  &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      \n1 O000172.jpg  92.9  5.49   smiling    \n2 P000197.jpg  99.0  0.538  smiling    \n3 S001168.jpg 100.0  0.0137 smiling    \n\n\n\nHow to interpret these results\n\nsmile_label is a simple rule-based classification built from the emotion scores.\nIf happy is higher than neutral, the image is labeled smiling.\nThis is a convenient classroom example.\nThe rule helps you see how we can turn model outputs into a new derived category.\n\nWe can also count how many images were classified into each smile category.\n\nsmile_results %&gt;%\n  count(smile_label)\n\n# A tibble: 1 × 2\n  smile_label     n\n  &lt;chr&gt;       &lt;int&gt;\n1 smiling         3",
+    "crumbs": [
+      "Tutorials",
+      "10. Image as data"
     ]
   },
   {
@@ -110,7 +473,7 @@
     "href": "Tutorials/index.html",
     "title": "Tutorials",
     "section": "",
-    "text": "Introduction to R\nData structure and cleaning\nData pre-processing and visualization\nData accss: Social media API\nBasic textual analysis\nTopic modeling",
+    "text": "Introduction to R\nData structure and cleaning\nData pre-processing and visualization\nData access: Social media API\nBasic textual analysis\nTopic modeling\nSentiment analysis\nNetwork analysis\nPredictive analysis\nImage as data",
     "crumbs": [
       "Tutorials"
     ]
@@ -142,7 +505,7 @@
     "href": "Tutorials/Topic-modeling.html#required-packages",
     "title": "6. Topic modeling",
     "section": "Required Packages",
-    "text": "Required Packages\nThis chapter uses several packages for text processing and topic modeling.\nYou only need to install packages once.\n\npackages &lt;- c(\n  \"tidyverse\",\n  \"tidytext\",\n  \"tokenizers\",\n  \"stm\",\n  \"topicmodels\",\n  \"ldatuning\"\n)\ninstall.packages(packages)\n\n\nlibrary(tidyverse)\nlibrary(tidytext)\nlibrary(tokenizers)\nlibrary(stm)          # Structural Topic Modeling\nlibrary(topicmodels)  # Latent Dirichlet Allocation\nlibrary(ldatuning)    # LDA: Selecting number of topics",
+    "text": "Required Packages\nThis chapter uses several packages for text processing and topic modeling.\nYou only need to install packages once.\n\npackages &lt;- c(\n  \"tidyverse\",\n  \"tidytext\",\n  \"tokenizers\",\n  \"stm\",\n  \"topicmodels\",\n  \"reshape2\"\n)\ninstall.packages(packages)\n\n\nlibrary(tidyverse)\nlibrary(tidytext)\nlibrary(tokenizers)\nlibrary(stm)          # Structural Topic Modeling\nlibrary(topicmodels)  # Latent Dirichlet Allocation",
     "crumbs": [
       "Tutorials",
       "6. Topic modeling"
@@ -164,7 +527,7 @@
     "href": "Tutorials/Topic-modeling.html#step-1-text-pre-processing",
     "title": "6. Topic modeling",
     "section": "Step 1: Text Pre-processing",
-    "text": "Step 1: Text Pre-processing\nBefore estimating a topic model, text must be cleaned and standardized. Common preprocessing steps include: removing stopwords removing numbers removing punctuation converting text to lowercase The textProcessor() function in the stm package performs many of these steps automatically. Let’s use the ‘full_article’ column.\n\nnews_processed &lt;- textProcessor(news_corpus$full_article, \n                                metadata = news_corpus,\n                                customstopwords = c(\"said\", \"don't\", \"will\", \"like\", \"use\",\n                                                    \"can\", \"'re\", \"one\", \"get\", \"know\",\n                                                    \"new\", \"told\", \"accord\", \"don’t\", \"’re\",\n                                                    \"according\", \"show\", \"say\", \"people\",\n                                                    \"report\", \"just\", \"want\", \"think\", \"now\",\n                                                    \"make\", \"time\", \"come\", \"back\", \"say\",\n                                                    \"see\", \"äî\", \"äôs\", \"also\",\n                                                    \"read\",\"vaccin\", \"covid-\", \"covid\",\n                                                    \"vaccine\", \"vaccination\", \"äù\", \n                                                    \"äôre\", \"COVID-19\", \"äô\", \"äôt\"),\n                                 lowercase = TRUE,\n                                 striphtml = TRUE)",
+    "text": "Step 1: Text Pre-processing\nBefore estimating a topic model, text must be cleaned and standardized. Common preprocessing steps include: removing stopwords removing numbers removing punctuation converting text to lowercase The textProcessor function in the stm package performs many of these steps automatically. Let’s use the ‘full_article’ column.\n\nnews_processed &lt;- textProcessor(news_corpus$full_article, \n                                metadata = news_corpus,\n                                customstopwords = c(\"said\", \"don't\", \"will\", \"like\", \n                                                    \"use\", \"can\", \"'re\", \"one\", \"get\", \n                                                    \"know\", \"new\", \"told\", \"accord\", \n                                                    \"don’t\", \"’re\", \"according\", \"show\", \n                                                    \"say\", \"people\", \"report\", \"just\", \n                                                    \"want\", \"think\", \"now\", \"make\", \"time\", \n                                                    \"come\", \"back\", \"say\", \"see\", \"äî\", \n                                                    \"äôs\", \"also\", \"read\",\"vaccin\", \n                                                    \"covid-\", \"covid\", \"vaccine\", \"vaccination\", \n                                                    \"äù\", \"äôre\", \"COVID-19\", \"äô\", \"äôt\"),\n                                 lowercase = TRUE,\n                                 striphtml = TRUE)",
     "crumbs": [
       "Tutorials",
       "6. Topic modeling"
@@ -175,7 +538,7 @@
     "href": "Tutorials/Topic-modeling.html#step-2-prepare-documents-for-modeling.",
     "title": "6. Topic modeling",
     "section": "Step 2: Prepare Documents for Modeling.",
-    "text": "Step 2: Prepare Documents for Modeling.\nNext, we convert the processed text into the format required for STM. We use the function prepDocuments() to clean the data.\n\nout &lt;- prepDocuments(news_processed$documents, \n                     news_processed$vocab, \n                     news_processed$meta, \n                     lower.thresh = 50) \n\nRemoving 65247 of 67439 terms (186551 of 655969 tokens) due to frequency \nYour corpus now has 2394 documents, 2192 terms and 469418 tokens.\n\ndocs &lt;- out$documents\nvocab &lt;- out$vocab\nmeta &lt;- out$meta\n\n\n\n\n\n\n\nTipThreshold Tip\n\n\n\nThe argument lower.thresh = 50 means that any word appearing in fewer than 50 documents will be automatically excluded from the analysis. Removing these rare words helps make the dataset less sparse, which can improve the stability and interpretability of the topic model.\nYou can also use upper.thresh to set an upper limit, excluding words that appear too frequently across documents. Adjusting these thresholds allows researchers to control which terms are included in the analysis and refine the model based on predefined constraints.\n\nprepDocuments() cleans and filters the processed text data. Then we extract the cleaned components:\nout$documents → filtered document data\nout$vocab → updated vocabulary\nout$meta → corresponding metadata",
+    "text": "Step 2: Prepare Documents for Modeling.\nNext, we convert the processed text into the format required for STM. We use the function prepDocuments to clean the data.\n\nout &lt;- prepDocuments(news_processed$documents, \n                     news_processed$vocab, \n                     news_processed$meta, \n                     lower.thresh = 50) \n\nRemoving 65247 of 67439 terms (186551 of 655969 tokens) due to frequency \nYour corpus now has 2394 documents, 2192 terms and 469418 tokens.\n\ndocs &lt;- out$documents\nvocab &lt;- out$vocab\nmeta &lt;- out$meta\n\n\n\n\n\n\n\nTipThreshold Tip\n\n\n\nThe argument lower.thresh = 50 means that any word appearing in fewer than 50 documents will be automatically excluded from the analysis. Removing these rare words helps make the dataset less sparse, which can improve the stability and interpretability of the topic model.\nYou can also use upper.thresh to set an upper limit, excluding words that appear too frequently across documents. Adjusting these thresholds allows researchers to control which terms are included in the analysis and refine the model based on predefined constraints.\n\nprepDocuments cleans and filters the processed text data. Then we extract the cleaned components:\nout$documents → filtered document data\nout$vocab → updated vocabulary\nout$meta → corresponding metadata",
     "crumbs": [
       "Tutorials",
       "6. Topic modeling"
@@ -197,7 +560,7 @@
     "href": "Tutorials/Topic-modeling.html#step-4-run-stm-topic-modeling",
     "title": "6. Topic modeling",
     "section": "Step 4: Run STM topic modeling",
-    "text": "Step 4: Run STM topic modeling\n\n\n\n\n\n\nNote\n\n\n\nThe code estimates a Structural Topic Model using the stm() function. Each argument controls a specific aspect of the model.\n\nK = 7 specifies the number of topics to estimate.\nmax.em.its = 50 sets the maximum number of Expectation–Maximization (EM) iterations used to fit the model.\ndata = out$meta includes the metadata associated with the documents, which can later be used to examine how topics vary across document characteristics.\ninit.type = \"Spectral\" specifies the initialization method used to start the model estimation. Spectral initialization is commonly recommended because it tends to produce stable results.\nseed = 100 sets a random seed for reproducibility, ensuring that the model produces the same results each time it is run.\n\n\n\n\nnews_stm &lt;- stm(\n  documents = out$documents,\n  vocab = out$vocab,\n  K = 7,\n  max.em.its = 50,\n  data = out$meta,\n  init.type = \"Spectral\",\n  seed = 100)\n\nThis code will also take some time to run.",
+    "text": "Step 4: Run STM topic modeling\n\n\n\n\n\n\nNote\n\n\n\nThe code estimates a Structural Topic Model using the stm function. Each argument controls a specific aspect of the model.\n\nK = 7 specifies the number of topics to estimate.\nmax.em.its = 50 sets the maximum number of Expectation–Maximization (EM) iterations used to fit the model.\ndata = out$meta includes the metadata associated with the documents, which can later be used to examine how topics vary across document characteristics.\ninit.type = \"Spectral\" specifies the initialization method used to start the model estimation. Spectral initialization is commonly recommended because it tends to produce stable results.\nseed = 100 sets a random seed for reproducibility, ensuring that the model produces the same results each time it is run.\n\n\n\n\nnews_stm &lt;- stm(\n  documents = out$documents,\n  vocab = out$vocab,\n  K = 7,\n  max.em.its = 50,\n  data = out$meta,\n  init.type = \"Spectral\",\n  seed = 100)\n\nThis code will also take some time to run.",
     "crumbs": [
       "Tutorials",
       "6. Topic modeling"
@@ -208,7 +571,7 @@
     "href": "Tutorials/Topic-modeling.html#step-5-examine-topics",
     "title": "6. Topic modeling",
     "section": "Step 5 Examine topics",
-    "text": "Step 5 Examine topics\nAfter estimating the topic model, we can examine the most important words associated with each topic. These words help researchers interpret the themes captured by the model. The labelTopics() function extracts the most representative terms for each topic. In this example, topics 1 through 7 are displayed.\n\nlabelTopics(news_stm, c(1:7)) \n\nTopic 1 Top Words:\n     Highest Prob: booster, vaccin, shot, dose, data, fda, author \n     FREX: booster, fda, pfizer, moderna, immun, johnson, drug \n     Lift: fdas, fda‚, jab, pfizer‚, inflamm, fda, booster \n     Score: jab, booster, fda, dose, pfizer, moderna, cdc \nTopic 2 Top Words:\n     Highest Prob: mandat, worker, vaccin, citi, requir, employe, health \n     FREX: employe, religi, exempt, mandat, polic, worker, irv \n     Lift: nba, nypd, kyri, email, unpaid, blasio‚, irv \n     Score: email, mandat, employe, exempt, irv, religi, polic \nTopic 3 Top Words:\n     Highest Prob: play, third, year, even, work, take, mani \n     FREX: third, play, feel, black, misinform, love, game \n     Lift: third, reader, husband, instagram, misinform, podcast, wife \n     Score: third, coach, star, game, misinform, player, feel \nTopic 4 Top Words:\n     Highest Prob: compani, use, year, travel, busi, expect, billion \n     FREX: use, market, price, stock, industri, flight, billion \n     Lift: economist, index, stock, use, market, revenu, investor \n     Score: use, market, stock, airlin, compani, billion, price \nTopic 5 Top Words:\n     Highest Prob: biden, presid, democrat, republican, state, elect, trump \n     FREX: trump, democrat, voter, republican, today, newsom, elect \n     Lift: ballot, gop, today, trump, voter, taliban, alli \n     Score: today, democrat, republican, voter, trump, newsom, elect \nTopic 6 Top Words:\n     Highest Prob: countri, vaccin, case, death, health, million, hospit \n     FREX: death, countri, popul, toll, restrict, lockdown, region \n     Lift: coronavirus-born, toll, covax, brazil, tracker, africa, india \n     Score: coronavirus-born, death, hospit, africa, minist, toll, countri \nTopic 7 Top Words:\n     Highest Prob: school, children, mask, vaccin, student, parent, test \n     FREX: school, student, parent, mask, kid, children, wear \n     Lift: los, classroom, student, parent, halloween, school, kid \n     Score: los, school, student, children, mask, kid, parent \n\n\nVisualize the prevalence of topics in the dataset:\n\nplot.STM(news_stm, type = \"summary\") \n\n\n\n\n\n\n\nplot.STM(news_stm, type = \"labels\") \n\n\n\n\n\n\n\n\nInterpreting Topics: Once topics are estimated, the researcher must interpret them. Key questions include: - What words define each topic? - What theme connects these words? - Do the topics align with theoretical expectations?",
+    "text": "Step 5 Examine topics\nAfter estimating the topic model, we can examine the most important words associated with each topic. These words help researchers interpret the themes captured by the model. The labelTopics function extracts the most representative terms for each topic. In this example, topics 1 through 7 are displayed.\n\nlabelTopics(news_stm, c(1:7)) \n\nTopic 1 Top Words:\n     Highest Prob: booster, vaccin, shot, dose, data, fda, author \n     FREX: booster, fda, pfizer, moderna, immun, johnson, drug \n     Lift: fdas, fda‚, jab, pfizer‚, inflamm, fda, booster \n     Score: jab, booster, fda, dose, pfizer, moderna, cdc \nTopic 2 Top Words:\n     Highest Prob: mandat, worker, vaccin, citi, requir, employe, health \n     FREX: employe, religi, exempt, mandat, polic, worker, irv \n     Lift: nba, nypd, kyri, email, unpaid, blasio‚, irv \n     Score: email, mandat, employe, exempt, irv, religi, polic \nTopic 3 Top Words:\n     Highest Prob: play, third, year, even, work, take, mani \n     FREX: third, play, feel, black, misinform, love, game \n     Lift: third, reader, husband, instagram, misinform, podcast, wife \n     Score: third, coach, star, game, misinform, player, feel \nTopic 4 Top Words:\n     Highest Prob: compani, use, year, travel, busi, expect, billion \n     FREX: use, market, price, stock, industri, flight, billion \n     Lift: economist, index, stock, use, market, revenu, investor \n     Score: use, market, stock, airlin, compani, billion, price \nTopic 5 Top Words:\n     Highest Prob: biden, presid, democrat, republican, state, elect, trump \n     FREX: trump, democrat, voter, republican, today, newsom, elect \n     Lift: ballot, gop, today, trump, voter, taliban, alli \n     Score: today, democrat, republican, voter, trump, newsom, elect \nTopic 6 Top Words:\n     Highest Prob: countri, vaccin, case, death, health, million, hospit \n     FREX: death, countri, popul, toll, restrict, lockdown, region \n     Lift: coronavirus-born, toll, covax, brazil, tracker, africa, india \n     Score: coronavirus-born, death, hospit, africa, minist, toll, countri \nTopic 7 Top Words:\n     Highest Prob: school, children, mask, vaccin, student, parent, test \n     FREX: school, student, parent, mask, kid, children, wear \n     Lift: los, classroom, student, parent, halloween, school, kid \n     Score: los, school, student, children, mask, kid, parent \n\n\nVisualize the prevalence of topics in the dataset:\n\nplot.STM(news_stm, type = \"summary\") \n\n\n\n\n\n\n\nplot.STM(news_stm, type = \"labels\") \n\n\n\n\n\n\n\n\nYou can use\nInterpreting Topics: Once topics are estimated, the researcher must interpret them. Key questions include: - What words define each topic? - What theme connects these words? - Do the topics align with theoretical expectations?",
     "crumbs": [
       "Tutorials",
       "6. Topic modeling"
@@ -219,7 +582,7 @@
     "href": "Tutorials/Topic-modeling.html#finding-correlations",
     "title": "6. Topic modeling",
     "section": "Finding correlations",
-    "text": "Finding correlations\nUsing the topicCorr() function, you can identify correlations between topics. If a line appears between topics in the resulting network diagram, it indicates a correlation between them. This visualization helps reveal relationships and connections between different topics.\n\nset.seed(381)\nmod.out.corr &lt;- topicCorr(news_stm)\nplot(mod.out.corr) \n\n\n\n\n\n\n\n\nIt seems these seven topics are not correlated (Yikes!)",
+    "text": "Finding correlations\nUsing the topicCorr function, you can identify correlations between topics. If a line appears between topics in the resulting network diagram, it indicates a correlation between them. This visualization helps reveal relationships and connections between different topics.\n\nset.seed(381)\nmod.out.corr &lt;- topicCorr(news_stm)\nplot(mod.out.corr) \n\n\n\n\n\n\n\n\nIt seems these seven topics are not correlated (Yikes!)",
     "crumbs": [
       "Tutorials",
       "6. Topic modeling"
@@ -230,7 +593,7 @@
     "href": "Tutorials/Topic-modeling.html#extracting-thetas",
     "title": "6. Topic modeling",
     "section": "Extracting thetas",
-    "text": "Extracting thetas\nIn Structural Topic Modeling (STM), the scores used to assess the proportion of a document associated with a topic are referred to as “thetas.” It is used to determine which topic is most relevant to each document.\n\ntheta_scores &lt;- news_stm$theta %&gt;% as.data.frame()\ntheta_scores$doc_id &lt;- out$meta$doc_id #from the \"out\" processed file\n#View(theta_scores)\n\nIf you inspect theta_scores using View(theta_scores), you’ll notice that news_stm$theta is already formatted in a wide structure. To identify the topic with the highest theta value for each document, we need to convert it into a long format.\n\ntopics_long &lt;- theta_scores %&gt;%\n  pivot_longer(cols = V1:V7,\n               names_to = \"topic\",\n              values_to = \"theta\")\n\n\nExtract top thetas\nHere, we use by group_by() and treat the ‘doc_id’ column as an unique ID of each row. We use slice_max() to select the highest theta value per document\n\ntoptopics &lt;- topics_long %&gt;%\n  group_by(doc_id) %&gt;% \n  slice_max(theta) \ntoptopics\n\n# A tibble: 1,749 × 3\n# Groups:   doc_id [1,748]\n   doc_id topic theta\n    &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;\n 1      2 V6    0.735\n 2      5 V1    0.524\n 3      9 V5    0.524\n 4     12 V1    0.472\n 5     31 V6    0.563\n 6     33 V2    0.423\n 7     44 V4    0.697\n 8     45 V6    0.594\n 9     46 V2    0.592\n10     48 V3    0.487\n# ℹ 1,739 more rows\n\n\nThis extracts the topic with the highest theta value for each document, showing which topic is most strongly associated with each document. For example, the row with doc_id 2 is most strongly associated with topic 6.\n\n\nAssign topic to each document and create a new dataframe\nYou can use write.csv() to save it into a csv file.\n\ndf &lt;- merge(news_corpus, toptopics, by.x=\"doc_id\")\n#View(df)",
+    "text": "Extracting thetas\nIn Structural Topic Modeling (STM), the scores used to assess the proportion of a document associated with a topic are referred to as “thetas.” It is used to determine which topic is most relevant to each document.\n\ntheta_scores &lt;- news_stm$theta %&gt;% as.data.frame()\ntheta_scores$doc_id &lt;- out$meta$doc_id #from the \"out\" processed file\n#View(theta_scores)\n\nIf you inspect theta_scores using View(theta_scores), you’ll notice that news_stm$theta is already formatted in a wide structure. To identify the topic with the highest theta value for each document, we need to convert it into a long format.\n\ntopics_long &lt;- theta_scores %&gt;%\n  pivot_longer(cols = V1:V7,\n               names_to = \"topic\",\n              values_to = \"theta\")\n\n\nExtract top thetas\nHere, we use by group_by and treat the ‘doc_id’ column as an unique ID of each row. We use slice_max to select the highest theta value per document\n\ntoptopics &lt;- topics_long %&gt;%\n  group_by(doc_id) %&gt;% \n  slice_max(theta) \ntoptopics\n\n# A tibble: 1,749 × 3\n# Groups:   doc_id [1,748]\n   doc_id topic theta\n    &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;\n 1      2 V6    0.735\n 2      5 V1    0.524\n 3      9 V5    0.524\n 4     12 V1    0.472\n 5     31 V6    0.563\n 6     33 V2    0.423\n 7     44 V4    0.697\n 8     45 V6    0.594\n 9     46 V2    0.592\n10     48 V3    0.487\n# ℹ 1,739 more rows\n\n\nThis extracts the topic with the highest theta value for each document, showing which topic is most strongly associated with each document. For example, the row with doc_id 2 is most strongly associated with topic 6.\n\n\nAssign topic to each document and create a new dataframe\nYou can use write.csv to save it into a csv file.\n\ndf &lt;- merge(news_corpus, toptopics, by.x=\"doc_id\")\n#View(df)",
     "crumbs": [
       "Tutorials",
       "6. Topic modeling"
@@ -252,7 +615,7 @@
     "href": "Tutorials/Topic-modeling.html#step-2-add-custom-stopwords-to-the-stop_words-list-in-tidytext",
     "title": "6. Topic modeling",
     "section": "Step 2: Add custom stopwords to the stop_words list in tidytext",
-    "text": "Step 2: Add custom stopwords to the stop_words list in tidytext\n\nfinal_stop &lt;- data.frame(word = c(\"said\", \"don't\", \"will\", \"like\", \n                                  \"use\", \"can\", \"'re\", \"one\", \"get\", \n                                  \"know\", \"new\", \"told\", \"accord\", \"don’t\", \n                                  \"’re\", \"according\", \"show\", \"say\", \"people\", \n                                  \"report\", \"just\", \"want\", \"think\", \"now\", \n                                  \"make\", \"time\", \"come\", \"back\", \"say\", \n                                  \"see\", \"äî\", \"äôs\", \"also\", \"read\",\"vaccin\", \n                                  \"covid-\", \"covid\", \"vaccine\", \"vaccination\", \n                                  \"äù\", \"äôre\", \"COVID-19\", \"äô\", \"äôt\"),\n                         lexicon = \"custom\") %&gt;%\n  rbind(stop_words)",
+    "text": "Step 2: Add custom stopwords to the stop_words list in tidytext\n\nfinal_stop &lt;- data.frame(word = \n                           c(\"said\", \"don't\", \"will\", \"like\", \"use\", \"can\", \"'re\", \"one\", \"get\", \"know\", \"new\", \"told\", \"accord\", \"don’t\", \"’re\", \"according\", \"show\", \"say\", \"people\", \"report\", \"just\", \"want\", \"think\", \"now\", \"make\", \"time\", \"come\", \"back\", \"say\", \"see\", \"äî\", \"äôs\", \"also\", \"read\",\"vaccin\", \"covid-\", \"covid\", \"vaccine\", \"vaccination\", \"äù\", \"äôre\", \"COVID-19\", \"äô\", \"äôt\"), \n                         lexicon = \"custom\") %&gt;%\n  rbind(stop_words)",
     "crumbs": [
       "Tutorials",
       "6. Topic modeling"
@@ -262,8 +625,8 @@
     "objectID": "Tutorials/Topic-modeling.html#step-3-use-cast_dtm-function-and-create-document-term-matric-dtm-to-prepare-the-document",
     "href": "Tutorials/Topic-modeling.html#step-3-use-cast_dtm-function-and-create-document-term-matric-dtm-to-prepare-the-document",
     "title": "6. Topic modeling",
-    "section": "Step 3: Use cast_dtm() function and create document-term matric (DTM) to prepare the document",
-    "text": "Step 3: Use cast_dtm() function and create document-term matric (DTM) to prepare the document\nThe code performs several steps in sequence:\n\nunnest_tokens(word, full_article) tokenizes each article into individual words.\nanti_join(final_stop, by = \"word\") removes stopwords from the dataset.\ncount(doc_id, word) counts how many times each word appears in each document.\ncast_dtm(doc_id, word, n) converts the tidy text format into a Document–Term Matrix.\n\n\ndata_dtm &lt;- news_corpus0 %&gt;%\n  unnest_tokens(word, full_article) %&gt;% \n  anti_join(final_stop, by = \"word\") %&gt;% \n  count(doc_id, word) %&gt;%                \n  cast_dtm(doc_id, word, n)             \ndata_dtm\n\n&lt;&lt;DocumentTermMatrix (documents: 2486, terms: 67520)&gt;&gt;\nNon-/sparse entries: 517049/167337671\nSparsity           : 100%\nMaximal term length: NA\nWeighting          : term frequency (tf)\n\n\nYou can use the LDA() function from the topicmodels package to perform LDA topic modeling. In this example, we will classify the dataset into seven topics (k = 7).\nThe LDA algorithm offers two fitting methods: VEM (Variational Expectation-Maximization) and Gibbs sampling. Selecting a different method may lead to slight variations in the results. For more about key differences, see: https://www.quora.com/Could-latent-Dirichlet-allocation-solved-by-Gibbs-sampling-versus-variational-EM-yield-different-results\nEach word in a topic is assigned a beta value, which represents its significance within that topic. A higher beta score indicates that the word is more strongly associated with the topic. In other words, when a document contains that word, it is more likely to be classified into the corresponding topic cluster.",
+    "section": "Step 3: Use cast_dtm function and create document-term matric (DTM) to prepare the document",
+    "text": "Step 3: Use cast_dtm function and create document-term matric (DTM) to prepare the document\nThe code performs several steps in sequence:\n\nunnest_tokens(word, full_article) tokenizes each article into individual words.\nanti_join(final_stop, by = \"word\") removes stopwords from the dataset.\ncount(doc_id, word) counts how many times each word appears in each document.\ncast_dtm(doc_id, word, n) converts the tidy text format into a Document–Term Matrix.\n\n\ndata_dtm &lt;- news_corpus0 %&gt;%\n  unnest_tokens(word, full_article) %&gt;% \n  anti_join(final_stop, by = \"word\") %&gt;% \n  count(doc_id, word) %&gt;%                \n  cast_dtm(doc_id, word, n)             \ndata_dtm\n\n&lt;&lt;DocumentTermMatrix (documents: 2486, terms: 67520)&gt;&gt;\nNon-/sparse entries: 517049/167337671\nSparsity           : 100%\nMaximal term length: NA\nWeighting          : term frequency (tf)\n\n\nYou can use the LDA function from the topicmodels package to perform LDA topic modeling. In this example, we will classify the dataset into seven topics (k = 7).\nThe LDA algorithm offers two fitting methods: VEM (Variational Expectation-Maximization) and Gibbs sampling. Selecting a different method may lead to slight variations in the results. For more about key differences, see: https://www.quora.com/Could-latent-Dirichlet-allocation-solved-by-Gibbs-sampling-versus-variational-EM-yield-different-results\nEach word in a topic is assigned a beta value, which represents its significance within that topic. A higher beta score indicates that the word is more strongly associated with the topic. In other words, when a document contains that word, it is more likely to be classified into the corresponding topic cluster.",
     "crumbs": [
       "Tutorials",
       "6. Topic modeling"
@@ -274,7 +637,7 @@
     "href": "Tutorials/Topic-modeling.html#step-4-run-lda",
     "title": "6. Topic modeling",
     "section": "Step 4: Run LDA",
-    "text": "Step 4: Run LDA\nNote: It may take some time to run this code.\n\nset.seed(381)\nlda_model &lt;- topicmodels::LDA(data_dtm, k = 7, method=\"VEM\")\nlda_model \n\nA LDA_VEM topic model with 7 topics.\n\n\n\nExtract beta\n\ntopics &lt;- tidy(lda_model, matrix=\"beta\")\n\nBased on the beta values that you extracted, identify and visualize the most important words for each topic in an LDA model (which indicate the probability of a word belonging to a given topic).",
+    "text": "Step 4: Run LDA\nNote: It may take some time to run this code.\n\nset.seed(381)\nlda_model &lt;- topicmodels::LDA(data_dtm, k = 7, method=\"VEM\")\nlda_model \n\nA LDA_VEM topic model with 7 topics.\n\n\n\nExtract beta\ntidy() for LDA models uses the reshape2 package behind the scenes, so make sure it is installed before running this step.\n\ntopics &lt;- tidy(lda_model, matrix = \"beta\")\n\nBased on the beta values that you extracted, identify and visualize the most important words for each topic in an LDA model (which indicate the probability of a word belonging to a given topic).",
     "crumbs": [
       "Tutorials",
       "6. Topic modeling"
@@ -285,7 +648,7 @@
     "href": "Tutorials/Topic-modeling.html#step-5-identify-and-visualize-the-most-important-words-based-on-beta-values",
     "title": "6. Topic modeling",
     "section": "Step 5: Identify and visualize the most important words based on beta values",
-    "text": "Step 5: Identify and visualize the most important words based on beta values\nFocus on top 7 topics in each topic:\n\ntop_terms &lt;- topics %&gt;% \n  #groups by topic\n  group_by(topic) %&gt;% \n  #takes the words with the top 10 beta scores\n  top_n(7, beta) %&gt;% \n  #ungroups the topic\n  ungroup() \n\n\nVisualize your topics\n\ntop_terms %&gt;% \n  ggplot(aes(x = reorder_within(term, beta, topic, sep = \"_\"), \n             y =  beta, \n             fill = factor(topic))) +\n  geom_bar(stat = 'identity', show.legend = FALSE) +\n  facet_wrap(~ topic, scales = \"free\") + \n  coord_flip()\n\n\n\n\n\n\n\n\nYou can also extract the topic probabilities for each document in an LDA (Latent Dirichlet Allocation) model and converts the data from a long format to a wide format for easier analysis.\nGamma values represent the probability of each document belonging to a given topic.\n\n\nUse gamma values\n\ntopics_doc &lt;- tidy(lda_model, matrix=\"gamma\") \n\n\n\npivot_wider() your data frame\n\ntopics_wide &lt;- topics_doc %&gt;%\n  pivot_wider(names_from = topic,\n              values_from = gamma)",
+    "text": "Step 5: Identify and visualize the most important words based on beta values\nFocus on top 7 topics in each topic:\n\ntop_terms &lt;- topics %&gt;% \n  #groups by topic\n  group_by(topic) %&gt;% \n  #takes the words with the top 10 beta scores\n  top_n(7, beta) %&gt;% \n  #ungroups the topic\n  ungroup() \n\n\nVisualize your topics\n\ntop_terms %&gt;% \n  ggplot(aes(x = reorder_within(term, beta, topic, sep = \"_\"), \n             y =  beta, \n             fill = factor(topic))) +\n  geom_bar(stat = 'identity', show.legend = FALSE) +\n  facet_wrap(~ topic, scales = \"free\") + \n  coord_flip()\n\n\n\n\n\n\n\n\nYou can also extract the topic probabilities for each document in an LDA (Latent Dirichlet Allocation) model and converts the data from a long format to a wide format for easier analysis.\nGamma values represent the probability of each document belonging to a given topic.\n\n\nUse gamma values\n\ntopics_doc &lt;- tidy(lda_model, matrix=\"gamma\") \n\n\n\npivot_wider your data frame\n\ntopics_wide &lt;- topics_doc %&gt;%\n  pivot_wider(names_from = topic,\n              values_from = gamma)",
     "crumbs": [
       "Tutorials",
       "6. Topic modeling"
@@ -296,7 +659,7 @@
     "href": "Tutorials/Topic-modeling.html#assign-a-topic-to-each-document",
     "title": "6. Topic modeling",
     "section": "Assign a topic to each document",
-    "text": "Assign a topic to each document\n\ntoptopics &lt;- topics_doc %&gt;%\n  group_by(document) %&gt;%\n  # Subset the rows with the largest gamma (per document)\n  slice_max(gamma) \n\ncolnames(toptopics)[1] &lt;- \"doc_id\"\ncolnames(toptopics)[2] &lt;- \"topics\"\ntoptopics$doc_id &lt;- as.numeric(toptopics$doc_id)\nnews_corpus1 &lt;- full_join(news_corpus0, toptopics, by = \"doc_id\")\n\n\nPlot the distribution of topics across articles\n\nnews_corpus1 %&gt;%\n  # removes rows where the topic value is missing\n  filter(!is.na(topics)) %&gt;% \n  count(topics) %&gt;%\n  mutate(topics = factor(topics, levels = 1:7)) %&gt;%\n  ggplot(aes(x = topics, y = n, fill = topics)) +\n  geom_bar(stat = \"identity\", show.legend = FALSE) +\n  labs(title = \"Distribution of topics across COVID-19 news\",\n       x = \"Topics\",\n       y = \"Number of Articles\") +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\n\nFinding the k\nYou can use the ldatuning package and use FindTopicsNumber() function to find your k (number of topics). Ultimately, it is up to you to determine the optimal K based on these results. The plot presents various metrics, and their interpretation may vary depending on individual research approaches and methodologies.\n\n\n\n\n\n\nTipBonus: Seeded LDA\n\n\n\nSeeded Latent Dirichlet Allocation (Seeded LDA) is a semi-supervised topic modeling approach that allows researchers to guide topic discovery using predefined seed words.\nIn standard LDA, topics are identified solely from patterns in word co-occurrence within the data. In contrast, Seeded LDA incorporates prior knowledge by allowing researchers to specify keywords that represent expected themes. These seed words influence how topics are constructed while the model continues to learn additional related terms from the corpus.\nThis approach can produce topics that are more interpretable and theoretically grounded, especially when researchers already have expectations about the main themes in a dataset.\n\nWhen to Use Seeded LDA\nSeeded LDA is particularly useful when:\n\nresearchers have clear theoretical categories\nspecific keywords define expected themes\npurely unsupervised topic models produce ambiguous topics\n\n\n\nFurther Resources\nIf you would like to explore this method further, the following resources provide detailed tutorials and applications:\n\nPackage tutorial:\nhttps://koheiw.github.io/seededlda/articles/pkgdown/seeded.html\nExample application in social media research:\nKoo, G. H., & Chen, B. (2024). It’s not just “8 dead”: Examining news and Twitter’s social construction of the Atlanta spa shootings through the lens of networked gatekeeping and affective publics. Social Media + Society, 10(3). https://doi.org/10.1177/20563051241269278",
+    "text": "Assign a topic to each document\n\ntoptopics &lt;- topics_doc %&gt;%\n  group_by(document) %&gt;%\n  # Subset the rows with the largest gamma (per document)\n  slice_max(gamma) \n\ncolnames(toptopics)[1] &lt;- \"doc_id\"\ncolnames(toptopics)[2] &lt;- \"topics\"\ntoptopics$doc_id &lt;- as.numeric(toptopics$doc_id)\nnews_corpus1 &lt;- full_join(news_corpus0, toptopics, by = \"doc_id\")\n\n\nPlot the distribution of topics across articles\n\nnews_corpus1 %&gt;%\n  # removes rows where the topic value is missing\n  filter(!is.na(topics)) %&gt;% \n  count(topics) %&gt;%\n  mutate(topics = factor(topics, levels = 1:7)) %&gt;%\n  ggplot(aes(x = topics, y = n, fill = topics)) +\n  geom_bar(stat = \"identity\", show.legend = FALSE) +\n  labs(title = \"Distribution of topics across COVID-19 news\",\n       x = \"Topics\",\n       y = \"Number of Articles\") +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTipBonus: Seeded LDA\n\n\n\nSeeded Latent Dirichlet Allocation (Seeded LDA) is a semi-supervised topic modeling approach that allows researchers to guide topic discovery using predefined seed words.\nIn standard LDA, topics are identified solely from patterns in word co-occurrence within the data. In contrast, Seeded LDA incorporates prior knowledge by allowing researchers to specify keywords that represent expected themes. These seed words influence how topics are constructed while the model continues to learn additional related terms from the corpus.\nThis approach can produce topics that are more interpretable and theoretically grounded, especially when researchers already have expectations about the main themes in a dataset.\n\nWhen to Use Seeded LDA\nSeeded LDA is particularly useful when:\n\nresearchers have clear theoretical categories\nspecific keywords define expected themes\npurely unsupervised topic models produce ambiguous topics\n\n\n\nFurther Resources\nIf you would like to explore this method further, the following resources provide detailed tutorials and applications:\n\nPackage tutorial:\nhttps://koheiw.github.io/seededlda/articles/pkgdown/seeded.html\nExample application in social media research:\nKoo, G. H., & Chen, B. (2024). It’s not just “8 dead”: Examining news and Twitter’s social construction of the Atlanta spa shootings through the lens of networked gatekeeping and affective publics. Social Media + Society, 10(3). https://doi.org/10.1177/20563051241269278",
     "crumbs": [
       "Tutorials",
       "6. Topic modeling"
@@ -394,7 +757,7 @@
     "href": "Tutorials/Data-structure-and-cleaning.html#data-structures",
     "title": "2. Data structure & cleaning",
     "section": "Data structures",
-    "text": "Data structures\n\nObject\nA general term for anything you create and store in R’s memory. For example, when you assign a value using &lt;-, you are creating an object.\nVector\nA sequence of values stored in order where all elements are the same type (such as numbers or characters). Vectors are the most basic data structure in R.\nList\nA container that can store multiple items of different types and lengths. Lists are flexible and can grow as needed. You can access elements by position (e.g., mylist[[1]]) or by name (e.g., mylist$age).\nMatrix\nA two-dimensional structure made of rows and columns. All values in a matrix must be the same type, and its size is fixed when created.\nData frame\nA table-like structure commonly used for datasets. Each column contains one type of data, columns have names, and different columns can store different types (numeric, character, etc.).\n\n\n\n\n\n\n\nNote\n\n\n\nThese structures form the foundation for organizing and analyzing data in R and will be used throughout the rest of the book.\n\n\n\n1.1 Vectors\n\n# Vector of strings\nweather &lt;- c(\"windy\", \"cloudy\", \"snowy\", \"cold\", \"hot\")\nweather\n\n[1] \"windy\"  \"cloudy\" \"snowy\"  \"cold\"   \"hot\"   \n\nlength(weather)\n\n[1] 5\n\nweather[1]           # first element\n\n[1] \"windy\"\n\nweather[c(1, 4)]     # first and fourth elements\n\n[1] \"windy\" \"cold\" \n\nsort(weather)        # alphabetical order\n\n[1] \"cloudy\" \"cold\"   \"hot\"    \"snowy\"  \"windy\" \n\nweather[1] &lt;- \"breezy\"\nclass(weather)\n\n[1] \"character\"\n\n# Numeric vector\nnumbers &lt;- c(7, 1, 3, 5)\nsort(numbers)\n\n[1] 1 3 5 7\n\n# Sequence\nnumber_seq &lt;- 1:5\nnumber_seq\n\n[1] 1 2 3 4 5\n\n# Logical vector\nveracity &lt;- c(TRUE, FALSE, TRUE, FALSE)\nveracity\n\n[1]  TRUE FALSE  TRUE FALSE\n\n\n\n\n1.2 Object\n\nfirst_computer &lt;- 1946\nfirst_moon &lt;- 1969\n\n\n\n1.3 Data frames\n\nweather_df &lt;- data.frame(\n  day = c(\"Mon\", \"Tue\", \"Wed\"),\n  temp = c(70, 75, 80),\n  snow = c(TRUE, FALSE, TRUE)\n)\nweather_df\n\n  day temp  snow\n1 Mon   70  TRUE\n2 Tue   75 FALSE\n3 Wed   80  TRUE\n\n\n\n\n1.4 List: Vectors and lists\nVector: one data type, stored in a sequence\n\nnumbers &lt;- c(1, 2, 3, 4, 5)\nnumbers\n\n[1] 1 2 3 4 5\n\nnumbers[1:3]\n\n[1] 1 2 3\n\nfruits &lt;- c(\"Apple\", \"Banana\", \"Orange\")\nfruits[1]\n\n[1] \"Apple\"\n\n\nList: can store multiple objects of different types\n\ncombined &lt;- list(numbers = numbers, fruits = fruits)\ncombined\n\n$numbers\n[1] 1 2 3 4 5\n\n$fruits\n[1] \"Apple\"  \"Banana\" \"Orange\"\n\ncombined[[\"numbers\"]]\n\n[1] 1 2 3 4 5\n\ncombined[[\"fruits\"]]\n\n[1] \"Apple\"  \"Banana\" \"Orange\"\n\ncombined[[\"numbers\"]][1:3]\n\n[1] 1 2 3\n\ncombined[[\"fruits\"]][1]\n\n[1] \"Apple\"\n\n\n\n\n1.5 Matrices: Matrix and data frame\nMatrix: one data type, arranged in rows and columns\n\na &lt;- matrix(0, nrow = 5, ncol = 5)\nb &lt;- matrix(rnorm(25), nrow = 5, ncol = 5)\n\nConvert matrix to data frame\n\ndf &lt;- as.data.frame(b)\ndf[1, 5]\n\n[1] -0.03187435\n\n\nData frame: columns can be different types (each column is one type)\n\nnew_dataset &lt;- mtcars\nnew_dataset$wt[1:5]\n\n[1] 2.620 2.875 2.320 3.215 3.440\n\n\nConvert a column (example)\n\nnew_dataset$wt &lt;- as.character(new_dataset$wt)\nclass(new_dataset$wt)\n\n[1] \"character\"\n\nstr(new_dataset$wt)\n\n chr [1:32] \"2.62\" \"2.875\" \"2.32\" \"3.215\" \"3.44\" \"3.46\" \"3.57\" \"3.19\" ...\n\n\n\n\n\n\n\n\nTip\n\n\n\nMatrices must contain a single data type. If you mix numbers and text, R will coerce everything into one type (often character). Data frames are usually more flexible for real-world datasets.\n\n\n\n\nComparing list, matrix, and data frame\n\n# Data frames require columns of equal length\nfruits &lt;- c(\"Apple\", \"Banana\", \"Orange\", \n            \"Raspberry\", \"Strawberry\")\nnumbers &lt;- c(1, 2, 3, 4, 5)\ndf &lt;- data.frame(numbers = numbers, fruits = fruits)\ndf\n\n  numbers     fruits\n1       1      Apple\n2       2     Banana\n3       3     Orange\n4       4  Raspberry\n5       5 Strawberry\n\n\n\ndf[1, ]\n\n  numbers fruits\n1       1  Apple\n\ndf[, 1]\n\n[1] 1 2 3 4 5\n\ndf[1:3, ]\n\n  numbers fruits\n1       1  Apple\n2       2 Banana\n3       3 Orange\n\n\nMatrix example: mixing numeric + character coerces to character\n\nnumbers &lt;- c(1, 2, 3)\nfruits  &lt;- c(\"Apple\", \"Banana\", \"Orange\")\nm &lt;- matrix(c(numbers, fruits), nrow = 3, ncol = 2)\nm\n\n     [,1] [,2]    \n[1,] \"1\"  \"Apple\" \n[2,] \"2\"  \"Banana\"\n[3,] \"3\"  \"Orange\"\n\nclass(m)\n\n[1] \"matrix\" \"array\" \n\nmode(m)\n\n[1] \"character\"\n\n\n\n\n1.6 Data type conversion\n\nx &lt;- 5\nas.character(x)  # convert to character\nas.numeric(x)    # convert to numeric\nas.integer(x)    # convert to integer\nas.logical(x)    # convert to logical\n\n\ntemps &lt;- c(\"30\", \"25\", \"40\")\nclass(temps)\n\n[1] \"character\"\n\n\nConvert to numeric\n\ntemps_num &lt;- as.numeric(temps)\nclass(temps_num)\n\n[1] \"numeric\"\n\n\nCheck the type of an object\n\nvariable &lt;- \"2.5\"\nclass(variable)\n\n[1] \"character\"\n\n\nConvert character to numeric\n\nnumeric_variable &lt;- as.numeric(variable)\nclass(numeric_variable)\nnumeric_variable\n\nCommon coercion functions\n\nas.numeric(3.2)\nas.character(10)\nas.integer(\"3\")\n\nCaution: non-numeric text becomes NA\n\nas.numeric(\"three\")\n\n[1] NA\n\n\n\n\n\n\n\n\nNote\n\n\n\nWhen coercion produces NA, it usually means the original value could not be converted. Always check for unexpected NA values after converting variables.",
+    "text": "Data structures\n\nObject\nA general term for anything you create and store in R’s memory. For example, when you assign a value using &lt;-, you are creating an object.\nVector\nA sequence of values stored in order where all elements are the same type (such as numbers or characters). Vectors are the most basic data structure in R.\nList\nA container that can store multiple items of different types and lengths. Lists are flexible and can grow as needed. You can access elements by position (e.g., mylist[[1]]) or by name (e.g., mylist$age).\nMatrix\nA two-dimensional structure made of rows and columns. All values in a matrix must be the same type, and its size is fixed when created.\nData frame\nA table-like structure commonly used for datasets. Each column contains one type of data, columns have names, and different columns can store different types (numeric, character, etc.).\n\n\n\n\n\n\n\nNote\n\n\n\nThese structures form the foundation for organizing and analyzing data in R and will be used throughout the rest of the book.\n\n\n\n1.1 Vectors\n\n# Vector of strings\nweather &lt;- c(\"windy\", \"cloudy\", \"snowy\", \"cold\", \"hot\")\nweather\n\n[1] \"windy\"  \"cloudy\" \"snowy\"  \"cold\"   \"hot\"   \n\nlength(weather)\n\n[1] 5\n\nweather[1]           # first element\n\n[1] \"windy\"\n\nweather[c(1, 4)]     # first and fourth elements\n\n[1] \"windy\" \"cold\" \n\nsort(weather)        # alphabetical order\n\n[1] \"cloudy\" \"cold\"   \"hot\"    \"snowy\"  \"windy\" \n\nweather[1] &lt;- \"breezy\"\nclass(weather)\n\n[1] \"character\"\n\n# Numeric vector\nnumbers &lt;- c(7, 1, 3, 5)\nsort(numbers)\n\n[1] 1 3 5 7\n\n# Sequence\nnumber_seq &lt;- 1:5\nnumber_seq\n\n[1] 1 2 3 4 5\n\n# Logical vector\nveracity &lt;- c(TRUE, FALSE, TRUE, FALSE)\nveracity\n\n[1]  TRUE FALSE  TRUE FALSE\n\n\n\n\n1.2 Object\n\nfirst_computer &lt;- 1946\nfirst_moon &lt;- 1969\n\n\n\n1.3 Data frames\n\nweather_df &lt;- data.frame(\n  day = c(\"Mon\", \"Tue\", \"Wed\"),\n  temp = c(70, 75, 80),\n  snow = c(TRUE, FALSE, TRUE)\n)\nweather_df\n\n  day temp  snow\n1 Mon   70  TRUE\n2 Tue   75 FALSE\n3 Wed   80  TRUE\n\n\n\n\n1.4 List: Vectors and lists\nVector: one data type, stored in a sequence\n\nnumbers &lt;- c(1, 2, 3, 4, 5)\nnumbers\n\n[1] 1 2 3 4 5\n\nnumbers[1:3]\n\n[1] 1 2 3\n\nfruits &lt;- c(\"Apple\", \"Banana\", \"Orange\")\nfruits[1]\n\n[1] \"Apple\"\n\n\nList: can store multiple objects of different types\n\ncombined &lt;- list(numbers = numbers, fruits = fruits)\ncombined\n\n$numbers\n[1] 1 2 3 4 5\n\n$fruits\n[1] \"Apple\"  \"Banana\" \"Orange\"\n\ncombined[[\"numbers\"]]\n\n[1] 1 2 3 4 5\n\ncombined[[\"fruits\"]]\n\n[1] \"Apple\"  \"Banana\" \"Orange\"\n\ncombined[[\"numbers\"]][1:3]\n\n[1] 1 2 3\n\ncombined[[\"fruits\"]][1]\n\n[1] \"Apple\"\n\n\n\n\n1.5 Matrices: Matrix and data frame\nMatrix: one data type, arranged in rows and columns\n\na &lt;- matrix(0, nrow = 5, ncol = 5)\nb &lt;- matrix(rnorm(25), nrow = 5, ncol = 5)\n\nConvert matrix to data frame\n\ndf &lt;- as.data.frame(b)\ndf[1, 5]\n\n[1] 2.276277\n\n\nData frame: columns can be different types (each column is one type)\n\nnew_dataset &lt;- mtcars\nnew_dataset$wt[1:5]\n\n[1] 2.620 2.875 2.320 3.215 3.440\n\n\nConvert a column (example)\n\nnew_dataset$wt &lt;- as.character(new_dataset$wt)\nclass(new_dataset$wt)\n\n[1] \"character\"\n\nstr(new_dataset$wt)\n\n chr [1:32] \"2.62\" \"2.875\" \"2.32\" \"3.215\" \"3.44\" \"3.46\" \"3.57\" \"3.19\" ...\n\n\n\n\n\n\n\n\nTip\n\n\n\nMatrices must contain a single data type. If you mix numbers and text, R will coerce everything into one type (often character). Data frames are usually more flexible for real-world datasets.\n\n\n\n\nComparing list, matrix, and data frame\n\n# Data frames require columns of equal length\nfruits &lt;- c(\"Apple\", \"Banana\", \"Orange\", \n            \"Raspberry\", \"Strawberry\")\nnumbers &lt;- c(1, 2, 3, 4, 5)\ndf &lt;- data.frame(numbers = numbers, fruits = fruits)\ndf\n\n  numbers     fruits\n1       1      Apple\n2       2     Banana\n3       3     Orange\n4       4  Raspberry\n5       5 Strawberry\n\n\n\ndf[1, ]\n\n  numbers fruits\n1       1  Apple\n\ndf[, 1]\n\n[1] 1 2 3 4 5\n\ndf[1:3, ]\n\n  numbers fruits\n1       1  Apple\n2       2 Banana\n3       3 Orange\n\n\nMatrix example: mixing numeric + character coerces to character\n\nnumbers &lt;- c(1, 2, 3)\nfruits  &lt;- c(\"Apple\", \"Banana\", \"Orange\")\nm &lt;- matrix(c(numbers, fruits), nrow = 3, ncol = 2)\nm\n\n     [,1] [,2]    \n[1,] \"1\"  \"Apple\" \n[2,] \"2\"  \"Banana\"\n[3,] \"3\"  \"Orange\"\n\nclass(m)\n\n[1] \"matrix\" \"array\" \n\nmode(m)\n\n[1] \"character\"\n\n\n\n\n1.6 Data type conversion\n\nx &lt;- 5\nas.character(x)  # convert to character\nas.numeric(x)    # convert to numeric\nas.integer(x)    # convert to integer\nas.logical(x)    # convert to logical\n\n\ntemps &lt;- c(\"30\", \"25\", \"40\")\nclass(temps)\n\n[1] \"character\"\n\n\nConvert to numeric\n\ntemps_num &lt;- as.numeric(temps)\nclass(temps_num)\n\n[1] \"numeric\"\n\n\nCheck the type of an object\n\nvariable &lt;- \"2.5\"\nclass(variable)\n\n[1] \"character\"\n\n\nConvert character to numeric\n\nnumeric_variable &lt;- as.numeric(variable)\nclass(numeric_variable)\nnumeric_variable\n\nCommon coercion functions\n\nas.numeric(3.2)\nas.character(10)\nas.integer(\"3\")\n\nCaution: non-numeric text becomes NA\n\nas.numeric(\"three\")\n\n[1] NA\n\n\n\n\n\n\n\n\nNote\n\n\n\nWhen coercion produces NA, it usually means the original value could not be converted. Always check for unexpected NA values after converting variables.",
     "crumbs": [
       "Tutorials",
       "2. Data structure & cleaning"
@@ -555,80 +918,520 @@
     ]
   },
   {
-    "objectID": "Tutorials/Text-as-data.html",
-    "href": "Tutorials/Text-as-data.html",
-    "title": "5. Basic textual analysis",
+    "objectID": "Tutorials/Data-preprocessing.html",
+    "href": "Tutorials/Data-preprocessing.html",
+    "title": "3. Data pre-processing and visualization",
     "section": "",
-    "text": "By the end of this tutorial, you will be able to:\n\nUnderstand how text data is structured for analysis in R\nTokenize text into words and n-grams\nRemove stopwords and clean textual data\nCalculate word frequencies and visualize them\nCreate word clouds\nIdentify co-occurring words using bigrams",
+    "text": "By the end of this tutorial, you will be able to:\n\nInspect and prepare datasets for analysis by checking structure and formats\nClean and pre-process data by creating variables and standardizing dates\nMerge datasets using shared keys such as state and date\nCreate basic visualizations using ggplot2, including line graphs and bar charts\nCustomize plots with titles, labels, and themes\nExport and save visualizations for reports or presentations\n\n\nIn the previous module, we explored data types and why they matter. R does not always import variables in the format you expect. For example, numbers may be read as character strings. When this happens, you must convert (coerce) the variable to the correct type before analysis and visualization.",
     "crumbs": [
       "Tutorials",
-      "5. Basic textual analysis"
+      "3. Data pre-processing and visualization"
     ]
   },
   {
-    "objectID": "Tutorials/Text-as-data.html#learning-goals",
-    "href": "Tutorials/Text-as-data.html#learning-goals",
-    "title": "5. Basic textual analysis",
+    "objectID": "Tutorials/Data-preprocessing.html#learning-goals",
+    "href": "Tutorials/Data-preprocessing.html#learning-goals",
+    "title": "3. Data pre-processing and visualization",
     "section": "",
-    "text": "By the end of this tutorial, you will be able to:\n\nUnderstand how text data is structured for analysis in R\nTokenize text into words and n-grams\nRemove stopwords and clean textual data\nCalculate word frequencies and visualize them\nCreate word clouds\nIdentify co-occurring words using bigrams",
+    "text": "By the end of this tutorial, you will be able to:\n\nInspect and prepare datasets for analysis by checking structure and formats\nClean and pre-process data by creating variables and standardizing dates\nMerge datasets using shared keys such as state and date\nCreate basic visualizations using ggplot2, including line graphs and bar charts\nCustomize plots with titles, labels, and themes\nExport and save visualizations for reports or presentations\n\n\nIn the previous module, we explored data types and why they matter. R does not always import variables in the format you expect. For example, numbers may be read as character strings. When this happens, you must convert (coerce) the variable to the correct type before analysis and visualization.",
     "crumbs": [
       "Tutorials",
-      "5. Basic textual analysis"
+      "3. Data pre-processing and visualization"
     ]
   },
   {
-    "objectID": "Tutorials/Text-as-data.html#tokenization",
-    "href": "Tutorials/Text-as-data.html#tokenization",
-    "title": "5. Basic textual analysis",
-    "section": "2-1. Tokenization",
-    "text": "2-1. Tokenization\nCommon words like “the,” “and,” and “to” appear frequently but carry little meaning. These are called stopwords. Let’s tokenize the description column in YT_data and create a word column.\n\nYT_tokenized &lt;- YT_data |&gt;\n  unnest_tokens(word, description)\n\nTokenization breaks text into individual words and removes sentence structure.If you examine the first 20 words, you’ll notice common words like “to,” “the,” “and,” and “of,” which add little (or no) meaning.\n\nhead(YT_tokenized$word, 20)\n\n [1] \"people's\"  \"march\"     \"adviser\"   \"ash\"       \"lee\"       \"woodard\"  \n [7] \"henderson\" \"discusses\" \"the\"       \"upcoming\"  \"march\"     \"to\"       \n[13] \"protest\"   \"donald\"    \"trump's\"   \"second\"    \"term\"      \"and\"      \n[19] \"ahead\"     \"of\"",
+    "objectID": "Tutorials/Data-preprocessing.html#why-date-formats-matter",
+    "href": "Tutorials/Data-preprocessing.html#why-date-formats-matter",
+    "title": "3. Data pre-processing and visualization",
+    "section": "2-1. Why date formats matter",
+    "text": "2-1. Why date formats matter\nBoth datasets include time, but they record it differently. The COVID dataset uses a week index, while the mobility dataset uses a calendar date. Before merging, we must standardize the time variable.\n\n\n\n\n\n\nNote\n\n\n\nDate parsing is one of the most common sources of errors in data analysis. If your merge produces lots of missing values, date formats are often the reason.",
     "crumbs": [
       "Tutorials",
-      "5. Basic textual analysis"
+      "3. Data pre-processing and visualization"
     ]
   },
   {
-    "objectID": "Tutorials/Text-as-data.html#removing-stopwords",
-    "href": "Tutorials/Text-as-data.html#removing-stopwords",
-    "title": "5. Basic textual analysis",
-    "section": "2-2. Removing stopwords",
-    "text": "2-2. Removing stopwords\nOne of the first steps in Natural Language Processing (NLP) is removing words that carry little to no meaningful information, such as “a,” “the,” and “is” These are known as stopwords.\nIn tidytext, there is a predefined list of stopwords (stop_words).\n\nYT_tokenized_cleaned &lt;- YT_tokenized |&gt;\n  anti_join(stop_words, by = \"word\")\nhead(YT_tokenized_cleaned)\n\n\n\n\n\n\n\nNote\n\n\n\nTo view some preset stopwords, you can simply run ‘stop_words’",
+    "objectID": "Tutorials/Data-preprocessing.html#pre-processing-and-merging",
+    "href": "Tutorials/Data-preprocessing.html#pre-processing-and-merging",
+    "title": "3. Data pre-processing and visualization",
+    "section": "2-2. Pre-processing and merging",
+    "text": "2-2. Pre-processing and merging\nFirst, ensure values in the ‘date’ column in mobility is a real Date object If it is already a Date, this will keep it as Date. If it’s a character like “2026-04-01”, this will parse it correctly.\n\nmobility &lt;- mobility |&gt;\n  mutate(date = as.Date(date))\n\nCreate a calendar date in covidcases based on the week number. Week 1 starts on 2019-12-29\n\ncovidcases &lt;- covidcases |&gt;\n  mutate(date = as.Date(\"2019-12-29\") + \n           weeks(week - 1))\n\n\nMerge datasets by state and date\n\nmerged_data &lt;- mobility |&gt;\n  left_join(covidcases, by = c(\"state\", \"date\"))\nglimpse(merged_data)\n\nRows: 77,518\nColumns: 9\nGroups: state [51]\n$ state         &lt;chr&gt; \"Alabama\", \"Alabama\", \"Alabama\", \"Alabama\", \"Alabama\", \"…\n$ date          &lt;date&gt; 2020-03-01, 2020-03-02, 2020-03-03, 2020-03-04, 2020-03…\n$ samples       &lt;int&gt; 267652, 287264, 292018, 298704, 288218, 282982, 282326, …\n$ m50           &lt;dbl&gt; 10.871941, 14.345132, 14.244603, 13.083015, 14.815029, 1…\n$ m50_index     &lt;dbl&gt; 76.92647, 98.57353, 98.25000, 89.69118, 102.38235, 126.2…\n$ county        &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, \"Shelby\", \"Baldwin\", \"Lee\", …\n$ week          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, 11, 11, 11, 11, 11, 11, 11, …\n$ weekly_cases  &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, 4, 1, 3, 1, 21, 2, 3, 1, 1, …\n$ weekly_deaths &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…\n\n\n\n\n\n\n\n\nNote\n\n\n\nAlternatively, you can also use right_join(), innter_join(), full_join()… etc: for more, see: https://alicepaul.github.io/health-data-science-using-r/book/merging_data.html",
     "crumbs": [
       "Tutorials",
-      "5. Basic textual analysis"
+      "3. Data pre-processing and visualization"
     ]
   },
   {
-    "objectID": "Tutorials/Text-as-data.html#customize-stopwords",
-    "href": "Tutorials/Text-as-data.html#customize-stopwords",
-    "title": "5. Basic textual analysis",
-    "section": "2-3. Customize stopwords",
-    "text": "2-3. Customize stopwords\nIf there is a specific stopword you’d like to add—such as “lol”, you can create a custom stopword list and merge it with the existing tidytext stopwords dataset.For example, the following code adds “lol” to the stopword list (creating a new dataframe with your custom stopwords):\nCreate a custom stopword list (e.g., adding “lol”):\n\ncustom_stop &lt;- data.frame(word = c(\"lol\"), lexicon = \"custom\")\n\nCombine the custom stopwords with the default stopwords\n\nfinal_stop &lt;- bind_rows(stop_words, custom_stop)\n\nThis code removes unwanted words from the tokenized dataset.\n\nYT_tokenized_cleaned &lt;- YT_tokenized |&gt;\n  anti_join(final_stop, by = \"word\")\n\nTry: head(YT_tokenized_cleaned$word, 20) to display the cleaned words with stopwords removed.",
+    "objectID": "Tutorials/Data-preprocessing.html#line-graph-trends-over-time",
+    "href": "Tutorials/Data-preprocessing.html#line-graph-trends-over-time",
+    "title": "3. Data pre-processing and visualization",
+    "section": "3-1. Line graph: trends over time",
+    "text": "3-1. Line graph: trends over time\nYou can add a title and label the x- and y-axes to make the plot more informative. Of note, m50 represents the median of the max-distance mobility (the distance a typical member of a given population moves in a day).\n\nm50trend &lt;- ggplot(filtered_data, \n                   aes(x = week, y = m50, \n                       color = state)) +\n  geom_line() +\n  labs(\n    title = \"Weekly Mobility Across 3 States\",\n    x = \"Week number\",\n    y = \"m50 (Median max-distance mobility)\")\nprint(m50trend)",
     "crumbs": [
       "Tutorials",
-      "5. Basic textual analysis"
+      "3. Data pre-processing and visualization"
     ]
   },
   {
-    "objectID": "Tutorials/Text-as-data.html#visualization",
-    "href": "Tutorials/Text-as-data.html#visualization",
-    "title": "5. Basic textual analysis",
-    "section": "3-1. Visualization",
-    "text": "3-1. Visualization\nYou can also visualize this using ggplot2. For example, to display the top 10 most frequently occurring words:\n\nword_counts &lt;- YT_tokenized_cleaned |&gt;\n  count(word, sort = TRUE) |&gt;\n  slice_max(n, n = 10)\n\nHere, I selected top 15 words. If you don’t specify a number or use this function, the graph will include the entire dataset, which may be difficult to interpret.\n\nggplot(word_counts, \n       aes(x = reorder(word, n), y = n)) +\n  geom_col() +\n  coord_flip() +\n  labs(title = \"Top 15 Most Frequent Words\",\n       x = \"Words\",\n       y = \"Frequency\")\n\n\n\n\n\n\n\n\nWord frequency does not capture context, sarcasm, or its underlying meaning. Text analysis should be interpreted carefully and ideally combined with qualitative review.",
+    "objectID": "Tutorials/Data-preprocessing.html#saving-plots",
+    "href": "Tutorials/Data-preprocessing.html#saving-plots",
+    "title": "3. Data pre-processing and visualization",
+    "section": "3-2. Saving plots",
+    "text": "3-2. Saving plots\nBy default, ggsave() saves figures at 7 × 7 inches. You can change the width and height to customize the figure size.\n\nggsave(\"mobility_line_graph.png\", plot = m50trend)\n# Customizing the figure size\nggsave(\n  \"mobility_line_graph_large.png\",\n  plot = m50trend,\n  width = 10, height = 8, units = \"in\",\n  dpi = 300)\n\n\n\n\n\n\n\nTip\n\n\n\nIf ggsave() does not save where you expect, check your working directory with getwd().",
     "crumbs": [
       "Tutorials",
-      "5. Basic textual analysis"
+      "3. Data pre-processing and visualization"
     ]
   },
   {
-    "objectID": "Tutorials/Text-as-data.html#summary",
-    "href": "Tutorials/Text-as-data.html#summary",
-    "title": "5. Basic textual analysis",
+    "objectID": "Tutorials/Data-preprocessing.html#customizing-plot-appearance",
+    "href": "Tutorials/Data-preprocessing.html#customizing-plot-appearance",
+    "title": "3. Data pre-processing and visualization",
+    "section": "3-3. Customizing plot appearance",
+    "text": "3-3. Customizing plot appearance\nYou can change the size of texts, colors/thickness/types of the lines etc by using different functions.\n\nA. Change the size of texts (increase text size for instane)\n\nm50trend_1 &lt;- ggplot(filtered_data, \n                     aes(x = week, y = m50, \n                         color = state)) +\n  geom_line() +\n  labs(title = \"Weekly Mobility Across 3 States\",\n       x = \"Week Number\",\n       y = \"m50 (Median Max-Distance Mobility)\") +\n  theme_minimal() +\n  theme(\n# Bigger title\n    plot.title = element_text(size = 16, \n                              face = \"bold\"),  \n# X-axis label size\n    axis.title.x = element_text(size = 14),  \n# Y-axis label size\n    axis.title.y = element_text(size = 14),  \n# Legend text size\n    legend.text = element_text(size = 12),  \n# Legend title size\n    legend.title = element_text(size = 14)  \n  )\nprint(m50trend_1)\n\n\n\n\n\n\n\n\n\n\nB. Change line thickness\nYou can adjust the number after size = to control how thick the line appears in the plot.\n\nm50trend_2 &lt;- ggplot(filtered_data, \n                     aes(x = week, y = m50, \n                         color = state)) +\n  geom_line(size = 1.5) +  # Increase line thickness\n  labs(title = \"Weekly Mobility Across 3 States\",\n       x = \"Week Number\",\n       y = \"m50 (Median Max-Distance Mobility)\") +\n  theme_minimal()\nprint(m50trend_2)\n\n\n\n\n\n\n\n\n\n\nC. Change Line Type\nIf the figure will be printed in black and white, use different line types such as solid, dashed, or dotted to make each line easier to distinguish.\n\nm50trend_3 &lt;- ggplot(filtered_data, \n                     aes(x = week, y = m50, \n                         color = state, linetype = state)) +\n  geom_line(size = 1.2) +  # Thicker lines\n  labs(title = \"Weekly Mobility Across 3 States\",\n       x = \"Week Number\",\n       y = \"m50 (Median Max-Distance Mobility)\") +\n  theme_minimal()\nprint(m50trend_3)\n\n\n\n\n\n\n\n\n\n\nD. Assign Colors\nYou can use the scale_color_manual() function and enter the colors of your choice to customize the plot.\n\nm50trend_4 &lt;- ggplot(filtered_data, \n                     aes(x = week, y = m50, \n                         color = state)) +\n  geom_line(size = 1.2) +\n  scale_color_manual(values = c(\"California\" = \"blue\", \n                                \"Florida\" = \"green\", \n                                \"Hawaii\" = \"pink\")) + \n  labs(title = \"Weekly Mobility Across 3 States\",\n       x = \"Week Number\",\n       y = \"m50 (Median Max-Distance Mobility)\") +\n  theme_minimal()\nprint(m50trend_4)",
+    "crumbs": [
+      "Tutorials",
+      "3. Data pre-processing and visualization"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Data-preprocessing.html#bar-graph-comparing-states",
+    "href": "Tutorials/Data-preprocessing.html#bar-graph-comparing-states",
+    "title": "3. Data pre-processing and visualization",
+    "section": "3-4. Bar graph: comparing states",
+    "text": "3-4. Bar graph: comparing states\nExample 1. Here we calculate the average mobility for each state and then plot it. A bar chart usually use summarized data (one value per group), not raw daily rows. First, create a summarized dataset.\n\nstate_summary &lt;- filtered_data |&gt;\n  group_by(state) |&gt;\n  summarise(mean_m50 = mean(m50, na.rm = TRUE), \n            .groups = \"drop\")\n\nWe now have ‘mean_m50’ scores. We enter this to ggplot and its geom_col() function.\n\nggplot(state_summary, aes(x = state, y = mean_m50)) +\n  geom_col() +\n  labs(\n    title = \"Average Mobility Across 3 States\",\n    x = \"State\",\n    y = \"Mean m50\"\n    )\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTip\n\n\n\n\nIf you already summarized your data: then use the geom_col().\nBut if you want to use counts of rows: then use geom_bar().\n\n\n\nExample 2. If we want to count how many observations exist for each state, we use geom_bar(). geom_bar() automatically counts how many rows fall into each category.\n\nggplot(filtered_data, aes(x = state)) +\n  geom_bar() +\n  labs(\n    title = \"Number of Observations by State\",\n    x = \"State\",\n    y = \"Count\"\n  )",
+    "crumbs": [
+      "Tutorials",
+      "3. Data pre-processing and visualization"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Data-preprocessing.html#summary",
+    "href": "Tutorials/Data-preprocessing.html#summary",
+    "title": "3. Data pre-processing and visualization",
     "section": "Summary",
-    "text": "Summary\nIn this module, you learned how to structure and clean textual data in R. You practiced tokenizing text, removing stopwords, analyzing word frequency, generating visualizations, and examining word sequences using n-grams. These techniques provide a foundation for computational text analysis and prepare you for more advanced methods such as sentiment analysis, topic modeling, and semantic network analysis.",
+    "text": "Summary\nIn this chapter, you practiced inspecting datasets, converting variables, and preparing data for analysis by aligning date formats and merging datasets.\nYou also created visualizations using ggplot2 to examine trends and compare groups. These steps (cleaning, organizing, and visualizing data) are essential for turning raw data into meaningful insights.\nIn the next chapter, we will build on these skills by moving from data preparation to data analysis and interpretation.",
     "crumbs": [
       "Tutorials",
-      "5. Basic textual analysis"
+      "3. Data pre-processing and visualization"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Sentiment analysis.html",
+    "href": "Tutorials/Sentiment analysis.html",
+    "title": "7. Sentiment analysis",
+    "section": "",
+    "text": "By the end of this tutorial, you will be able to:\n\nUnderstand what dictionary-based sentiment analysis is and when it is useful.\nPreprocess social media text for sentiment analysis in R.\nApply the AFINN lexicon to estimate tweet-level sentiment.\nSummarize and interpret sentiment scores across tweets.\nExplore whether sentiment is associated with engagement metrics.",
+    "crumbs": [
+      "Tutorials",
+      "7. Sentiment analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Sentiment analysis.html#learning-goals",
+    "href": "Tutorials/Sentiment analysis.html#learning-goals",
+    "title": "7. Sentiment analysis",
+    "section": "",
+    "text": "By the end of this tutorial, you will be able to:\n\nUnderstand what dictionary-based sentiment analysis is and when it is useful.\nPreprocess social media text for sentiment analysis in R.\nApply the AFINN lexicon to estimate tweet-level sentiment.\nSummarize and interpret sentiment scores across tweets.\nExplore whether sentiment is associated with engagement metrics.",
+    "crumbs": [
+      "Tutorials",
+      "7. Sentiment analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Sentiment analysis.html#required-packages",
+    "href": "Tutorials/Sentiment analysis.html#required-packages",
+    "title": "7. Sentiment analysis",
+    "section": "Required Packages",
+    "text": "Required Packages\nYou only need to install packages once.\n\npackages &lt;- c(\n  \"tidyverse\",\n  \"tidytext\",\n  \"tokenizers\",\n  \"stringr\"\n)\ninstall.packages(packages)\n\n\nlibrary(tidyverse)\nlibrary(dplyr)\nlibrary(tokenizers)\nlibrary(tidytext)\nlibrary(stringr)\nset.seed(381)\noptions(scipen = 999)",
+    "crumbs": [
+      "Tutorials",
+      "7. Sentiment analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Sentiment analysis.html#importing-data",
+    "href": "Tutorials/Sentiment analysis.html#importing-data",
+    "title": "7. Sentiment analysis",
+    "section": "Importing data",
+    "text": "Importing data\nFor this tutorial, we use a CSV file containing abortion-related Twitter data.\n\ntweets &lt;- read.csv(\"~/Desktop/abortion_tweets.csv\", header = TRUE, sep = \",\")\n\ntweets_subset &lt;- tweets %&gt;%\n  select(\n    id,\n    author_id,\n    created_at,\n    text,\n    public_metrics.impression_count,\n    public_metrics.like_count,\n    public_metrics.quote_count,\n    public_metrics.reply_count,\n    public_metrics.retweet_count,\n    referenced_tweets\n  )",
+    "crumbs": [
+      "Tutorials",
+      "7. Sentiment analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Sentiment analysis.html#step-1-tokenize-the-text",
+    "href": "Tutorials/Sentiment analysis.html#step-1-tokenize-the-text",
+    "title": "7. Sentiment analysis",
+    "section": "Step 1: Tokenize the text",
+    "text": "Step 1: Tokenize the text\nTo prepare the tweets for sentiment analysis, we:\n\npreserve the original text\nremove URLs\ntokenize the tweets into individual words\nconvert all words to lowercase\nremove stopwords\n\n\ntweets_tokenized &lt;- tweets_subset %&gt;%\n  mutate(original_text = text) %&gt;%\n  mutate(text = str_remove_all(text, \"\\\\bhttps[^\\\\s]+\")) %&gt;%\n  unnest_tokens(word, text, to_lower = TRUE) %&gt;%\n  anti_join(stop_words, by = \"word\")\n\nhead(tweets_tokenized)\n\n                   id           author_id               created_at\n1 1608879536376262656 1293292839963631616 2022-12-30T17:35:47.000Z\n2 1608879536376262656 1293292839963631616 2022-12-30T17:35:47.000Z\n3 1608879536376262656 1293292839963631616 2022-12-30T17:35:47.000Z\n4 1608879536376262656 1293292839963631616 2022-12-30T17:35:47.000Z\n5 1608879536376262656 1293292839963631616 2022-12-30T17:35:47.000Z\n6 1608879536376262656 1293292839963631616 2022-12-30T17:35:47.000Z\n  public_metrics.impression_count public_metrics.like_count\n1                               0                         0\n2                               0                         0\n3                               0                         0\n4                               0                         0\n5                               0                         0\n6                               0                         0\n  public_metrics.quote_count public_metrics.reply_count\n1                          0                          0\n2                          0                          0\n3                          0                          0\n4                          0                          0\n5                          0                          0\n6                          0                          0\n  public_metrics.retweet_count              referenced_tweets\n1                          190 retweeted, 1608817588376834048\n2                          190 retweeted, 1608817588376834048\n3                          190 retweeted, 1608817588376834048\n4                          190 retweeted, 1608817588376834048\n5                          190 retweeted, 1608817588376834048\n6                          190 retweeted, 1608817588376834048\n                                                                                                                                 original_text\n1 RT @KelseyDotOrg: Today my piece for @atrupar’s Public Notice on abortion access in Missouri and Kansas is up. Thank you Aaron for the oppo…\n2 RT @KelseyDotOrg: Today my piece for @atrupar’s Public Notice on abortion access in Missouri and Kansas is up. Thank you Aaron for the oppo…\n3 RT @KelseyDotOrg: Today my piece for @atrupar’s Public Notice on abortion access in Missouri and Kansas is up. Thank you Aaron for the oppo…\n4 RT @KelseyDotOrg: Today my piece for @atrupar’s Public Notice on abortion access in Missouri and Kansas is up. Thank you Aaron for the oppo…\n5 RT @KelseyDotOrg: Today my piece for @atrupar’s Public Notice on abortion access in Missouri and Kansas is up. Thank you Aaron for the oppo…\n6 RT @KelseyDotOrg: Today my piece for @atrupar’s Public Notice on abortion access in Missouri and Kansas is up. Thank you Aaron for the oppo…\n          word\n1           rt\n2 kelseydotorg\n3        piece\n4    atrupar’s\n5       public\n6       notice\n\n\n\n\n\n\n\n\nTip\n\n\n\nIf you want to inspect the most common words before running sentiment analysis, try:\n\ntweets_tokenized %&gt;%\n  count(word, sort = TRUE)",
+    "crumbs": [
+      "Tutorials",
+      "7. Sentiment analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Sentiment analysis.html#what-is-the-afinn-lexicon",
+    "href": "Tutorials/Sentiment analysis.html#what-is-the-afinn-lexicon",
+    "title": "7. Sentiment analysis",
+    "section": "What is the AFINN lexicon?",
+    "text": "What is the AFINN lexicon?\nIn dictionary-based sentiment analysis, we use a predefined lexicon that assigns sentiment values to words.\nIn this tutorial, we use the AFINN lexicon, which assigns words scores ranging from -5 (very negative) to +5 (very positive).\nOther commonly used lexicons include:\n\nBing: positive / negative\nNRC: eight emotions plus positive / negative\nLexicoder: often used in political communication\nLIWC: sentiment and broader psychological categories\n\nEach dictionary has different strengths and limitations. Because language is complex, researchers should always interpret dictionary results carefully.\n\nafinn_dictionary &lt;- get_sentiments(\"afinn\")\nhead(afinn_dictionary)\n\n# A tibble: 6 × 2\n  word       value\n  &lt;chr&gt;      &lt;dbl&gt;\n1 abandon       -2\n2 abandoned     -2\n3 abandons      -2\n4 abducted      -2\n5 abduction     -2\n6 abductions    -2\n\nsubset(afinn_dictionary, word == \"love\")\n\n# A tibble: 1 × 2\n  word  value\n  &lt;chr&gt; &lt;dbl&gt;\n1 love      3\n\nsubset(afinn_dictionary, word == \"terrible\")\n\n# A tibble: 1 × 2\n  word     value\n  &lt;chr&gt;    &lt;dbl&gt;\n1 terrible    -3",
+    "crumbs": [
+      "Tutorials",
+      "7. Sentiment analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Sentiment analysis.html#step-2-match-tweet-words-to-the-sentiment-dictionary",
+    "href": "Tutorials/Sentiment analysis.html#step-2-match-tweet-words-to-the-sentiment-dictionary",
+    "title": "7. Sentiment analysis",
+    "section": "Step 2: Match tweet words to the sentiment dictionary",
+    "text": "Step 2: Match tweet words to the sentiment dictionary\nWe use inner_join() to keep only the words in our dataset that also appear in the AFINN dictionary.\n\ntweets_sentiment &lt;- tweets_tokenized %&gt;%\n  inner_join(afinn_dictionary, by = \"word\")\n\nhead(tweets_sentiment)\n\n                   id           author_id               created_at\n1 1608879534690160640 1407429095005245440 2022-12-30T17:35:47.000Z\n2 1608879520039448320  925802396609073280 2022-12-30T17:35:43.000Z\n3 1608879520039448320  925802396609073280 2022-12-30T17:35:43.000Z\n4 1608879520039448320  925802396609073280 2022-12-30T17:35:43.000Z\n5 1608879519641002240            99833187 2022-12-30T17:35:43.000Z\n6 1608879518382718720           228617818 2022-12-30T17:35:43.000Z\n  public_metrics.impression_count public_metrics.like_count\n1                              10                         1\n2                               0                         0\n3                               0                         0\n4                               0                         0\n5                               0                         0\n6                               0                         0\n  public_metrics.quote_count public_metrics.reply_count\n1                          0                          0\n2                          0                          0\n3                          0                          0\n4                          0                          0\n5                          0                          0\n6                          0                          0\n  public_metrics.retweet_count              referenced_tweets\n1                            1                               \n2                         1027 retweeted, 1608871631765786624\n3                         1027 retweeted, 1608871631765786624\n4                         1027 retweeted, 1608871631765786624\n5                         2278 retweeted, 1529674574266257408\n6                           41 retweeted, 1608860717515423744\n                                                                                                                                     original_text\n1                                        You know any of these hags? Get Paid!  $10,000 Reward for Info https://t.co/mgpx6PoQTo via @gatewaypundit\n2     RT @mjs_DC: After being denied basic miscarriage care during two separate visits to the ER because of Louisiana's abortion ban, Kaitlyn Jos…\n3     RT @mjs_DC: After being denied basic miscarriage care during two separate visits to the ER because of Louisiana's abortion ban, Kaitlyn Jos…\n4     RT @mjs_DC: After being denied basic miscarriage care during two separate visits to the ER because of Louisiana's abortion ban, Kaitlyn Jos…\n5 RT @MrAndyNgo: Jennifer Thompson, an extremist abortion &amp; BLM activist in Portland, has shared in graphic detail her recent decision to end…\n6     RT @LifeNewsToo: The FBI has arrested a dozen pro-life Americans for peacefully protesting abortion, but not one single leftist for firebom…\n      word value\n1   reward     2\n2   denied    -2\n3     care     2\n4      ban    -2\n5   shared     1\n6 arrested    -3\n\n\nThe value column shows the sentiment score assigned to each word.",
+    "crumbs": [
+      "Tutorials",
+      "7. Sentiment analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Sentiment analysis.html#step-3-identify-the-most-negative-and-most-positive-words",
+    "href": "Tutorials/Sentiment analysis.html#step-3-identify-the-most-negative-and-most-positive-words",
+    "title": "7. Sentiment analysis",
+    "section": "Step 3: Identify the most negative and most positive words",
+    "text": "Step 3: Identify the most negative and most positive words\n\nmost_negative_words &lt;- tweets_sentiment %&gt;%\n  arrange(value) %&gt;%\n  select(word, value) %&gt;%\n  distinct() %&gt;%\n  head(10)\nmost_negative_words\n\n           word value\n1         bitch    -5\n2          cock    -5\n3       bitches    -5\n4  motherfucker    -5\n5        niggas    -5\n6          rape    -4\n7      bullshit    -4\n8          fuck    -4\n9       fucking    -4\n10         damn    -4\n\n\n\nmost_positive_words &lt;- tweets_sentiment %&gt;%\n  arrange(desc(value)) %&gt;%\n  select(word, value) %&gt;%\n  distinct() %&gt;%\n  head(10)\nmost_positive_words\n\n        word value\n1  brilliant     4\n2        win     4\n3      funny     4\n4       lmao     4\n5      lmfao     4\n6    amazing     4\n7    awesome     4\n8        fun     4\n9        wow     4\n10 fantastic     4\n\n\nThese outputs help us see which words in the dataset contribute most strongly to negative and positive sentiment.",
+    "crumbs": [
+      "Tutorials",
+      "7. Sentiment analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Sentiment analysis.html#step-4-calculate-tweet-level-sentiment-scores",
+    "href": "Tutorials/Sentiment analysis.html#step-4-calculate-tweet-level-sentiment-scores",
+    "title": "7. Sentiment analysis",
+    "section": "Step 4: Calculate tweet-level sentiment scores",
+    "text": "Step 4: Calculate tweet-level sentiment scores\nNext, we summarize the sentiment values within each tweet. Since id is the unique tweet identifier, we group by id and sum the sentiment values.\n\ntweets_summarized &lt;- tweets_sentiment %&gt;%\n  group_by(id) %&gt;%\n  summarize(sentiment = sum(value), .groups = \"drop\")\nhead(tweets_summarized)\n\n# A tibble: 6 × 2\n       id sentiment\n    &lt;dbl&gt;     &lt;dbl&gt;\n1 1.61e18        -1\n2 1.61e18        -4\n3 1.61e18        -2\n4 1.61e18        -1\n5 1.61e18        -2\n6 1.61e18         4\n\n\nNow we merge these sentiment scores back into the original tweet-level dataset.\n\ntweets_final &lt;- tweets_subset %&gt;%\n  full_join(tweets_summarized, by = \"id\")",
+    "crumbs": [
+      "Tutorials",
+      "7. Sentiment analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Sentiment analysis.html#step-5-replace-missing-sentiment-values-with-0",
+    "href": "Tutorials/Sentiment analysis.html#step-5-replace-missing-sentiment-values-with-0",
+    "title": "7. Sentiment analysis",
+    "section": "Step 5: Replace missing sentiment values with 0",
+    "text": "Step 5: Replace missing sentiment values with 0\nSome tweets will not contain any words found in the AFINN dictionary. In those cases, sentiment will appear as NA. We replace those missing values with 0.\n\ntweets_final$sentiment[is.na(tweets_final$sentiment)] &lt;- 0",
+    "crumbs": [
+      "Tutorials",
+      "7. Sentiment analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Sentiment analysis.html#distribution-of-sentiment-scores",
+    "href": "Tutorials/Sentiment analysis.html#distribution-of-sentiment-scores",
+    "title": "7. Sentiment analysis",
+    "section": "Distribution of sentiment scores",
+    "text": "Distribution of sentiment scores\n\ntable(tweets_final$sentiment)\n\n\n -23  -19  -16  -15  -14  -13  -12  -11  -10   -9   -8   -7   -6   -5   -4   -3 \n   1    1    2    4    2    6   24   76   26   79   48  313  164  349  427 1027 \n  -2   -1    0    1    2    3    4    5    6    7    8    9   10   11   14 \n1865  833 3156  754  580  173  132   46   40   58    5    5    8    1    1 \n\n\nThis gives a simple overview of how sentiment is distributed across the tweets.",
+    "crumbs": [
+      "Tutorials",
+      "7. Sentiment analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Sentiment analysis.html#inspect-negative-and-positive-tweets",
+    "href": "Tutorials/Sentiment analysis.html#inspect-negative-and-positive-tweets",
+    "title": "7. Sentiment analysis",
+    "section": "Inspect negative and positive tweets",
+    "text": "Inspect negative and positive tweets\nNegative tweets:\n\nnegative_tweets &lt;- tweets_final %&gt;%\n  filter(sentiment &lt;= -1) %&gt;%\n  select(text, sentiment)\nhead(negative_tweets)\n\n                                                                                                                                          text\n1 RT @mjs_DC: After being denied basic miscarriage care during two separate visits to the ER because of Louisiana's abortion ban, Kaitlyn Jos…\n2 RT @LifeNewsToo: The FBI has arrested a dozen pro-life Americans for peacefully protesting abortion, but not one single leftist for firebom…\n3                                                                       @ThisIsKyleR Did.. you even go to school? I missed the abortion class.\n4                                                                RT @JackPosobiec: Anti-abortion is literally written in the AP standard guide\n5   @HoustonHizzoner @janecoaston I don’t think there is one. If pro life Americans believe abortion is murder, how can their be a compromise?\n6 RT @mjs_DC: When a Louisiana woman miscarried at 11 weeks, the hospital refused to confirm that it was a miscarriage or provide any treatme…\n  sentiment\n1        -2\n2        -3\n3        -2\n4        -1\n5        -2\n6        -2\n\n\nPositive tweets:\n\npositive_tweets &lt;- tweets_final %&gt;%\n  filter(sentiment &gt;= 1) %&gt;%\n  select(text, sentiment)\nhead(positive_tweets)\n\n                                                                                                                                                                                                                                                                 text\n1                                                                                                                                                           You know any of these hags? Get Paid!  $10,000 Reward for Info https://t.co/mgpx6PoQTo via @gatewaypundit\n2                                                                                                                    RT @MrAndyNgo: Jennifer Thompson, an extremist abortion &amp; BLM activist in Portland, has shared in graphic detail her recent decision to end…\n3 SOUTH AFRICA PRIVATE VIP ABORTION/TERMINATION +27635284507 QUICK,SAFE &amp; PAIN FREE SAME DAY FREE CLEANING  CALL/WHATSAPP +27635284507 FREE STATE,DURBAN,EASTERN CAPE,LIMPOPO,MPUMALANGA,NORTH WEST,WESTERN CAPE,LOSOTHO,ZIMBABWE NAMIBIA https://t.co/g8QXm4wYgr\n4                                                                                                                        RT @robbystarbuck: Steven Tyler legally had a minor signed over to him by her parents so he could take her on the road where he sexually ab…\n5                                                                                                                    RT @ArmandKleinX: Complot Against Pres.Trump? Rino Mitch McConnell Backed Rino @ODeaForColorado who does not support America First&amp;who supp…\n6 SOUTH AFRICA PRIVATE VIP ABORTION/TERMINATION +27635284507 QUICK,SAFE &amp; PAIN FREE SAME DAY FREE CLEANING  CALL/WHATSAPP +27635284507 FREE STATE,DURBAN,EASTERN CAPE,LIMPOPO,MPUMALANGA,NORTH WEST,WESTERN CAPE,LOSOTHO,ZIMBABWE NAMIBIA https://t.co/HYFoACLaIp\n  sentiment\n1         2\n2         1\n3         2\n4         1\n5         2\n6         2\n\n\nLooking directly at tweet examples helps researchers evaluate whether the sentiment scores make sense in context.\n\n\n\n\n\n\nNote\n\n\n\nThis step is important because dictionary-based sentiment analysis cannot fully capture sarcasm, irony, humor, or context-dependent meanings.",
+    "crumbs": [
+      "Tutorials",
+      "7. Sentiment analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Sentiment analysis.html#step-1-examine-the-relationship-with-likes",
+    "href": "Tutorials/Sentiment analysis.html#step-1-examine-the-relationship-with-likes",
+    "title": "7. Sentiment analysis",
+    "section": "Step 1: Examine the relationship with likes",
+    "text": "Step 1: Examine the relationship with likes\nAs a simple extension, we can test whether more positive or negative tweets tend to receive more likes.\n\ncor.test(\n  tweets_final$sentiment,\n  tweets_final$public_metrics.like_count,\n  method = \"spearman\",\n  use = \"complete.obs\"\n)\n\nWarning in cor.test.default(tweets_final$sentiment,\ntweets_final$public_metrics.like_count, : Cannot compute exact p-value with\nties\n\n\n\n    Spearman's rank correlation rho\n\ndata:  tweets_final$sentiment and tweets_final$public_metrics.like_count\nS = 170495177668, p-value = 0.0001375\nalternative hypothesis: true rho is not equal to 0\nsample estimates:\n       rho \n0.03773063",
+    "crumbs": [
+      "Tutorials",
+      "7. Sentiment analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Sentiment analysis.html#step-2-visualize-sentiment-and-likes",
+    "href": "Tutorials/Sentiment analysis.html#step-2-visualize-sentiment-and-likes",
+    "title": "7. Sentiment analysis",
+    "section": "Step 2: Visualize sentiment and likes",
+    "text": "Step 2: Visualize sentiment and likes\n\nggplot(tweets_final, aes(x = sentiment, y = public_metrics.like_count)) +\n  geom_point(alpha = 0.2) +\n  geom_smooth(method = \"lm\", se = FALSE, color = \"steelblue\") +\n  labs(\n    title = \"Sentiment and Likes in Abortion Tweets\",\n    x = \"Sentiment score\",\n    y = \"Like count\"\n  ) +\n  theme_minimal()\n\n`geom_smooth()` using formula = 'y ~ x'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTip\n\n\n\nEngagement variables such as likes, replies, and retweets are often highly skewed. In substantive research, it is a good idea to inspect their distributions before choosing a model.",
+    "crumbs": [
+      "Tutorials",
+      "7. Sentiment analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html",
+    "href": "Tutorials/Predictive analysis.html",
+    "title": "9. Predictive analysis",
+    "section": "",
+    "text": "By the end of this tutorial, you will be able to:\n\nUnderstand the difference between descriptive analysis and predictive analysis.\nRun a correlation test in R and interpret the result.\nRun a simple ANOVA and understand when to use post-hoc tests.\nRun a simple linear regression model in R.\nApply these tools to a practice dataset involving COVID-19 cases and mobility.",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#learning-goals",
+    "href": "Tutorials/Predictive analysis.html#learning-goals",
+    "title": "9. Predictive analysis",
+    "section": "",
+    "text": "By the end of this tutorial, you will be able to:\n\nUnderstand the difference between descriptive analysis and predictive analysis.\nRun a correlation test in R and interpret the result.\nRun a simple ANOVA and understand when to use post-hoc tests.\nRun a simple linear regression model in R.\nApply these tools to a practice dataset involving COVID-19 cases and mobility.",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#required-packages",
+    "href": "Tutorials/Predictive analysis.html#required-packages",
+    "title": "9. Predictive analysis",
+    "section": "Required Packages",
+    "text": "Required Packages\nYou only need to install packages once.\n\npackages &lt;- c(\n  \"tidyverse\",\n  \"modelsummary\",\n  \"HDSinRdata\",\n  \"car\",\n  \"lubridate\"\n)\ninstall.packages(packages)\n\n\nlibrary(tidyverse)\nlibrary(modelsummary)\nlibrary(HDSinRdata)\nlibrary(car)\nlibrary(lubridate)\nset.seed(381)\noptions(scipen = 999)",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#what-is-correlation",
+    "href": "Tutorials/Predictive analysis.html#what-is-correlation",
+    "title": "9. Predictive analysis",
+    "section": "What is correlation?",
+    "text": "What is correlation?\nA correlation test examines whether two numeric variables tend to move together.\n\nA positive correlation means that as one variable increases, the other also tends to increase.\nA negative correlation means that as one variable increases, the other tends to decrease.\nA correlation close to 0 suggests little or no linear relationship.\n\nHere, we use the built-in mtcars dataset.\n\ndata(mtcars)\nhead(mtcars)\n\n                   mpg cyl disp  hp drat    wt  qsec vs am gear carb\nMazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4\nMazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4\nDatsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1\nHornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1\nHornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2\nValiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1\n\ncar_dataset &lt;- mtcars",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#step-1-calculate-a-correlation",
+    "href": "Tutorials/Predictive analysis.html#step-1-calculate-a-correlation",
+    "title": "9. Predictive analysis",
+    "section": "Step 1: Calculate a correlation",
+    "text": "Step 1: Calculate a correlation\nWe test the relationship between car weight (wt) and horsepower (hp).\n\ncor(car_dataset$wt, car_dataset$hp)\n\n[1] 0.6587479\n\nplot(car_dataset$wt, car_dataset$hp)\n\n\n\n\n\n\n\n\nBy default, cor() computes a Pearson correlation.",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#step-2-try-a-different-correlation-method",
+    "href": "Tutorials/Predictive analysis.html#step-2-try-a-different-correlation-method",
+    "title": "9. Predictive analysis",
+    "section": "Step 2: Try a different correlation method",
+    "text": "Step 2: Try a different correlation method\nYou can also use a different method, such as Spearman correlation.\n\ncor(car_dataset$wt, car_dataset$hp, method = \"spearman\")\n\n[1] 0.7746767",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#step-3-report-the-p-value",
+    "href": "Tutorials/Predictive analysis.html#step-3-report-the-p-value",
+    "title": "9. Predictive analysis",
+    "section": "Step 3: Report the p-value",
+    "text": "Step 3: Report the p-value\nIf you need the test statistic and p-value, use cor.test().\n\ncor.test(car_dataset$wt, car_dataset$hp)\n\n\n    Pearson's product-moment correlation\n\ndata:  car_dataset$wt and car_dataset$hp\nt = 4.7957, df = 30, p-value = 0.00004146\nalternative hypothesis: true correlation is not equal to 0\n95 percent confidence interval:\n 0.4025113 0.8192573\nsample estimates:\n      cor \n0.6587479 \n\n\n\n\n\n\n\n\nTip\n\n\n\nWhen reporting a correlation, it is useful to include:\n\nthe correlation coefficient (r)\nthe p-value\na brief interpretation of the direction and strength of the relationship",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#what-is-anova",
+    "href": "Tutorials/Predictive analysis.html#what-is-anova",
+    "title": "9. Predictive analysis",
+    "section": "What is ANOVA?",
+    "text": "What is ANOVA?\nANOVA, or Analysis of Variance, is used when:\n\nthe independent variable (IV) is categorical\nthe dependent variable (DV) is numeric\n\nHere, we test whether miles per gallon (mpg) differs across cars with different numbers of cylinders.",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#step-1-convert-the-iv-to-a-factor",
+    "href": "Tutorials/Predictive analysis.html#step-1-convert-the-iv-to-a-factor",
+    "title": "9. Predictive analysis",
+    "section": "Step 1: Convert the IV to a factor",
+    "text": "Step 1: Convert the IV to a factor\n\ncar_dataset$cyl_factor &lt;- as.factor(car_dataset$cyl)",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#step-2-run-anova",
+    "href": "Tutorials/Predictive analysis.html#step-2-run-anova",
+    "title": "9. Predictive analysis",
+    "section": "Step 2: Run ANOVA",
+    "text": "Step 2: Run ANOVA\n\nanova_model &lt;- aov(mpg ~ cyl_factor, data = car_dataset)\nsummary(anova_model)\n\n            Df Sum Sq Mean Sq F value        Pr(&gt;F)    \ncyl_factor   2  824.8   412.4    39.7 0.00000000498 ***\nResiduals   29  301.3    10.4                          \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#step-3-run-a-post-hoc-test",
+    "href": "Tutorials/Predictive analysis.html#step-3-run-a-post-hoc-test",
+    "title": "9. Predictive analysis",
+    "section": "Step 3: Run a post-hoc test",
+    "text": "Step 3: Run a post-hoc test\nIf the ANOVA result is statistically significant, a post-hoc test helps identify which groups differ from one another.\n\nTukeyHSD(anova_model)\n\n  Tukey multiple comparisons of means\n    95% family-wise confidence level\n\nFit: aov(formula = mpg ~ cyl_factor, data = car_dataset)\n\n$cyl_factor\n          diff        lwr        upr     p adj\n6-4  -6.920779 -10.769350 -3.0722086 0.0003424\n8-4 -11.563636 -14.770779 -8.3564942 0.0000000\n8-6  -4.642857  -8.327583 -0.9581313 0.0112287\n\n\n\n\n\n\n\n\nNote\n\n\n\nIn ANOVA:\n\nthe IV should be a factor\nthe DV should be numeric",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#what-is-linear-regression",
+    "href": "Tutorials/Predictive analysis.html#what-is-linear-regression",
+    "title": "9. Predictive analysis",
+    "section": "What is linear regression?",
+    "text": "What is linear regression?\nLinear regression estimates how much a numeric outcome changes as a predictor variable changes.\nHere, we predict miles per gallon (mpg) using number of cylinders (cyl).",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#step-1-run-a-simple-regression",
+    "href": "Tutorials/Predictive analysis.html#step-1-run-a-simple-regression",
+    "title": "9. Predictive analysis",
+    "section": "Step 1: Run a simple regression",
+    "text": "Step 1: Run a simple regression\n\nreg_model &lt;- lm(mpg ~ cyl, data = car_dataset)\nsummary(reg_model)\n\n\nCall:\nlm(formula = mpg ~ cyl, data = car_dataset)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-4.9814 -2.1185  0.2217  1.0717  7.5186 \n\nCoefficients:\n            Estimate Std. Error t value             Pr(&gt;|t|)    \n(Intercept)  37.8846     2.0738   18.27 &lt; 0.0000000000000002 ***\ncyl          -2.8758     0.3224   -8.92       0.000000000611 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 3.206 on 30 degrees of freedom\nMultiple R-squared:  0.7262,    Adjusted R-squared:  0.7171 \nF-statistic: 79.56 on 1 and 30 DF,  p-value: 0.0000000006113\n\n\nYou can also write the same model more compactly:\n\nlm(mpg ~ cyl, data = car_dataset) %&gt;% summary()\n\n\nCall:\nlm(formula = mpg ~ cyl, data = car_dataset)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-4.9814 -2.1185  0.2217  1.0717  7.5186 \n\nCoefficients:\n            Estimate Std. Error t value             Pr(&gt;|t|)    \n(Intercept)  37.8846     2.0738   18.27 &lt; 0.0000000000000002 ***\ncyl          -2.8758     0.3224   -8.92       0.000000000611 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 3.206 on 30 degrees of freedom\nMultiple R-squared:  0.7262,    Adjusted R-squared:  0.7171 \nF-statistic: 79.56 on 1 and 30 DF,  p-value: 0.0000000006113",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#step-2-add-another-predictor",
+    "href": "Tutorials/Predictive analysis.html#step-2-add-another-predictor",
+    "title": "9. Predictive analysis",
+    "section": "Step 2: Add another predictor",
+    "text": "Step 2: Add another predictor\nIf you want to control for an additional variable, you can include multiple predictors in the same model.\n\nmodel2 &lt;- lm(mpg ~ cyl + wt, data = car_dataset)\nsummary(model2)\n\n\nCall:\nlm(formula = mpg ~ cyl + wt, data = car_dataset)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-4.2893 -1.5512 -0.4684  1.5743  6.1004 \n\nCoefficients:\n            Estimate Std. Error t value             Pr(&gt;|t|)    \n(Intercept)  39.6863     1.7150  23.141 &lt; 0.0000000000000002 ***\ncyl          -1.5078     0.4147  -3.636             0.001064 ** \nwt           -3.1910     0.7569  -4.216             0.000222 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 2.568 on 29 degrees of freedom\nMultiple R-squared:  0.8302,    Adjusted R-squared:  0.8185 \nF-statistic: 70.91 on 2 and 29 DF,  p-value: 0.000000000006809",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#bonus-display-a-model-summary-table",
+    "href": "Tutorials/Predictive analysis.html#bonus-display-a-model-summary-table",
+    "title": "9. Predictive analysis",
+    "section": "Bonus: Display a model summary table",
+    "text": "Bonus: Display a model summary table\nThe modelsummary package provides a cleaner way to display regression results.\n\nmodelsummary(model2)\n\n\n\n    \n\n    \n\n    \n    \n    \n      \n        \n        \n              \n                 \n                (1)\n              \n        \n        \n        \n                \n                  (Intercept)\n                  39.686\n                \n                \n                  \n                  (1.715)\n                \n                \n                  cyl\n                  -1.508\n                \n                \n                  \n                  (0.415)\n                \n                \n                  wt\n                  -3.191\n                \n                \n                  \n                  (0.757)\n                \n                \n                  Num.Obs.\n                  32\n                \n                \n                  R2\n                  0.830\n                \n                \n                  R2 Adj.\n                  0.819\n                \n                \n                  AIC\n                  156.0\n                \n                \n                  BIC\n                  161.9\n                \n                \n                  Log.Lik.\n                  -74.005\n                \n                \n                  F\n                  70.908\n                \n                \n                  RMSE\n                  2.44",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#step-1-prepare-the-dates",
+    "href": "Tutorials/Predictive analysis.html#step-1-prepare-the-dates",
+    "title": "9. Predictive analysis",
+    "section": "Step 1: Prepare the dates",
+    "text": "Step 1: Prepare the dates\nBefore merging the datasets, we need to make sure the date formats are compatible.\n\nmobility$date &lt;- as.Date(mobility$date, formula = \"%Y-%M-%D\")\n\ncovidcases$date &lt;- as.Date(\"2019-12-29\") + weeks(covidcases$week - 1)",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#step-2-merge-the-datasets",
+    "href": "Tutorials/Predictive analysis.html#step-2-merge-the-datasets",
+    "title": "9. Predictive analysis",
+    "section": "Step 2: Merge the datasets",
+    "text": "Step 2: Merge the datasets\nWe merge the two datasets by state and date.\n\nmerged_data &lt;- mobility |&gt;\n  left_join(covidcases, by = c(\"state\", \"date\"))",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#step-3-generate-grouped-summaries",
+    "href": "Tutorials/Predictive analysis.html#step-3-generate-grouped-summaries",
+    "title": "9. Predictive analysis",
+    "section": "Step 3: Generate grouped summaries",
+    "text": "Step 3: Generate grouped summaries\nThis gives a quick overview of average mobility and total cases by state.\n\nstate_m50 &lt;- merged_data %&gt;%\n  group_by(state) %&gt;%\n  summarise(\n    mean_m50 = mean(m50, na.rm = TRUE),\n    median_m50 = median(m50, na.rm = TRUE),\n    cases_total = sum(weekly_cases, na.rm = TRUE),\n    .groups = \"drop\"\n  )\n\nprint(state_m50)\n\n# A tibble: 51 × 4\n   state       mean_m50 median_m50 cases_total\n   &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;       &lt;int&gt;\n 1 Alabama         7.84       8.77      127616\n 2 Alaska          2.12       2.45        6072\n 3 Arizona         4.08       4.40      202373\n 4 Arkansas        7.12       7.85       60600\n 5 California      2.24       2.17      716585\n 6 Colorado        5.12       5.83       58118\n 7 Connecticut     3.07       2.93       52899\n 8 Delaware        3.89       4.11       17246\n 9 Florida         4.61       5.14      630002\n10 Georgia         6.49       7.41      254062\n# ℹ 41 more rows",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#step-4-filter-to-three-states",
+    "href": "Tutorials/Predictive analysis.html#step-4-filter-to-three-states",
+    "title": "9. Predictive analysis",
+    "section": "Step 4: Filter to three states",
+    "text": "Step 4: Filter to three states\nFor this example, we compare:\n\nCalifornia\nFlorida\nHawaii\n\n\nfiltered_data &lt;- merged_data %&gt;%\n  filter(state %in% c(\"California\", \"Florida\", \"Hawaii\"))",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#step-5-check-the-data-structure",
+    "href": "Tutorials/Predictive analysis.html#step-5-check-the-data-structure",
+    "title": "9. Predictive analysis",
+    "section": "Step 5: Check the data structure",
+    "text": "Step 5: Check the data structure\nTo run ANOVA, the IV (state) should be a factor and the DV (m50) should be numeric.\n\nstr(filtered_data)\n\ngropd_df [3,569 × 9] (S3: grouped_df/tbl_df/tbl/data.frame)\n $ state        : chr [1:3569] \"California\" \"California\" \"California\" \"California\" ...\n $ date         : Date[1:3569], format: \"2020-03-01\" \"2020-03-01\" ...\n $ samples      : int [1:3569] 902406 902406 902406 902406 902406 902406 902406 902406 902406 902406 ...\n $ m50          : num [1:3569] 9.72 9.72 9.72 9.72 9.72 ...\n $ m50_index    : num [1:3569] 312 312 312 312 312 ...\n $ county       : chr [1:3569] \"Marin\" \"Orange\" \"Napa\" \"San Francisco\" ...\n $ week         : num [1:3569] 10 10 10 10 10 10 10 10 10 10 ...\n $ weekly_cases : int [1:3569] 1 2 0 14 4 5 2 1 1 23 ...\n $ weekly_deaths: int [1:3569] 0 0 0 0 0 1 0 0 0 0 ...\n - attr(*, \"groups\")= tibble [3 × 2] (S3: tbl_df/tbl/data.frame)\n  ..$ state: chr [1:3] \"California\" \"Florida\" \"Hawaii\"\n  ..$ .rows: list&lt;int&gt; [1:3] \n  .. ..$ : int [1:1541] 1 2 3 4 5 6 7 8 9 10 ...\n  .. ..$ : int [1:1770] 1542 1543 1544 1545 1546 1547 1548 1549 1550 1551 ...\n  .. ..$ : int [1:258] 3312 3313 3314 3315 3316 3317 3318 3319 3320 3321 ...\n  .. ..@ ptype: int(0) \n  ..- attr(*, \".drop\")= logi TRUE\n\nfiltered_data$state &lt;- as.factor(filtered_data$state)",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#step-6-run-anova",
+    "href": "Tutorials/Predictive analysis.html#step-6-run-anova",
+    "title": "9. Predictive analysis",
+    "section": "Step 6: Run ANOVA",
+    "text": "Step 6: Run ANOVA\n\nanova_model &lt;- aov(m50 ~ state, data = filtered_data)\nsummary(anova_model)\n\n              Df Sum Sq Mean Sq F value              Pr(&gt;F)    \nstate          2   4723  2361.4   659.9 &lt;0.0000000000000002 ***\nResiduals   3566  12761     3.6                                \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#step-7-run-a-post-hoc-test",
+    "href": "Tutorials/Predictive analysis.html#step-7-run-a-post-hoc-test",
+    "title": "9. Predictive analysis",
+    "section": "Step 7: Run a post-hoc test",
+    "text": "Step 7: Run a post-hoc test\n\nTukeyHSD(anova_model)\n\n  Tukey multiple comparisons of means\n    95% family-wise confidence level\n\nFit: aov(formula = m50 ~ state, data = filtered_data)\n\n$state\n                         diff        lwr       upr p adj\nFlorida-California  2.3782721  2.2237380  2.532806     0\nHawaii-California   0.7575374  0.4591798  1.055895     0\nHawaii-Florida     -1.6207347 -1.9163114 -1.325158     0",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#checking-assumptions-before-anova",
+    "href": "Tutorials/Predictive analysis.html#checking-assumptions-before-anova",
+    "title": "9. Predictive analysis",
+    "section": "Checking assumptions before ANOVA",
+    "text": "Checking assumptions before ANOVA\nTechnically, ANOVA assumes that group variances are reasonably equal. One common test is Levene’s test.\n\nleveneTest(m50 ~ state, data = filtered_data)\n\nLevene's Test for Homogeneity of Variance (center = median)\n        Df F value            Pr(&gt;F)    \ngroup    2  27.054 0.000000000002182 ***\n      3566                              \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n\nIf:\n\np &gt; 0.05, the equal-variance assumption is met\np &lt; 0.05, the assumption is not met\n\nIf the assumption is not met, you can use Welch’s ANOVA instead.\n\nwelch_anova &lt;- oneway.test(m50 ~ state, data = filtered_data, var.equal = FALSE)\nprint(welch_anova)\n\n\n    One-way analysis of means (not assuming equal variances)\n\ndata:  m50 and state\nF = 666.16, num df = 2.00, denom df = 734.36, p-value &lt;\n0.00000000000000022",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
+    ]
+  },
+  {
+    "objectID": "Tutorials/Predictive analysis.html#post-hoc-comparison-after-welchs-anova",
+    "href": "Tutorials/Predictive analysis.html#post-hoc-comparison-after-welchs-anova",
+    "title": "9. Predictive analysis",
+    "section": "Post-hoc comparison after Welch’s ANOVA",
+    "text": "Post-hoc comparison after Welch’s ANOVA\nHere, we use pairwise t-tests with a Bonferroni correction.\n\npairwise.t.test(filtered_data$m50, filtered_data$state, p.adjust.method = \"bonferroni\")\n\n\n    Pairwise comparisons using t tests with pooled SD \n\ndata:  filtered_data$m50 and filtered_data$state \n\n        California           Florida             \nFlorida &lt; 0.0000000000000002 -                   \nHawaii  0.0000000087         &lt; 0.0000000000000002\n\nP value adjustment method: bonferroni \n\n\n\n\n\n\n\n\nTip\n\n\n\nYou do not always need to run both standard ANOVA and Welch’s ANOVA in a final analysis. In teaching, however, comparing them can help students understand why assumptions matter.",
+    "crumbs": [
+      "Tutorials",
+      "9. Predictive analysis"
     ]
   }
 ]

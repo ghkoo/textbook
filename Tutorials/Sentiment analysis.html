@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="G.H. Koo">
+
+<title>7. Sentiment analysis – Computational Social Science Textbook</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-40fa9616f75a071ab237099a7cf90f2b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<meta name="robots" content="noindex, nofollow">
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Computational Social Science Textbook</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="../Tutorials/index.html" aria-current="page"> 
+<span class="menu-text">Tutorials</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Tutorials/Sentiment analysis.html">7. Sentiment analysis</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Tutorials/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorials</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Tutorials/Intro-to-R.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">1. Introduction to R</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Tutorials/Data-structure-and-cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2. Data structure &amp; cleaning</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Tutorials/Data-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3. Data pre-processing and visualization</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Tutorials/Data-access.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">4. Data access: Social media API</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Tutorials/Text-as-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">5. Basic textual analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Tutorials/Topic-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">6. Topic modeling</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Tutorials/Sentiment analysis.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">7. Sentiment analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Tutorials/Network analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">8. Network analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Tutorials/Predictive analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">9. Predictive analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Tutorials/Image-as-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">10. Image as data</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#learning-goals" id="toc-learning-goals" class="nav-link active" data-scroll-target="#learning-goals">Learning goals</a></li>
+  <li><a href="#introduction-to-sentiment-analysis" id="toc-introduction-to-sentiment-analysis" class="nav-link" data-scroll-target="#introduction-to-sentiment-analysis">Introduction to Sentiment Analysis</a>
+  <ul class="collapse">
+  <li><a href="#required-packages" id="toc-required-packages" class="nav-link" data-scroll-target="#required-packages">Required Packages</a></li>
+  <li><a href="#importing-data" id="toc-importing-data" class="nav-link" data-scroll-target="#importing-data">Importing data</a></li>
+  </ul></li>
+  <li><a href="#part-1-preprocessing-text" id="toc-part-1-preprocessing-text" class="nav-link" data-scroll-target="#part-1-preprocessing-text">Part 1: Preprocessing Text</a>
+  <ul class="collapse">
+  <li><a href="#step-1-tokenize-the-text" id="toc-step-1-tokenize-the-text" class="nav-link" data-scroll-target="#step-1-tokenize-the-text">Step 1: Tokenize the text</a></li>
+  </ul></li>
+  <li><a href="#part-2-dictionary-based-sentiment-analysis" id="toc-part-2-dictionary-based-sentiment-analysis" class="nav-link" data-scroll-target="#part-2-dictionary-based-sentiment-analysis">Part 2: Dictionary-Based Sentiment Analysis</a>
+  <ul class="collapse">
+  <li><a href="#what-is-the-afinn-lexicon" id="toc-what-is-the-afinn-lexicon" class="nav-link" data-scroll-target="#what-is-the-afinn-lexicon">What is the AFINN lexicon?</a></li>
+  <li><a href="#step-2-match-tweet-words-to-the-sentiment-dictionary" id="toc-step-2-match-tweet-words-to-the-sentiment-dictionary" class="nav-link" data-scroll-target="#step-2-match-tweet-words-to-the-sentiment-dictionary">Step 2: Match tweet words to the sentiment dictionary</a></li>
+  <li><a href="#step-3-identify-the-most-negative-and-most-positive-words" id="toc-step-3-identify-the-most-negative-and-most-positive-words" class="nav-link" data-scroll-target="#step-3-identify-the-most-negative-and-most-positive-words">Step 3: Identify the most negative and most positive words</a></li>
+  <li><a href="#step-4-calculate-tweet-level-sentiment-scores" id="toc-step-4-calculate-tweet-level-sentiment-scores" class="nav-link" data-scroll-target="#step-4-calculate-tweet-level-sentiment-scores">Step 4: Calculate tweet-level sentiment scores</a></li>
+  <li><a href="#step-5-replace-missing-sentiment-values-with-0" id="toc-step-5-replace-missing-sentiment-values-with-0" class="nav-link" data-scroll-target="#step-5-replace-missing-sentiment-values-with-0">Step 5: Replace missing sentiment values with 0</a></li>
+  </ul></li>
+  <li><a href="#part-3-describing-and-interpreting-sentiment" id="toc-part-3-describing-and-interpreting-sentiment" class="nav-link" data-scroll-target="#part-3-describing-and-interpreting-sentiment">Part 3: Describing and Interpreting Sentiment</a>
+  <ul class="collapse">
+  <li><a href="#distribution-of-sentiment-scores" id="toc-distribution-of-sentiment-scores" class="nav-link" data-scroll-target="#distribution-of-sentiment-scores">Distribution of sentiment scores</a></li>
+  <li><a href="#inspect-negative-and-positive-tweets" id="toc-inspect-negative-and-positive-tweets" class="nav-link" data-scroll-target="#inspect-negative-and-positive-tweets">Inspect negative and positive tweets</a></li>
+  </ul></li>
+  <li><a href="#part-4-sentiment-and-engagement" id="toc-part-4-sentiment-and-engagement" class="nav-link" data-scroll-target="#part-4-sentiment-and-engagement">Part 4: Sentiment and Engagement</a>
+  <ul class="collapse">
+  <li><a href="#step-1-examine-the-relationship-with-likes" id="toc-step-1-examine-the-relationship-with-likes" class="nav-link" data-scroll-target="#step-1-examine-the-relationship-with-likes">Step 1: Examine the relationship with likes</a></li>
+  <li><a href="#step-2-visualize-sentiment-and-likes" id="toc-step-2-visualize-sentiment-and-likes" class="nav-link" data-scroll-target="#step-2-visualize-sentiment-and-likes">Step 2: Visualize sentiment and likes</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">7. Sentiment analysis</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>G.H. Koo </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="learning-goals" class="level2">
+<h2 class="anchored" data-anchor-id="learning-goals">Learning goals</h2>
+<p>By the end of this tutorial, you will be able to:</p>
+<ul>
+<li>Understand what <strong>dictionary-based sentiment analysis</strong> is and when it is useful.</li>
+<li>Preprocess social media text for sentiment analysis in R.</li>
+<li>Apply the <strong>AFINN lexicon</strong> to estimate tweet-level sentiment.</li>
+<li>Summarize and interpret sentiment scores across tweets.</li>
+<li>Explore whether sentiment is associated with <strong>engagement metrics</strong>.</li>
+</ul>
+<hr>
+</section>
+<section id="introduction-to-sentiment-analysis" class="level1">
+<h1>Introduction to Sentiment Analysis</h1>
+<p>Sentiment analysis is a computational method used to identify the <strong>emotional tone</strong> of text. In communication research, it is often used to classify text as positive, negative, or neutral, or to estimate emotional intensity using predefined dictionaries.</p>
+<p>In this tutorial, we use a <strong>dictionary-based approach</strong> to analyze sentiment in Twitter data containing the keyword <strong>“abortion”</strong> from <strong>June 24, 2022, to December 31, 2022</strong>.</p>
+<p>Because social media text is unstructured, the first step is always <strong>cleaning and preprocessing</strong> the data. This helps reduce noise and improves the clarity of the analysis.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Since this dataset was collected when the platform was still called <strong>Twitter</strong>, I refer to it as Twitter rather than X in this tutorial.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>As of February 2023, Twitter (now X) no longer provides free API access. If you need social media data for practice, you may want to explore public archives such as:</p>
+<ul>
+<li><a href="https://dataverse.harvard.edu/">Harvard Dataverse</a></li>
+<li><a href="https://www.reddit.com/r/datasets/">r/datasets</a></li>
+<li><a href="https://developer.x.com/en/docs/x-api">Twitter/X API documentation</a></li>
+</ul>
+</div>
+</div>
+<hr>
+<section id="required-packages" class="level2">
+<h2 class="anchored" data-anchor-id="required-packages">Required Packages</h2>
+<p>You only need to install packages once.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>packages <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-2"><a href="#cb1-2"></a>  <span class="st">"tidyverse"</span>,</span>
+<span id="cb1-3"><a href="#cb1-3"></a>  <span class="st">"tidytext"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4"></a>  <span class="st">"tokenizers"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5"></a>  <span class="st">"stringr"</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>)</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="fu">install.packages</span>(packages)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="fu">library</span>(tokenizers)</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="fu">library</span>(tidytext)</span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="fu">set.seed</span>(<span class="dv">381</span>)</span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="fu">options</span>(<span class="at">scipen =</span> <span class="dv">999</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="importing-data" class="level2">
+<h2 class="anchored" data-anchor-id="importing-data">Importing data</h2>
+<p>For this tutorial, we use a CSV file containing abortion-related Twitter data.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>tweets <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"~/Desktop/abortion_tweets.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">","</span>)</span>
+<span id="cb3-2"><a href="#cb3-2"></a></span>
+<span id="cb3-3"><a href="#cb3-3"></a>tweets_subset <span class="ot">&lt;-</span> tweets <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="fu">select</span>(</span>
+<span id="cb3-5"><a href="#cb3-5"></a>    id,</span>
+<span id="cb3-6"><a href="#cb3-6"></a>    author_id,</span>
+<span id="cb3-7"><a href="#cb3-7"></a>    created_at,</span>
+<span id="cb3-8"><a href="#cb3-8"></a>    text,</span>
+<span id="cb3-9"><a href="#cb3-9"></a>    public_metrics.impression_count,</span>
+<span id="cb3-10"><a href="#cb3-10"></a>    public_metrics.like_count,</span>
+<span id="cb3-11"><a href="#cb3-11"></a>    public_metrics.quote_count,</span>
+<span id="cb3-12"><a href="#cb3-12"></a>    public_metrics.reply_count,</span>
+<span id="cb3-13"><a href="#cb3-13"></a>    public_metrics.retweet_count,</span>
+<span id="cb3-14"><a href="#cb3-14"></a>    referenced_tweets</span>
+<span id="cb3-15"><a href="#cb3-15"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<hr>
+</section>
+</section>
+<section id="part-1-preprocessing-text" class="level1">
+<h1>Part 1: Preprocessing Text</h1>
+<section id="step-1-tokenize-the-text" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-tokenize-the-text">Step 1: Tokenize the text</h2>
+<p>To prepare the tweets for sentiment analysis, we:</p>
+<ul>
+<li>preserve the original text</li>
+<li>remove URLs</li>
+<li>tokenize the tweets into individual words</li>
+<li>convert all words to lowercase</li>
+<li>remove stopwords</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>tweets_tokenized <span class="ot">&lt;-</span> tweets_subset <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>  <span class="fu">mutate</span>(<span class="at">original_text =</span> text) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="fu">mutate</span>(<span class="at">text =</span> <span class="fu">str_remove_all</span>(text, <span class="st">"</span><span class="sc">\\</span><span class="st">bhttps[^</span><span class="sc">\\</span><span class="st">s]+"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="fu">unnest_tokens</span>(word, text, <span class="at">to_lower =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="fu">anti_join</span>(stop_words, <span class="at">by =</span> <span class="st">"word"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6"></a></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="fu">head</span>(tweets_tokenized)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   id           author_id               created_at
+1 1608879536376262656 1293292839963631616 2022-12-30T17:35:47.000Z
+2 1608879536376262656 1293292839963631616 2022-12-30T17:35:47.000Z
+3 1608879536376262656 1293292839963631616 2022-12-30T17:35:47.000Z
+4 1608879536376262656 1293292839963631616 2022-12-30T17:35:47.000Z
+5 1608879536376262656 1293292839963631616 2022-12-30T17:35:47.000Z
+6 1608879536376262656 1293292839963631616 2022-12-30T17:35:47.000Z
+  public_metrics.impression_count public_metrics.like_count
+1                               0                         0
+2                               0                         0
+3                               0                         0
+4                               0                         0
+5                               0                         0
+6                               0                         0
+  public_metrics.quote_count public_metrics.reply_count
+1                          0                          0
+2                          0                          0
+3                          0                          0
+4                          0                          0
+5                          0                          0
+6                          0                          0
+  public_metrics.retweet_count              referenced_tweets
+1                          190 retweeted, 1608817588376834048
+2                          190 retweeted, 1608817588376834048
+3                          190 retweeted, 1608817588376834048
+4                          190 retweeted, 1608817588376834048
+5                          190 retweeted, 1608817588376834048
+6                          190 retweeted, 1608817588376834048
+                                                                                                                                 original_text
+1 RT @KelseyDotOrg: Today my piece for @atrupar’s Public Notice on abortion access in Missouri and Kansas is up. Thank you Aaron for the oppo…
+2 RT @KelseyDotOrg: Today my piece for @atrupar’s Public Notice on abortion access in Missouri and Kansas is up. Thank you Aaron for the oppo…
+3 RT @KelseyDotOrg: Today my piece for @atrupar’s Public Notice on abortion access in Missouri and Kansas is up. Thank you Aaron for the oppo…
+4 RT @KelseyDotOrg: Today my piece for @atrupar’s Public Notice on abortion access in Missouri and Kansas is up. Thank you Aaron for the oppo…
+5 RT @KelseyDotOrg: Today my piece for @atrupar’s Public Notice on abortion access in Missouri and Kansas is up. Thank you Aaron for the oppo…
+6 RT @KelseyDotOrg: Today my piece for @atrupar’s Public Notice on abortion access in Missouri and Kansas is up. Thank you Aaron for the oppo…
+          word
+1           rt
+2 kelseydotorg
+3        piece
+4    atrupar’s
+5       public
+6       notice</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you want to inspect the most common words before running sentiment analysis, try:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>tweets_tokenized <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="part-2-dictionary-based-sentiment-analysis" class="level1">
+<h1>Part 2: Dictionary-Based Sentiment Analysis</h1>
+<section id="what-is-the-afinn-lexicon" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-the-afinn-lexicon">What is the AFINN lexicon?</h2>
+<p>In dictionary-based sentiment analysis, we use a predefined lexicon that assigns sentiment values to words.</p>
+<p>In this tutorial, we use the AFINN lexicon, which assigns words scores ranging from -5 (very negative) to +5 (very positive).</p>
+<p>Other commonly used lexicons include:</p>
+<ul>
+<li>Bing: positive / negative</li>
+<li>NRC: eight emotions plus positive / negative</li>
+<li>Lexicoder: often used in political communication</li>
+<li>LIWC: sentiment and broader psychological categories</li>
+</ul>
+<p>Each dictionary has different strengths and limitations. Because language is complex, researchers should always interpret dictionary results carefully.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>afinn_dictionary <span class="ot">&lt;-</span> <span class="fu">get_sentiments</span>(<span class="st">"afinn"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="fu">head</span>(afinn_dictionary)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+  word       value
+  &lt;chr&gt;      &lt;dbl&gt;
+1 abandon       -2
+2 abandoned     -2
+3 abandons      -2
+4 abducted      -2
+5 abduction     -2
+6 abductions    -2</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">subset</span>(afinn_dictionary, word <span class="sc">==</span> <span class="st">"love"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  word  value
+  &lt;chr&gt; &lt;dbl&gt;
+1 love      3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">subset</span>(afinn_dictionary, word <span class="sc">==</span> <span class="st">"terrible"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  word     value
+  &lt;chr&gt;    &lt;dbl&gt;
+1 terrible    -3</code></pre>
+</div>
+</div>
+</section>
+<section id="step-2-match-tweet-words-to-the-sentiment-dictionary" class="level2">
+<h2 class="anchored" data-anchor-id="step-2-match-tweet-words-to-the-sentiment-dictionary">Step 2: Match tweet words to the sentiment dictionary</h2>
+<p>We use <code>inner_join()</code> to keep only the words in our dataset that also appear in the AFINN dictionary.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>tweets_sentiment <span class="ot">&lt;-</span> tweets_tokenized <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>  <span class="fu">inner_join</span>(afinn_dictionary, <span class="at">by =</span> <span class="st">"word"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3"></a></span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="fu">head</span>(tweets_sentiment)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   id           author_id               created_at
+1 1608879534690160640 1407429095005245440 2022-12-30T17:35:47.000Z
+2 1608879520039448320  925802396609073280 2022-12-30T17:35:43.000Z
+3 1608879520039448320  925802396609073280 2022-12-30T17:35:43.000Z
+4 1608879520039448320  925802396609073280 2022-12-30T17:35:43.000Z
+5 1608879519641002240            99833187 2022-12-30T17:35:43.000Z
+6 1608879518382718720           228617818 2022-12-30T17:35:43.000Z
+  public_metrics.impression_count public_metrics.like_count
+1                              10                         1
+2                               0                         0
+3                               0                         0
+4                               0                         0
+5                               0                         0
+6                               0                         0
+  public_metrics.quote_count public_metrics.reply_count
+1                          0                          0
+2                          0                          0
+3                          0                          0
+4                          0                          0
+5                          0                          0
+6                          0                          0
+  public_metrics.retweet_count              referenced_tweets
+1                            1                               
+2                         1027 retweeted, 1608871631765786624
+3                         1027 retweeted, 1608871631765786624
+4                         1027 retweeted, 1608871631765786624
+5                         2278 retweeted, 1529674574266257408
+6                           41 retweeted, 1608860717515423744
+                                                                                                                                     original_text
+1                                        You know any of these hags? Get Paid!  $10,000 Reward for Info https://t.co/mgpx6PoQTo via @gatewaypundit
+2     RT @mjs_DC: After being denied basic miscarriage care during two separate visits to the ER because of Louisiana's abortion ban, Kaitlyn Jos…
+3     RT @mjs_DC: After being denied basic miscarriage care during two separate visits to the ER because of Louisiana's abortion ban, Kaitlyn Jos…
+4     RT @mjs_DC: After being denied basic miscarriage care during two separate visits to the ER because of Louisiana's abortion ban, Kaitlyn Jos…
+5 RT @MrAndyNgo: Jennifer Thompson, an extremist abortion &amp;amp; BLM activist in Portland, has shared in graphic detail her recent decision to end…
+6     RT @LifeNewsToo: The FBI has arrested a dozen pro-life Americans for peacefully protesting abortion, but not one single leftist for firebom…
+      word value
+1   reward     2
+2   denied    -2
+3     care     2
+4      ban    -2
+5   shared     1
+6 arrested    -3</code></pre>
+</div>
+</div>
+<p>The <code>value</code> column shows the sentiment score assigned to each word.</p>
+</section>
+<section id="step-3-identify-the-most-negative-and-most-positive-words" class="level2">
+<h2 class="anchored" data-anchor-id="step-3-identify-the-most-negative-and-most-positive-words">Step 3: Identify the most negative and most positive words</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>most_negative_words <span class="ot">&lt;-</span> tweets_sentiment <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>  <span class="fu">arrange</span>(value) <span class="sc">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a>  <span class="fu">select</span>(word, value) <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="#cb15-4"></a>  <span class="fu">distinct</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span>
+<span id="cb15-6"><a href="#cb15-6"></a>most_negative_words</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           word value
+1         bitch    -5
+2          cock    -5
+3       bitches    -5
+4  motherfucker    -5
+5        niggas    -5
+6          rape    -4
+7      bullshit    -4
+8          fuck    -4
+9       fucking    -4
+10         damn    -4</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>most_positive_words <span class="ot">&lt;-</span> tweets_sentiment <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(value)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3"></a>  <span class="fu">select</span>(word, value) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="#cb17-4"></a>  <span class="fu">distinct</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb17-5"><a href="#cb17-5"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span>
+<span id="cb17-6"><a href="#cb17-6"></a>most_positive_words</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        word value
+1  brilliant     4
+2        win     4
+3      funny     4
+4       lmao     4
+5      lmfao     4
+6    amazing     4
+7    awesome     4
+8        fun     4
+9        wow     4
+10 fantastic     4</code></pre>
+</div>
+</div>
+<p>These outputs help us see which words in the dataset contribute most strongly to negative and positive sentiment.</p>
+</section>
+<section id="step-4-calculate-tweet-level-sentiment-scores" class="level2">
+<h2 class="anchored" data-anchor-id="step-4-calculate-tweet-level-sentiment-scores">Step 4: Calculate tweet-level sentiment scores</h2>
+<p>Next, we summarize the sentiment values within each tweet. Since <code>id</code> is the unique tweet identifier, we group by <code>id</code> and sum the sentiment values.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>tweets_summarized <span class="ot">&lt;-</span> tweets_sentiment <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3"></a>  <span class="fu">summarize</span>(<span class="at">sentiment =</span> <span class="fu">sum</span>(value), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb19-4"><a href="#cb19-4"></a><span class="fu">head</span>(tweets_summarized)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+       id sentiment
+    &lt;dbl&gt;     &lt;dbl&gt;
+1 1.61e18        -1
+2 1.61e18        -4
+3 1.61e18        -2
+4 1.61e18        -1
+5 1.61e18        -2
+6 1.61e18         4</code></pre>
+</div>
+</div>
+<p>Now we merge these sentiment scores back into the original tweet-level dataset.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>tweets_final <span class="ot">&lt;-</span> tweets_subset <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>  <span class="fu">full_join</span>(tweets_summarized, <span class="at">by =</span> <span class="st">"id"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="step-5-replace-missing-sentiment-values-with-0" class="level2">
+<h2 class="anchored" data-anchor-id="step-5-replace-missing-sentiment-values-with-0">Step 5: Replace missing sentiment values with 0</h2>
+<p>Some tweets will not contain any words found in the AFINN dictionary. In those cases, sentiment will appear as <code>NA</code>. We replace those missing values with <code>0</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>tweets_final<span class="sc">$</span>sentiment[<span class="fu">is.na</span>(tweets_final<span class="sc">$</span>sentiment)] <span class="ot">&lt;-</span> <span class="dv">0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<hr>
+</section>
+</section>
+<section id="part-3-describing-and-interpreting-sentiment" class="level1">
+<h1>Part 3: Describing and Interpreting Sentiment</h1>
+<section id="distribution-of-sentiment-scores" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-of-sentiment-scores">Distribution of sentiment scores</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="fu">table</span>(tweets_final<span class="sc">$</span>sentiment)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ -23  -19  -16  -15  -14  -13  -12  -11  -10   -9   -8   -7   -6   -5   -4   -3 
+   1    1    2    4    2    6   24   76   26   79   48  313  164  349  427 1027 
+  -2   -1    0    1    2    3    4    5    6    7    8    9   10   11   14 
+1865  833 3156  754  580  173  132   46   40   58    5    5    8    1    1 </code></pre>
+</div>
+</div>
+<p>This gives a simple overview of how sentiment is distributed across the tweets.</p>
+</section>
+<section id="inspect-negative-and-positive-tweets" class="level2">
+<h2 class="anchored" data-anchor-id="inspect-negative-and-positive-tweets">Inspect negative and positive tweets</h2>
+<p>Negative tweets:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>negative_tweets <span class="ot">&lt;-</span> tweets_final <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a>  <span class="fu">filter</span>(sentiment <span class="sc">&lt;=</span> <span class="sc">-</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3"></a>  <span class="fu">select</span>(text, sentiment)</span>
+<span id="cb25-4"><a href="#cb25-4"></a><span class="fu">head</span>(negative_tweets)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                                                                                                          text
+1 RT @mjs_DC: After being denied basic miscarriage care during two separate visits to the ER because of Louisiana's abortion ban, Kaitlyn Jos…
+2 RT @LifeNewsToo: The FBI has arrested a dozen pro-life Americans for peacefully protesting abortion, but not one single leftist for firebom…
+3                                                                       @ThisIsKyleR Did.. you even go to school? I missed the abortion class.
+4                                                                RT @JackPosobiec: Anti-abortion is literally written in the AP standard guide
+5   @HoustonHizzoner @janecoaston I don’t think there is one. If pro life Americans believe abortion is murder, how can their be a compromise?
+6 RT @mjs_DC: When a Louisiana woman miscarried at 11 weeks, the hospital refused to confirm that it was a miscarriage or provide any treatme…
+  sentiment
+1        -2
+2        -3
+3        -2
+4        -1
+5        -2
+6        -2</code></pre>
+</div>
+</div>
+<p>Positive tweets:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>positive_tweets <span class="ot">&lt;-</span> tweets_final <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2"></a>  <span class="fu">filter</span>(sentiment <span class="sc">&gt;=</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3"></a>  <span class="fu">select</span>(text, sentiment)</span>
+<span id="cb27-4"><a href="#cb27-4"></a><span class="fu">head</span>(positive_tweets)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                                                                                                                                                                                                                                 text
+1                                                                                                                                                           You know any of these hags? Get Paid!  $10,000 Reward for Info https://t.co/mgpx6PoQTo via @gatewaypundit
+2                                                                                                                    RT @MrAndyNgo: Jennifer Thompson, an extremist abortion &amp;amp; BLM activist in Portland, has shared in graphic detail her recent decision to end…
+3 SOUTH AFRICA PRIVATE VIP ABORTION/TERMINATION +27635284507 QUICK,SAFE &amp;amp; PAIN FREE SAME DAY FREE CLEANING  CALL/WHATSAPP +27635284507 FREE STATE,DURBAN,EASTERN CAPE,LIMPOPO,MPUMALANGA,NORTH WEST,WESTERN CAPE,LOSOTHO,ZIMBABWE NAMIBIA https://t.co/g8QXm4wYgr
+4                                                                                                                        RT @robbystarbuck: Steven Tyler legally had a minor signed over to him by her parents so he could take her on the road where he sexually ab…
+5                                                                                                                    RT @ArmandKleinX: Complot Against Pres.Trump? Rino Mitch McConnell Backed Rino @ODeaForColorado who does not support America First&amp;amp;who supp…
+6 SOUTH AFRICA PRIVATE VIP ABORTION/TERMINATION +27635284507 QUICK,SAFE &amp;amp; PAIN FREE SAME DAY FREE CLEANING  CALL/WHATSAPP +27635284507 FREE STATE,DURBAN,EASTERN CAPE,LIMPOPO,MPUMALANGA,NORTH WEST,WESTERN CAPE,LOSOTHO,ZIMBABWE NAMIBIA https://t.co/HYFoACLaIp
+  sentiment
+1         2
+2         1
+3         2
+4         1
+5         2
+6         2</code></pre>
+</div>
+</div>
+<p>Looking directly at tweet examples helps researchers evaluate whether the sentiment scores make sense in context.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This step is important because dictionary-based sentiment analysis cannot fully capture sarcasm, irony, humor, or context-dependent meanings.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="part-4-sentiment-and-engagement" class="level1">
+<h1>Part 4: Sentiment and Engagement</h1>
+<section id="step-1-examine-the-relationship-with-likes" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-examine-the-relationship-with-likes">Step 1: Examine the relationship with likes</h2>
+<p>As a simple extension, we can test whether more positive or negative tweets tend to receive more likes.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="fu">cor.test</span>(</span>
+<span id="cb29-2"><a href="#cb29-2"></a>  tweets_final<span class="sc">$</span>sentiment,</span>
+<span id="cb29-3"><a href="#cb29-3"></a>  tweets_final<span class="sc">$</span>public_metrics.like_count,</span>
+<span id="cb29-4"><a href="#cb29-4"></a>  <span class="at">method =</span> <span class="st">"spearman"</span>,</span>
+<span id="cb29-5"><a href="#cb29-5"></a>  <span class="at">use =</span> <span class="st">"complete.obs"</span></span>
+<span id="cb29-6"><a href="#cb29-6"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in cor.test.default(tweets_final$sentiment,
+tweets_final$public_metrics.like_count, : Cannot compute exact p-value with
+ties</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Spearman's rank correlation rho
+
+data:  tweets_final$sentiment and tweets_final$public_metrics.like_count
+S = 170495177668, p-value = 0.0001375
+alternative hypothesis: true rho is not equal to 0
+sample estimates:
+       rho 
+0.03773063 </code></pre>
+</div>
+</div>
+</section>
+<section id="step-2-visualize-sentiment-and-likes" class="level2">
+<h2 class="anchored" data-anchor-id="step-2-visualize-sentiment-and-likes">Step 2: Visualize sentiment and likes</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="fu">ggplot</span>(tweets_final, <span class="fu">aes</span>(<span class="at">x =</span> sentiment, <span class="at">y =</span> public_metrics.like_count)) <span class="sc">+</span></span>
+<span id="cb32-2"><a href="#cb32-2"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb32-3"><a href="#cb32-3"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb32-4"><a href="#cb32-4"></a>  <span class="fu">labs</span>(</span>
+<span id="cb32-5"><a href="#cb32-5"></a>    <span class="at">title =</span> <span class="st">"Sentiment and Likes in Abortion Tweets"</span>,</span>
+<span id="cb32-6"><a href="#cb32-6"></a>    <span class="at">x =</span> <span class="st">"Sentiment score"</span>,</span>
+<span id="cb32-7"><a href="#cb32-7"></a>    <span class="at">y =</span> <span class="st">"Like count"</span></span>
+<span id="cb32-8"><a href="#cb32-8"></a>  ) <span class="sc">+</span></span>
+<span id="cb32-9"><a href="#cb32-9"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Sentiment-analysis_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Engagement variables such as likes, replies, and retweets are often highly skewed. In substantive research, it is a good idea to inspect their distributions before choosing a model.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="summary" class="level1">
+<h1>Summary</h1>
+<p>In this tutorial, you learned how to:</p>
+<ul>
+<li>preprocess tweets for dictionary-based sentiment analysis</li>
+<li>apply the AFINN lexicon to estimate tweet-level sentiment</li>
+<li>identify strongly positive and negative words in the dataset</li>
+<li>interpret sentiment scores using both summary tables and tweet examples</li>
+<li>explore whether sentiment is associated with a simple engagement metric</li>
+</ul>
+<p>Dictionary-based sentiment analysis is easy to implement and useful for introductory text analysis, but it should always be interpreted with care because sentiment depends heavily on context.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/ghkoo\.github\.io\/textbook\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
